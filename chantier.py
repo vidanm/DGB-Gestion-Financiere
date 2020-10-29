@@ -2,12 +2,16 @@ import pandas as pd
 import datetime as dt
 from poste import *
 
-
 def DansDictionnaire(num,dic):
-    ''' Vérifie si le code de compte num est bien dans le plan comptable '''
+    ''' Vérifie si le code de compte num est bien dans le dictionnaire'''
     for key in dic:
-        if key == str(num):
+        
+        if key == num:
+            if (num == '706100'):
+                print("ok")
+            
             return True
+    
     return False
 
 
@@ -17,14 +21,30 @@ def ChargesParChantier(dfCharges):
     chantier '''
     dicChantiers = {}
     for index,value in dfCharges['Section analytique'].iteritems():
-        print(value)
-        if DansDictionnaire(value,dicChantiers):
+        if DansDictionnaire(str(value),dicChantiers):
             dicChantiers[str(value)].append(dfCharges[[index]])
         else :
             dicChantiers[str(value)] = pd.DataFrame(dfCharges[[index]])
     
     return dicChantiers
 
+def SupprimeLigneCodeSansPoste(dfCharges,fichier):
+    ''' Supprime les lignes dont le numéro de compte n'est associé a aucun
+    poste du plan comptable '''
+    codesManquants = []
+    for index,value in dfCharges['Général'].iteritems():
+        if not DansDictionnaire(str(value),dicComptable):
+            print("Numero : "+ str(value) + " pas dans le plan comptable")
+            print("Ligne non prise en compte")
+            dfCharges = dfCharges.drop(index=index)
+            if value not in codesManquants:
+                codesManquants.append(value)
+                EcrisCodeSansPoste(fichier,value)
+    return dfCharges
+
+def EcrisCodeSansPoste(fichier,code):
+    '''Ecris le code manquant dans un fichier'''
+    fichier.write(str(code) + "\n")
 
 def ChargesChantierParPostes(dicComptable,dfCharges):
     ''' Renvoie une structure de données regroupant par chantier, les dépenses 
@@ -43,20 +63,14 @@ def ChargesChantierParPostes(dicComptable,dfCharges):
     postes = {}
 
     for index,value in dfCharges['Général'].iteritems():
-        if DansDictionnaire(value,dicComptable):
-            row = dicComptable[str(value)].T.squeeze()
-            poste = row[0]
-            sousPoste = row[1]
-
-            if (poste not in postes):
-                postes[poste] = sousPostes.copy()
-                if (sousPoste not in postes[poste]):
-                    postes[poste][sousPoste] = data.copy()
-        else :
-            #ERREUR LE NUMERO N'EST PAS DANS LE PLAN COMPTABLE
-            print("Numero : "+str(value)+" pas dans le plan comptable")
-            print("La dépense ne sera pas prise en compte")
-            dfCharges.drop(index=index) #On supprime la ligne
+        row = dicComptable[str(value)].T.squeeze()
+        poste = row[0]
+        sousPoste = row[1]
+        if (poste not in postes):
+            postes[poste] = sousPostes.copy()
+        if (sousPoste not in postes[poste]):
+            postes[poste][sousPoste] = data.copy()
+        
     return postes;
 
 def CalculDepensesChantierParPostes(postes,dicComptable,dfCharges):
@@ -69,13 +83,18 @@ def CalculDepensesChantierParPostes(postes,dicComptable,dfCharges):
         row = dicComptable[str(value)].T.squeeze()
         poste = row[0]
         sousPoste = row[1]
-        print(poste)
-        print(sousPoste)
+        #print(poste)
+        #print(sousPoste)
         date = dt.date.strftime(dfCharges['Date'][index],'%b/%m/%y')
         postes[poste][sousPoste]["Dépenses de l'année"] += dfCharges['Débit'][index] - dfCharges['Crédit'][index]
 
-dicComptable,dicComptStruct = RecupDictComptable("/home/vidan/Documents/DGB/Resultat_chantier/plan comptable/PLAN COMPTABLE DGB 2020.xlsx")
+dicComptable = RecupDictComptable("/home/vidan/Documents/DGB/Resultat_chantier/plan comptable/PLAN COMPTABLE DGB 2020.xlsx")
 dfCharges = RecupDfChantier("/home/vidan/Documents/DGB/Resultat_chantier/Compte de charges/Compte de charges.xlsx")
+
+
+fichier = open("code_manquants.txt","w")
+dfCharges = SupprimeLigneCodeSansPoste(dfCharges,fichier)
 #ChargesParChantier(dfCharges)
 postes = ChargesChantierParPostes(dicComptable,dfCharges)
 CalculDepensesChantierParPostes(postes,dicComptable,dfCharges)
+
