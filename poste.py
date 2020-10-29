@@ -51,6 +51,6 @@ def RecupDictComptable(path):
 
 def RecupDfChantier(path):
     chantier = pd.read_excel(path)
-    chantier = chantier.drop(columns=['Type','Référence interne','Date réf. externe','Auxiliaire','N°','Section analytique'])
+    chantier = chantier.drop(columns=['Type','Référence interne','Date réf. externe','Auxiliaire','N°'])
     return chantier
 
