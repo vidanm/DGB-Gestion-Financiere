@@ -1,7 +1,7 @@
 # DGB-Gestion
 Logiciel de gestion financière
 
-[Dépendances]
+[ Dépendances ]
 - python
 - pandas
 - pyqt
