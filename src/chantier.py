@@ -1,19 +1,7 @@
 import pandas as pd
 import datetime as dt
 from poste import *
-
-def DansDictionnaire(num,dic):
-    ''' Vérifie si le code de compte num est bien dans le dictionnaire'''
-    for key in dic:
-        
-        if key == num:
-            if (num == '706100'):
-                print("ok")
-            
-            return True
-    
-    return False
-
+import os
 
 def ChargesParChantier(dfCharges):
     ''' Sachant que le fichier charges contient les charges de tout les chantiers 
@@ -22,9 +10,9 @@ def ChargesParChantier(dfCharges):
     dicChantiers = {}
     for index,value in dfCharges['Section analytique'].iteritems():
         if DansDictionnaire(str(value),dicChantiers):
-            dicChantiers[str(value)].append(dfCharges[[index]])
+            dicChantiers[str(value)].append(dfCharges.iloc[[index]])
         else :
-            dicChantiers[str(value)] = pd.DataFrame(dfCharges[[index]])
+            dicChantiers[str(value)] = pd.DataFrame(dfCharges.iloc[[index]])
     
     return dicChantiers
 
@@ -34,10 +22,10 @@ def SupprimeLigneCodeSansPoste(dfCharges,fichier):
     codesManquants = []
     for index,value in dfCharges['Général'].iteritems():
         if not DansDictionnaire(str(value),dicComptable):
-            print("Numero : "+ str(value) + " pas dans le plan comptable")
             print("Ligne non prise en compte")
             dfCharges = dfCharges.drop(index=index)
             if value not in codesManquants:
+                print("Numero : "+ str(value) + " pas dans le plan comptable")
                 codesManquants.append(value)
                 EcrisCodeSansPoste(fichier,value)
     return dfCharges
@@ -94,7 +82,8 @@ dfCharges = RecupDfChantier("/home/vidan/Documents/DGB/Resultat_chantier/Compte 
 
 fichier = open("code_manquants.txt","w")
 dfCharges = SupprimeLigneCodeSansPoste(dfCharges,fichier)
-#ChargesParChantier(dfCharges)
+dicChantiers = ChargesParChantier(dfCharges)
 postes = ChargesChantierParPostes(dicComptable,dfCharges)
 CalculDepensesChantierParPostes(postes,dicComptable,dfCharges)
-
+fichier.close()
+#os.system("libreoffice code_manquants.txt")
