@@ -1,5 +1,5 @@
 # DGB-Gestion
-![DGB LOGO](images/DGB.Jpeg)
+![DGB LOGO](https://github.com/vidanm/DGB-Gestion/images/DGB.Jpeg)
 Logiciel de gestion financière
 
 [ Dépendances ]
