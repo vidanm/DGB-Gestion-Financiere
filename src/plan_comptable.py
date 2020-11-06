@@ -28,6 +28,9 @@ class PlanComptable():
         dfCompteStruct = dfCompteStruct.rename(columns={'N° DE COMPTE.1': 'N° DE COMPTE','POSTE.1' : 'POSTE','SOUS POSTE.1' : 'SOUS POSTE'})
         dfCompteSite = dfCompteSite.append(dfCompteStruct,ignore_index=True)
         dfCompteSite['N° DE COMPTE'] = dfCompteSite['N° DE COMPTE'].apply(str)
+        
+        values = {'SOUS POSTE':'Sous poste non défini'}
+        dfCompteSite = dfCompteSite.fillna(value=values)
         return dfCompteSite
 
 planC = PlanComptable("/home/vidan/Documents/DGB/Resultat_chantier/plan comptable/PLAN COMPTABLE DGB 2020.xlsx")

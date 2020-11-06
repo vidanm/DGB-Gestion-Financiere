@@ -19,10 +19,14 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 c = canvas.Canvas("simple_pdf.pdf",pagesize=(A4[1],A4[0]))
 im = os.path.join(script_dir,'../images/DGB.jpeg')
 background(c)
-c.drawImage(im,0,A4[0]-inch*1.4)
+c.drawImage(im,0,A4[0]-inch*1.41)
 
 plan = PlanComptable("~/Documents/DGB/Resultat_chantier/plan comptable/PLAN COMPTABLE DGB 2020.xlsx")
+codes_missing = open("missing_numbers.txt","w")
+cha = Charges("~/Documents/DGB/Resultat_chantier/Compte de charges/Compte de charges.xlsx",plan,codes_missing)
 post = Postes(plan)
+post.calcul_chantier(cha.get_raw_chantier('19-GP-ROSN'),6)
+print(post.dicPostes['MO'])
 data = post.dicPostes['MATERIELS']
 
 # container for the 'Flowable' objects
@@ -32,10 +36,8 @@ custom_dark = colors.Color(48/255,48/255,48/255)
 custom_lightgray = colors.Color(220/255,220/255,220/255)
 custom_white = colors.Color(245/255,245/255,245/255)
 
-
 rowHeights = (len(data)+1)*[20]
 rowHeights[0] = 35
-
 
 numTable = np.array(data).tolist()
 numTable.insert(0,np.array(post.dicPostes['MATERIELS'].columns.values).tolist()) #####
@@ -57,12 +59,12 @@ for i in range(1,len(data)+1):
 t.setStyle(TableStyle(tablstl))
 
 t.wrapOn(c,0,0)
-t.drawOn(c,A4[0]/5,A4[1]/4-inch*0.7)
+t.drawOn(c,A4[0]/6,A4[1]/4-inch*0.7)
 c.setFont("Helvetica-Bold",50)
 c.rotate(90)
 c.drawCentredString(A4[0]/2,-A4[1]+inch*0.15,"MATERIELS")
 c.setFont("Helvetica-Bold",20)
-c.drawCentredString(A4[0]/2,-A4[1]+inch*0.7,"AOUT 2020")
+c.drawCentredString(A4[0]/2,-A4[1]+inch*0.8,"AOUT 2020 | 19-GP-ROSN")
 
 c.showPage()
 c.save()
