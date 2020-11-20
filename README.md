@@ -1,4 +1,4 @@
-# DGB-Gestion
+# DGB-Gesfin
 
 ![DGB LOGO](https://github.com/vidanm/DGB-Gestion/blob/master/images/DGB.jpeg)
 
