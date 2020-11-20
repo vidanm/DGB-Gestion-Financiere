@@ -1,5 +1,5 @@
-from plan_comptable import *
-from basic_operations import *
+from .plan_comptable import *
+from .basic_operations import *
 
 class Charges():
     

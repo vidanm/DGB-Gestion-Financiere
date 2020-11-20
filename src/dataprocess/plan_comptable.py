@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from basic_operations import *
+from .basic_operations import *
 
 class PlanComptable():
     

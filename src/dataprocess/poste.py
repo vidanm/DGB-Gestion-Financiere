@@ -1,5 +1,5 @@
-from plan_comptable import *
-from charges import *
+from .plan_comptable import *
+from .charges import *
 import datetime as dt
 
 class Postes():
@@ -23,24 +23,32 @@ class Postes():
             self.dicPostes[nom]['Ecart PFDC/Budget'] = 0
             self.dicPostes[nom] = self.dicPostes[nom].set_index('SOUS POSTE')
 
-    ### CLASSE DEPENSES ?
     def __depenses_mois_chantier(self,row):
-        self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += row['Débit'] - row['Crédit']
+        self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
         return 0
 
     def __depenses_annee_chantier(self,row):
-        self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += row['Débit'] - row['Crédit']
+        self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
         return 0
 
     def calcul_chantier(self,dfChantier,mois):
         for index,row in dfChantier.iterrows():
-            print(row)
             date = row['Date']
             if (date.month <= mois):
                 self.__depenses_mois_chantier(row)
             self.__depenses_annee_chantier(row)
-    ###
 
+        #self.__calcul_total_chantier(mois)
+    
+    def __calcul_total_chantier(self,mois):
+        totalmois = 0
+        totalannee = 0
+        for poste in self.dicPostes:
+            for sousPoste in poste:
+                totalannee += round(self.dicPostes[self.dicPostes[poste].loc[sousPoste],"Dépenses de l'année"],2)
+                totalmois += round(self.dicPostes[self.dicPostes[poste].loc[sousPoste],"Dépenses du mois"],2)
+        total = pd.DataFrame([[0,totalmois,totalannee,0,0,0]])
+        self.dicPostes.append(total)
 """
 plan = PlanComptable("~/Documents/DGB/Resultat_chantier/plan comptable/PLAN COMPTABLE DGB 2020.xlsx")
 codes_missing = open("missing_numbers.txt","w")
