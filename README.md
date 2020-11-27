@@ -5,7 +5,7 @@
 ## Logiciel de gestion financière
 
 [ Dépendances ]
-- python
-- pandas
-- pyqt
-- reportlab
+- Python
+- Pandas
+- Flask
+- Reportlab
