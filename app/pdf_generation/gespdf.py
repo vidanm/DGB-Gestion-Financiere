@@ -32,15 +32,7 @@ class PDFCharges():
         self.logo = os.path.join(script_dir,'../../../images/DGB.jpeg')
         self.postes = None
         self.__background(self.c)
-        self.__calcul_donnees(nomChantier,mois,annee)
 
-    def __calcul_donnees(self,nomChantier,mois,annee):
-        plan = PlanComptable("~/Documents/DGB/Resultat_chantier/plan comptable/PLAN COMPTABLE DGB 2020.xlsx")
-        codes_missing = open("missing_numbers.txt","w")
-        charges = Charges("~/Documents/DGB/Resultat_chantier/Compte de charges/Compte de charges.xlsx",plan,codes_missing)
-        self.postes = Postes(plan)
-        self.postes.calcul_chantier(charges.get_raw_chantier(nomChantier),mois,annee)
-        
     def round_numtable(self,numTable):
         for i in range (1,len(numTable)):
             for j in range (1,len(numTable[0])):
@@ -61,7 +53,7 @@ class PDFCharges():
         numTable = self.round_numtable(numTable)
         return Table(numTable,rowHeights=rowHeights)
     
-    def __define_table_style(self,table,data):
+    def __define_table_style(self,table):
         '''Définis comment va être affiché le tableau donné en argument 
         sur le pdf'''
         tabstl = [
@@ -79,8 +71,8 @@ class PDFCharges():
 
     def __genere_poste_pdf(self,poste):
         '''Genere le pdf pour un poste particulier'''
-        data = self.postes.dicPostes[poste].reset_index()
-        t = self.__format_table(poste,data)
+        data = self.tableau.reset_index()
+        t = self.__format_table(titre,data)
         t = self.__define_table_style(t,data)
         return t
         

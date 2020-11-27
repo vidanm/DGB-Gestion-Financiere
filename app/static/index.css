@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap');
 
 body, h1,h2,button{
-	/* font-family: "Montserrat",sans-serif; */
+	font-family: "Montserrat",sans-serif;
 	text-align:center;
 }
 
 button {
 	margin:auto;
-	margin-top:10px;
+	margin-top:15px;
 	transition-duration: 0.2s;
 	display:block;
 	border:0px;
 	font-size:20px;
-	background-color:#333333;
-	color:#ffffff;
+	background-color:#ffffff;
+	color:#000000;
 }
 
 p {
@@ -21,6 +21,14 @@ p {
 }
 
 button:hover {
-  font-size:25px;
+  font-size:21px;
   box-shadow: 0 8px 10px 0 rgba(0,0,0,0.5), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
+
+button:active {
+}
+
+*:focus {
+    outline: none;
+}
+

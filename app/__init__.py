@@ -15,7 +15,7 @@ postes.calcul_chantier(charges.get_raw_chantier("19-GP-ROSN"),6,2020)
 """
 
 app = Flask("DGB Gesfin")
-UPLOAD_FOLDER= '/home/vidan/Documents/DGB/Gesfin/src/api/test_api'
+UPLOAD_FOLDER= '~/DGBGesfinFlask/var/'
 ALLOWED_EXTENSIONS = ['pdf','txt']
 app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
