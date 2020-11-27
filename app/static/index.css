@@ -26,6 +26,7 @@ button:hover {
 }
 
 button:active {
+	background-color:#777777;
 }
 
 *:focus {

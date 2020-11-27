@@ -5,6 +5,9 @@ body, h1,h2,button{
 	text-align:center;
 }
 
+p {
+	font-size:25px;
+}
 
 *:focus {
     outline: none;

@@ -2,21 +2,19 @@ import sys
 import os
 from flask import Flask,send_file,request,flash,redirect,url_for,render_template
 from werkzeug.utils import secure_filename
-from app.pdf_generation.gespdf import *
 from app.dataprocess.plan_comptable import *
 from app.dataprocess.poste import *
+from app.pdf_generation.tabletopdf import *
 
-"""
 plan = PlanComptable("~/Documents/DGB/Resultat_chantier/plan comptable/PLAN COMPTABLE DGB 2020.xlsx")
 codes_missing = open("missing_numbers.txt","w")
 charges = Charges("~/Documents/DGB/Resultat_chantier/Compte de charges/Compte de charges.xlsx",plan,codes_missing)
 postes = Postes(plan)
 postes.calcul_chantier(charges.get_raw_chantier("19-GP-ROSN"),6,2020)
-"""
 
 app = Flask("DGB Gesfin")
 UPLOAD_FOLDER= '~/DGBGesfinFlask/var/'
-ALLOWED_EXTENSIONS = ['pdf','txt']
+ALLOWED_EXTENSIONS = ['pdf','txt','xlsx']
 app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -30,19 +28,21 @@ def index():
 
 @app.route('/table')
 def table():
-    return postes.dicPostes["MO"].to_html()
+    table = postes.dicPostes["MO"]
+    return table.to_html()
 
 @app.route('/pdf')
 def pdf():
-    pdf = PDFCharges("DGB.pdf","19-GP-ROSN",6,2020)
-    pdf.genere_pdf()
+    pdf = TablePDF("DGB.pdf")
+    pdf.new_page("Page test","sous test",postes.dicPostes["MO"])
+    pdf.save_pdf()
     return send_file("DGB.pdf",as_attachment=True)
 
 @app.route('/upload',methods=['GET','POST'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'plan' not in request.files:
+        if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
