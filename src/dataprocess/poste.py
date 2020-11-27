@@ -31,12 +31,13 @@ class Postes():
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
         return 0
 
-    def calcul_chantier(self,dfChantier,mois):
+    def calcul_chantier(self,dfChantier,mois,annee):
         for index,row in dfChantier.iterrows():
             date = row['Date']
-            if (date.month <= mois):
-                self.__depenses_mois_chantier(row)
-            self.__depenses_annee_chantier(row)
+            if (date.year == annee):
+                self.__depenses_annee_chantier(row)
+                if (date.month == mois):
+                    self.__depenses_mois_chantier(row)
 
         #self.__calcul_total_chantier(mois)
     
@@ -49,11 +50,4 @@ class Postes():
                 totalmois += round(self.dicPostes[self.dicPostes[poste].loc[sousPoste],"Dépenses du mois"],2)
         total = pd.DataFrame([[0,totalmois,totalannee,0,0,0]])
         self.dicPostes.append(total)
-"""
-plan = PlanComptable("~/Documents/DGB/Resultat_chantier/plan comptable/PLAN COMPTABLE DGB 2020.xlsx")
-codes_missing = open("missing_numbers.txt","w")
-cha = Charges("~/Documents/DGB/Resultat_chantier/Compte de charges/Compte de charges.xlsx",plan,codes_missing)
-post = Postes(plan)
-post.calcul_chantier(cha.get_raw_chantier('19-GP-ROSN'),6)
-print(post.dicPostes['MO'])
-"""
+

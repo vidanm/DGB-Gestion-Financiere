@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 from .basic_operations import *
 
 class PlanComptable():
@@ -10,6 +11,12 @@ class PlanComptable():
 
     def get_dataframe(self):
         return self.__dfComptable
+
+    def ajoute_code(self,code,poste,sous_poste):
+        row = pd.DataFrame(np.array([[code,poste,sous_poste]]),
+            columns=['N° DE COMPTE','POSTE','SOUS POSTE'])
+        self.__dfComptable = self.__dfComptable.append(row,ignore_index=True)
+
 
     def __init__(self,path):
         self.path = path

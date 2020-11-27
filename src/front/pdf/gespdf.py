@@ -2,7 +2,7 @@ import sys
 import locale
 import calendar
 sys.path.append("/home/vidan/Documents/DGB/Gesfin/src")
-import colors as cl
+import front.pdf.colors as cl
 from reportlab.lib.pagesizes import letter,A4,landscape
 from reportlab.lib.units import inch
 from reportlab.lib.utils import ImageReader
@@ -39,7 +39,7 @@ class PDFCharges():
         codes_missing = open("missing_numbers.txt","w")
         charges = Charges("~/Documents/DGB/Resultat_chantier/Compte de charges/Compte de charges.xlsx",plan,codes_missing)
         self.postes = Postes(plan)
-        self.postes.calcul_chantier(charges.get_raw_chantier(nomChantier),mois)
+        self.postes.calcul_chantier(charges.get_raw_chantier(nomChantier),mois,annee)
         
     def round_numtable(self,numTable):
         for i in range (1,len(numTable)):
@@ -101,3 +101,4 @@ class PDFCharges():
     
 pdf = PDFCharges("DGB.pdf","19-GP-ROSN",6,2020)
 pdf.genere_pdf()
+
