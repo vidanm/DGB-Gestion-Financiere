@@ -34,9 +34,13 @@ class TablePDF():
         self.c.setFillColorRGB(0,0,0)
 
     def new_page(self,titre,sousTitre,dataframe):
-        rowHeights = (len(dataframe))*[20]
+        dataframe = dataframe.reset_index()
+        rowHeights = (len(dataframe)+1)*[20]
         rowHeights[0] = 35
-        t = Table(dataframe.to_numpy().tolist(),rowHeights=rowHeights)
+        numTable = dataframe.to_numpy().tolist()
+        numTable.insert(0,np.array(dataframe.columns.values).tolist())
+
+        t = Table(numTable,rowHeights=rowHeights)
         t.setStyle(self.tablestyle)
         #TODO Rajouter la colonne des sous postes
         
