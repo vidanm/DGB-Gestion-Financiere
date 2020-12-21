@@ -1,5 +1,5 @@
 
-# DGB-Gesfin *Logiciel de gestion financière*
+# Logiciel de gestion financière DGB
 ![DGB LOGO](https://github.com/vidanm/DGB-Gestion/blob/master/images/DGB.jpeg)
 
 ### Dépendances
