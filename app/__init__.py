@@ -101,10 +101,12 @@ def chantpdf():
         postes.calcul_pfdc_budget()
         postes.round_2dec_df()
         pdf = PDF("bibl/"+code+".pdf")
-        pdf.new_page("CHARGES TEMPORELLES",code)
-        pdf.add_table(postes.dicPostes["CHARGES TEMPORELLES"])
-        #pdf.new_page("MO",code)
-        #pdf.add_table(postes.dicPostes["MO"])
+        
+        for nom in postes.nomPostes:
+            pdf.new_page(nom,code)
+            pdf.add_table(postes.dicPostes[nom])
+            pdf.save_page()
+
         pdf.save_pdf()
         return send_file("bibl/"+code+".pdf",as_attachment=True)
     return "A"
