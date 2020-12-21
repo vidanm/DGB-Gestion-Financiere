@@ -1,6 +1,7 @@
 from .plan_comptable import *
 from .charges import *
 import datetime as dt
+from .read_file import read_budget
 
 class Postes():
     
@@ -8,7 +9,7 @@ class Postes():
     def __init__(self,planComptable,codeChantier):
         pc = planComptable.get_dataframe()
         self.codeChantier = codeChantier
-        self.dfBudget = self._read_budget("/home/vidan/Documents/DGB/Resultat_chantier/Prevision/Budget.xlsx")
+        self.dfBudget = read_budget("/home/vidan/Documents/DGB/Resultat_chantier/Prevision/Budget.xlsx")
         self.nomPostes = []
         self.dicPostes = {}
         for index,row in pc.iterrows():
@@ -53,22 +54,6 @@ class Postes():
                 if (date.month == mois):
                     self._depenses_mois_chantier(row)
         #self._calcul_total_chantier(mois)
-
-    
-
-    def _read_budget(self,path):
-        '''Renvoie le budget traité dans une dataframe'''
-        #TODO Pas modulable réfléchir a la modularité dans le cas 
-        #ou on rajouterais des colonnes
-        dfBudget = pd.read_excel(path,header=3,usecols="A:J")
-        for (name , value) in dfBudget.iteritems():
-            if (name != self.codeChantier and name != 'POSTE' and name != 'SOUS-POSTE'):
-                dfBudget = dfBudget.drop(columns=name)
-
-        dfBudget['POSTE'] = dfBudget['POSTE'].fillna(method='ffill')
-        dfBudget = dfBudget.dropna()
-        print(dfBudget.to_string())
-        return dfBudget
 
     
 

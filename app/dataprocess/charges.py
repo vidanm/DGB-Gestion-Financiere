@@ -1,5 +1,6 @@
 from .plan_comptable import *
 from .basic_operations import *
+from .read_file import read_charges
 
 class Charges():
     '''
@@ -10,24 +11,11 @@ class Charges():
     '''
     
     def __init__(self,path,planComptable,f):
-        self._dicCharges = self._read_charges(path)
+        self._dicCharges = read_charges(path)
         self._dicCharges = self._delete_code_without_poste(planComptable,f)
         self._dicCharges = self._associe_chantier_poste(planComptable)
         self._dicChantiers = self._split_by_chantiers()
 
-    
-
-    def _read_charges(self,path):
-        '''Associe les données excel aux champs de la classe'''
-
-        charges = pd.read_excel(path)
-        charges = charges.drop(columns=['Type','Référence interne','Date réf. externe','Auxiliaire','N°'])
-        charges = charges.fillna(0)
-        charges['POSTE'] = ''
-        charges['SOUS POSTE'] = ''
-        return charges
-
-    
 
     def _write_missing_code_in_file(self,f,code):
         '''Ecris dans un fichier externe le numéro de code spécifié en argument.
