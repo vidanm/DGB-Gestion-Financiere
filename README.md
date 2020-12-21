@@ -4,10 +4,10 @@
 ## Logiciel de gestion financière
 
 [ Dépendances ]
-* Python
-* Pandas
-* Flask
-* Reportlab
+- Python
+- Pandas
+- Flask
+- Reportlab
 
 ### Instructions de bonne utilisation
 
