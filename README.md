@@ -1,7 +1,6 @@
 
+# DGB-Gesfin *Logiciel de gestion financière*
 ![DGB LOGO](https://github.com/vidanm/DGB-Gestion/blob/master/images/DGB.jpeg)
-# DGB-Gesfin
-## Logiciel de gestion financière
 
 ### Dépendances
 - Python
@@ -21,3 +20,6 @@
 #### Budget
 - Les noms des postes et des sous postes doivent impérativement correspondre aux noms donnés dans le plan
 comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'oeuvre"
+
+## Présentation
+![HTML Example](https://github.com/vidanm/DGB-Gestion/blob/master/images/htmlExample.png)
