@@ -83,8 +83,11 @@ class Postes():
         for nom in self.nomPostes:
             self.dicPostes[nom] = self.dicPostes[nom].round(2)
 
+
     def get_postes_names(self): 
         return self.nomPostes
+
+
 
     def _calcul_total_chantier(self,mois):
         '''Calcul du total des dépenses'''

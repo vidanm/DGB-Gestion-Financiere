@@ -1,6 +1,8 @@
 from .charges import *
+from .read_file import read_budget
 import pandas as pd
 import datetime as dt
+
 
 class Synthese():
     
@@ -38,7 +40,25 @@ class Synthese():
             
             out = pd.DataFrame([chantier_line],columns=self.col)
             self.ajoute_synthese_annee(out)
-
+        
+        self.synthese_annee = self.synthese_annee.set_index("CHANTIER")
+        self.ajoute_budget()
+        self.synthese_annee = self.synthese_annee.round(2)
+        
     
 
-    #def ajoute_budget(self,data):
+    def ajoute_budget(self):
+        dfBudget = read_budget("/home/vidan/Documents/DGB/Resultat_chantier/Prevision/Budget.xlsx")
+        chantier_names = self.charges.get_chantier_names()
+        print(self.synthese_annee)
+        for name in chantier_names:
+            if name in dfBudget.columns :
+                for index,row in dfBudget.iterrows():
+                    #print(name)
+                    #print(row[name])
+                    print(self.synthese_annee.loc[name])
+                    self.synthese_annee.loc[name,"BUDGET"] += row[name]
+    
+    #def calcul_pfdc(self):
+        
+    #def calcul_marges(self):

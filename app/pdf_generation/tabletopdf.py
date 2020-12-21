@@ -80,12 +80,18 @@ class PDF():
         d.drawOn(self.c,0,0)
         '''
 
-    def eliminate_zeros(self,numTable):
+    def eliminate_zeros_add_euros(self,numTable):
+        point = 0
         for i in range(1,len(numTable)):
             for j in range(1,len(numTable[0])):
                 if (numTable[i][j] == 0):
                     numTable[i][j] = '--'
+                else :
+                    asStr= str(numTable[i][j])
+                    numTable[i][j] = asStr + " €"
+                        
         return numTable
+
 
     def add_table(self,dataframe,x=-1,y=-1):
         """Ajoute un tableau a la feuille active. Le coin bas droite
@@ -97,7 +103,7 @@ class PDF():
         numTable = dataframe.to_numpy().tolist()
         numTable.insert(0,np.array(dataframe.columns.values).tolist())
         #self.ajoute_total(numTable)
-        self.eliminate_zeros(numTable)
+        self.eliminate_zeros_add_euros(numTable)
 
         t = Table(numTable,rowHeights=rowHeights)
         t.setStyle(self.tablestyle)
