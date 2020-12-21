@@ -5,12 +5,18 @@ from .basic_operations import *
 
 class PlanComptable():
     
+    
+
     def get_poste_by_code(self,code):
         '''Renvoie le poste en fonction du code donné'''
         return self.__dfComptable.loc[self.__dfComptable['N° DE COMPTE'].str.contains(code,na=False)]
 
+    
+    
     def get_dataframe(self):
         return self.__dfComptable
+
+    
 
     def ajoute_code(self,code,poste,sous_poste):
         row = pd.DataFrame(np.array([[code,poste,sous_poste]]),
@@ -18,9 +24,13 @@ class PlanComptable():
         self.__dfComptable = self.__dfComptable.append(row,ignore_index=True)
 
 
+    
+
     def __init__(self,path):
         self.path = path
         self.__dfComptable = self.__read_comptable()
+
+    
 
     def __read_comptable(self):
         '''Conversion Excel -> DataFrame pandas'''

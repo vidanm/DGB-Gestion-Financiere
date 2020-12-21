@@ -1,9 +1,11 @@
 import sys
 import os
+import time
 from flask import Flask,send_file,request,flash,redirect,url_for,render_template
 from werkzeug.utils import secure_filename
 from app.dataprocess.plan_comptable import *
 from app.dataprocess.poste import *
+from app.dataprocess.synthese import *
 from app.pdf_generation.tabletopdf import *
 
 '''
@@ -39,28 +41,75 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
+
 @app.route('/')
 def index():
-    return render_template("index.html")
+    charges_modif = time.ctime(os.path.getmtime('var/charges.xlsx'))
+    plan_modif = time.ctime(os.path.getmtime('var/plan.xlsx'))
+
+    return render_template("index.html") + '<p>' + 'Dernière mise à jour du fichier de charges : '+ str(charges_modif) + '</p><p>' + 'Dernière mise à jour du plan comptable : '+str(plan_modif) + '</p>'
+
+
+
+@app.route('/rad')
+def rad():
+    return render_template("rad.html")
+
+
 
 @app.route('/table')
 def table():
     table = postes.dicPostes["MO"]
     return table.to_html()
 
-@app.route('/pdf')
-def pdf():
-    
-    plan,charges = check_file_here();
+
+
+@app.route('/synthese_globale',methods=['POST','GET'])
+def syntpdf():
+    plan,charges = check_file_here()
     if (plan == None or charges == None):
         return "Missing file"
 
-    postes = Postes(plan)
-    postes.calcul_chantier(charges.get_raw_chantier("19-GP-ROSN"),6,2020)
-    pdf = TablePDF("DGB.pdf")
-    pdf.new_page("MATERIELS","19-GP-ROSN | Juin 2020",postes.dicPostes["MATERIELS"])
+    syn = Synthese(charges)
+    pdf = PDF("bibl/Synthese.pdf")
+    syn.calcul_synthese_annee(6,2020)
+
+    pdf.new_page("Synthese","Juin 2020")
+    pdf.add_table(syn.synthese_annee,x='center',y='center')
+    pdf.create_bar_graph()
+    pdf.save_page()
     pdf.save_pdf()
-    return send_file("DGB.pdf",as_attachment=True)
+    return send_file("bibl/Synthese.pdf",as_attachment=True)
+
+
+
+@app.route('/synthese_chantier',methods=['POST','GET'])
+def chantpdf():
+    
+    if request.method == 'POST':
+        date = request.form['date']
+        print(date)
+        code = request.form['code']
+
+        plan,charges = check_file_here();
+        if (plan == None or charges == None):
+            return "Missing file"
+
+        postes = Postes(plan,code)
+        postes.calcul_chantier(charges.get_raw_chantier(code),6,2020)
+        postes.calcul_pfdc_budget()
+        postes.round_2dec_df()
+        pdf = PDF("bibl/"+code+".pdf")
+        pdf.new_page("CHARGES TEMPORELLES",code)
+        pdf.add_table(postes.dicPostes["CHARGES TEMPORELLES"])
+        #pdf.new_page("MO",code)
+        #pdf.add_table(postes.dicPostes["MO"])
+        pdf.save_pdf()
+        return send_file("bibl/"+code+".pdf",as_attachment=True)
+    return "A"
+
+
 
 @app.route('/upload',methods=['GET','POST'])
 def upload_file():
@@ -85,9 +134,11 @@ def upload_file():
                                     filename=filename))
     return render_template("upload.html")
  
+
+
 @app.route('/bibliotheque')
 def bibliotheque() :
-    out = ""
+    out = "<!DOCTYPE HTML><html><body>"
     for filename in os.listdir('bibl'):
-        out += '<a href="~/DGBGesfinFlask/bibl/'+filename +'>'+ filename  + '</a><br>'
-    return out
+        out += '<a href="file:///bibl/'+filename+'" download>'+filename+'</a><br>'
+    return out + "</body></html>"

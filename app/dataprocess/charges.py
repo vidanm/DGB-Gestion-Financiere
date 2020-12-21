@@ -15,6 +15,8 @@ class Charges():
         self._dicCharges = self._associe_chantier_poste(planComptable)
         self._dicChantiers = self._split_by_chantiers()
 
+    
+
     def _read_charges(self,path):
         '''Associe les données excel aux champs de la classe'''
 
@@ -25,11 +27,15 @@ class Charges():
         charges['SOUS POSTE'] = ''
         return charges
 
+    
+
     def _write_missing_code_in_file(self,f,code):
         '''Ecris dans un fichier externe le numéro de code spécifié en argument.
         C'est utilisé quand un code du fichier charges n'est pas présent dans le
         plan comptable'''
         f.write(str(code) + "\n")
+
+    
 
     def _delete_code_without_poste(self,planComptable,f):
         '''On elimine les lignes dont le numéro de compte n'est pas spécifié
@@ -57,6 +63,8 @@ class Charges():
 
         return charges
 
+    
+
     def _associe_chantier_poste(self,planComptable):
         '''On associe les numéro de comptes comptable aux postes associés dans le        plan comptable'''
         charges = self._dicCharges
@@ -68,6 +76,8 @@ class Charges():
         
         return charges
     
+    
+
     def _split_by_chantiers(self):
         '''On divise les données des charges dans un dictionnaire utilisant les code        de chantier comme clé'''
         dicChantiers = {}
@@ -81,15 +91,21 @@ class Charges():
 
         return dicChantiers
     
+    
+
     def get_chantier_names(self):
         names = []
         for key in self._dicChantiers:
             names.append(key)
         return names
 
+    
+
     def get_raw_chantier(self,code):
         '''Renvoie les données pour un chantier particulier'''
         return self._dicChantiers[code]
+
+    
 
     def get_raw_charges(self):
         '''Renvoie le tableau de charges'''

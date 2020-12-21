@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<title>DGB Gestion Financière</title>
 		<link rel= "stylesheet" type= "text/css" href="{{ url_for('static',filename='index.css') }}">
+		<script src="{{ url_for('static',filename='index.js')}}"></script>
 	</head>
 	
 	<body>	<div id="image">
@@ -12,19 +13,29 @@
 		</div>
 		<h1>Gestion Financière</h1>
 		<div id="buttons">
+			
+			<button onclick="showChantier('syntheseform')"> Synthèse Globale </button>
+		   	<form id="syntheseform" method=post action='/synthese_globale'>
+				<br>
+				<input type="month" name="date"></input>
+				<br><br>
+				<input type="submit" value="Générer"></input>
+			</form>
 
-		   <form method=post action='/synthese_chantier'>
-			<input type="month" name="date"></input>
-			<br>
-			<button onclick="window.location.href='/synthese'"> Synthèse Globale </button>
-			<button onclick="window.location.href='/synthese_chantier'"> Synthèse d'un chantier </button><br>
-			<input type="text" name="code" placeholder="Code Chantier"></input>
-			<br><br>
-			<input type="submit"></input>
-		   </form>
+			
+			<button onclick="showChantier('chantierform')"> Synthèse d'un chantier </button>
+			<form id="chantierform" method=post action='synthese_chantier'>
+				<br>
+				<input type="month" name="date"></input>
+				<br><br>
+				<input type="text" name="code" placeholder="Code Chantier"></input>
+				<br><br>
+				<input type="submit" value="Générer"></input>
+			</form>
+
 		<button> Bilan de la structure </button>
 		<button onclick="window.location.href='/upload'"> Importer Fichiers </button>
 		<button onclick="window.location.href='/bibliotheque'"> Bibliothèque </button> 
-		</div><br>
+		</div>
 	</body>
 </html>

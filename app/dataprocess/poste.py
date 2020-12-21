@@ -3,10 +3,12 @@ from .charges import *
 import datetime as dt
 
 class Postes():
-    def __init__(self,planComptable):
+    
+
+    def __init__(self,planComptable,codeChantier):
         pc = planComptable.get_dataframe()
-        
-        self.dfBudget = self._read_budget("19-GP-ROSN","/home/vidan/Documents/DGB/Resultat_chantier/Prevision/Budget.xlsx")
+        self.codeChantier = codeChantier
+        self.dfBudget = self._read_budget("/home/vidan/Documents/DGB/Resultat_chantier/Prevision/Budget.xlsx")
         self.nomPostes = []
         self.dicPostes = {}
         for index,row in pc.iterrows():
@@ -24,16 +26,25 @@ class Postes():
             self.dicPostes[nom]['PFDC'] = 0
             self.dicPostes[nom]['Ecart PFDC/Budget'] = 0
             self.dicPostes[nom] = self.dicPostes[nom].set_index('SOUS POSTE')
+    
+    
 
     def _depenses_mois_chantier(self,row):
+        '''Rajoute la dépense de la ligne row dans la case dépenses du mois'''
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
         return 0
 
+    
+
     def _depenses_annee_chantier(self,row):
+        '''Rajoute la dépense de la ligne row dans la case dépenses de l'année'''
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
         return 0
 
+    
+
     def calcul_chantier(self,dfChantier,mois,annee):
+        ''' Calcul les dépenses du mois et de l'année pour le chantier'''
         for index,row in dfChantier.iterrows():
             date = row['Date']
             if (date.year == annee):
@@ -41,39 +52,56 @@ class Postes():
                 self._depenses_annee_chantier(row)
                 if (date.month == mois):
                     self._depenses_mois_chantier(row)
-        self._ajoute_budget_chantier("19-GP-ROSN",self.dfBudget)
-        self._calcul_pfdc()
         #self._calcul_total_chantier(mois)
+
     
-    def _read_budget(self,codeChantier,path):
+
+    def _read_budget(self,path):
+        '''Renvoie le budget traité dans une dataframe'''
         #TODO Pas modulable réfléchir a la modularité dans le cas 
         #ou on rajouterais des colonnes
         dfBudget = pd.read_excel(path,header=3,usecols="A:J")
         for (name , value) in dfBudget.iteritems():
-            if (name != codeChantier and name != 'POSTE' and name != 'SOUS-POSTE'):
+            if (name != self.codeChantier and name != 'POSTE' and name != 'SOUS-POSTE'):
                 dfBudget = dfBudget.drop(columns=name)
 
-        #TODO Je n'arrive pas a acceder a la colonne poste
         dfBudget['POSTE'] = dfBudget['POSTE'].fillna(method='ffill')
         dfBudget = dfBudget.dropna()
         print(dfBudget.to_string())
         return dfBudget
 
-    def _ajoute_budget_chantier(self,codeChantier,dfBudget):
+    
+
+    def _ajoute_budget_chantier(self,dfBudget):
+        '''Ajoute le budget dans les cases de postes correspondantes'''
         for index,row in dfBudget.iterrows():
-            self.dicPostes[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[codeChantier])
+            self.dicPostes[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[self.codeChantier])
 
         return 0
 
-    def _calcul_pfdc(self):
+
+
+    def calcul_pfdc_budget(self):
+        '''Calcul le pfdc et l'ecart pfdc budget'''
         for nom in self.nomPostes:
             for index,row in self.dicPostes[nom].iterrows():
                 print(row)
                 pfdc = row['RAD'] + row["Dépenses de l'année"]
                 self.dicPostes[nom].loc[row.name,"PFDC"] = round(pfdc)
                 self.dicPostes[nom].loc[row.name,"Ecart PFDC/Budget"] = row['Budget'] - pfdc
+        self._ajoute_budget_chantier(self.dfBudget)
+
+
+
+    def round_2dec_df(self):
+        '''Arrondi tout les nombres à 2 chiffres après la virgule'''
+        for nom in self.nomPostes:
+            self.dicPostes[nom] = self.dicPostes[nom].round(2)
+
+    
 
     def _calcul_total_chantier(self,mois):
+        '''Calcul du total des dépenses'''
         totalmois = 0
         totalannee = 0
         for poste in self.dicPostes:
