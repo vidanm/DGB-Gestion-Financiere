@@ -6,23 +6,25 @@
 		<link rel= "stylesheet" type= "text/css" href="{{ url_for('static',filename='index.css') }}">
 	</head>
 	
-	<body>
-		<h1>DGB Gestion Financière</h1>
+	<body>	<div id="image">
+		<img src="https://dgb.construction/wp-content/uploads/2019/06/dgb.png">
+
+		</div>
+		<h1>Gestion Financière</h1>
 		<div id="buttons">
-			
-			<input type="month"></input>
+
+		   <form method=post action='/synthese_chantier'>
+			<input type="month" name="date"></input>
 			<br>
-			<button> Synthèse Globale </button>
-			<button onclick="window.location.href='/pdf'"> Synthèse d'un chantier </button><br>
-			<input type="text" placeholder="Code Chantier"></input>
+			<button onclick="window.location.href='/synthese'"> Synthèse Globale </button>
+			<button onclick="window.location.href='/synthese_chantier'"> Synthèse d'un chantier </button><br>
+			<input type="text" name="code" placeholder="Code Chantier"></input>
 			<br><br>
 			<input type="submit"></input>
-
-			<button> Bilan de la structure </button>
-			<button onclick="window.location.href='/upload'"> Importer Fichiers </button>
-			<button onclick="window.location.href='/bibliotheque'"> Bibliothèque </button> 
+		   </form>
+		<button> Bilan de la structure </button>
+		<button onclick="window.location.href='/upload'"> Importer Fichiers </button>
+		<button onclick="window.location.href='/bibliotheque'"> Bibliothèque </button> 
 		</div><br>
-		<p> Dernière mise à jour du plan comptable : dd/mm/yyyy </p>
-		<p> Dernière mise a jour du fichier de charges : dd/mm/yyyy </p>
 	</body>
 </html>

@@ -11,6 +11,9 @@ class Synthese():
         self.charges = charges
         self.synthese_annee = pd.DataFrame(None,None,columns=self.col)
         self.synthese_cumul = self.synthese_annee.copy(deep=True)
+    
+    def ajoute_synthese_annee(self,data):
+        self.synthese_annee = self.synthese_annee.append(data,ignore_index=True)
 
     def calcul_synthese_annee(self,mois,annee):
         chantier_names = self.charges.get_chantier_names()
@@ -30,4 +33,4 @@ class Synthese():
                         chantier_line[2] += row['Débit'] - row['Crédit']
             
             out = pd.DataFrame([chantier_line],columns=self.col)
-            self.synthese_annee = self.synthese_annee.append(out,ignore_index=True)
+            self.ajoute_synthese_annee(out)

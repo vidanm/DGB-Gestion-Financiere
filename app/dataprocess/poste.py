@@ -5,14 +5,16 @@ import datetime as dt
 class Postes():
     def __init__(self,planComptable):
         pc = planComptable.get_dataframe()
-        nomPostes = []
+        
+        self.dfBudget = self._read_budget("19-GP-ROSN","/home/vidan/Documents/DGB/Resultat_chantier/Prevision/Budget.xlsx")
+        self.nomPostes = []
         self.dicPostes = {}
         for index,row in pc.iterrows():
             value = row['POSTE']
-            if not is_in_dic(str(value),nomPostes):
-                nomPostes.append(str(value))
+            if not is_in_dic(str(value),self.nomPostes):
+                self.nomPostes.append(str(value))
 
-        for nom in nomPostes:
+        for nom in self.nomPostes:
             self.dicPostes[nom] = pc.loc[pc['POSTE'] == nom]
             self.dicPostes[nom] = self.dicPostes[nom].drop(columns=['POSTE','EX.','N° DE COMPTE','EX. '])
             self.dicPostes[nom]['Budget'] = 0
@@ -23,11 +25,11 @@ class Postes():
             self.dicPostes[nom]['Ecart PFDC/Budget'] = 0
             self.dicPostes[nom] = self.dicPostes[nom].set_index('SOUS POSTE')
 
-    def __depenses_mois_chantier(self,row):
+    def _depenses_mois_chantier(self,row):
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
         return 0
 
-    def __depenses_annee_chantier(self,row):
+    def _depenses_annee_chantier(self,row):
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
         return 0
 
@@ -35,13 +37,43 @@ class Postes():
         for index,row in dfChantier.iterrows():
             date = row['Date']
             if (date.year == annee):
-                self.__depenses_annee_chantier(row)
+        
+                self._depenses_annee_chantier(row)
                 if (date.month == mois):
-                    self.__depenses_mois_chantier(row)
-
-        #self.__calcul_total_chantier(mois)
+                    self._depenses_mois_chantier(row)
+        self._ajoute_budget_chantier("19-GP-ROSN",self.dfBudget)
+        self._calcul_pfdc()
+        #self._calcul_total_chantier(mois)
     
-    def __calcul_total_chantier(self,mois):
+    def _read_budget(self,codeChantier,path):
+        #TODO Pas modulable réfléchir a la modularité dans le cas 
+        #ou on rajouterais des colonnes
+        dfBudget = pd.read_excel(path,header=3,usecols="A:J")
+        for (name , value) in dfBudget.iteritems():
+            if (name != codeChantier and name != 'POSTE' and name != 'SOUS-POSTE'):
+                dfBudget = dfBudget.drop(columns=name)
+
+        #TODO Je n'arrive pas a acceder a la colonne poste
+        dfBudget['POSTE'] = dfBudget['POSTE'].fillna(method='ffill')
+        dfBudget = dfBudget.dropna()
+        print(dfBudget.to_string())
+        return dfBudget
+
+    def _ajoute_budget_chantier(self,codeChantier,dfBudget):
+        for index,row in dfBudget.iterrows():
+            self.dicPostes[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[codeChantier])
+
+        return 0
+
+    def _calcul_pfdc(self):
+        for nom in self.nomPostes:
+            for index,row in self.dicPostes[nom].iterrows():
+                print(row)
+                pfdc = row['RAD'] + row["Dépenses de l'année"]
+                self.dicPostes[nom].loc[row.name,"PFDC"] = round(pfdc)
+                self.dicPostes[nom].loc[row.name,"Ecart PFDC/Budget"] = row['Budget'] - pfdc
+
+    def _calcul_total_chantier(self,mois):
         totalmois = 0
         totalannee = 0
         for poste in self.dicPostes:

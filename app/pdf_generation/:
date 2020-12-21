@@ -52,12 +52,11 @@ class PDF():
         numTable.append(total[0])
     
     def create_bar_graph(self):
-        '''d = Drawing(A4[0],A4[1])
+        d = Drawing(A4[0],A4[1])
         bar = VerticalBarChart()
         bar.x = 0
         bar.y = 50
         bar.width = 500
-        bar.height = 500
         data = [[1,2,3,None,None,None,5,10,5,2,6,8,3,5],
                 [10,5,2,6,8,3,5,10,5,2,6,8,3,5],
                 [5,7,2,8,8,2,5,10,5,2,6,8,3,5],
@@ -74,11 +73,9 @@ class PDF():
                                           '2027','2028']
         bar.bars[0].fillColor = lightgrey
         bar.bars[1].fillColor = lightwhite
-        bar.bars[2].fillColor = lightgrey
         bar.bars.fillColor = dark
         d.add(bar,'')
         d.drawOn(self.c,0,0)
-        '''
 
     def add_table(self,dataframe,x=-1,y=-1):
         """Ajoute un tableau a la feuille active. Le coin bas droite

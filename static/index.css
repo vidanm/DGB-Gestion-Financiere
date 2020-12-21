@@ -1,8 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');*/
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
+
+
+h1 {
+	color:white;
+	margin:-100px;
+	padding-bottom:150px;
+}
 
 body, h1,h2,button{
-	font-family: "Montserrat",sans-serif;
+	font-family: "Roboto",sans-serif;
+	font-weight:300;
 	text-align:center;
+}
+
+#image {
+	text-align:left;
+	padding-top:10px;
+	padding-bottom:10px;
+	background-color:#e94e1b;
+	margin-bottom:40px;
+	display:block;
+}
+
+img {
+	margin:15px;
+	height:30px;
 }
 
 button {
@@ -23,7 +46,7 @@ p {
 button:hover {
   /*font-size:21px;*/
   /*box-shadow: 0 8px 10px 0 rgba(0,0,0,0.5), 0 17px 50px 0 rgba(0,0,0,0.19);*/
-  background-color:#ff1500;
+  background-color:#e94e1b;
   color:#ffffff;
 }
 

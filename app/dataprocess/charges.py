@@ -5,17 +5,17 @@ class Charges():
     '''
     S'occupe de traiter le fichier excel contenant toutes les charges
 
-    Les méthodes commençant par __ sont des méthodes internes a la classe
+    Les méthodes commençant par _ sont des méthodes internes a la classe
     Ne pas les utiliser en dehors.
     '''
     
     def __init__(self,path,planComptable,f):
-        self.__dicCharges = self.__read_charges(path)
-        self.__dicCharges = self.__delete_code_without_poste(planComptable,f)
-        self.__dicCharges = self.__associe_chantier_poste(planComptable)
-        self.__dicChantiers = self.__split_by_chantiers()
+        self._dicCharges = self._read_charges(path)
+        self._dicCharges = self._delete_code_without_poste(planComptable,f)
+        self._dicCharges = self._associe_chantier_poste(planComptable)
+        self._dicChantiers = self._split_by_chantiers()
 
-    def __read_charges(self,path):
+    def _read_charges(self,path):
         '''Associe les données excel aux champs de la classe'''
 
         charges = pd.read_excel(path)
@@ -25,19 +25,19 @@ class Charges():
         charges['SOUS POSTE'] = ''
         return charges
 
-    def __write_missing_code_in_file(self,f,code):
+    def _write_missing_code_in_file(self,f,code):
         '''Ecris dans un fichier externe le numéro de code spécifié en argument.
         C'est utilisé quand un code du fichier charges n'est pas présent dans le
         plan comptable'''
         f.write(str(code) + "\n")
 
-    def __delete_code_without_poste(self,planComptable,f):
+    def _delete_code_without_poste(self,planComptable,f):
         '''On elimine les lignes dont le numéro de compte n'est pas spécifié
         dans le plan comptable'''
         missing_codes = []
-        charges = self.__dicCharges
+        charges = self._dicCharges
 
-        for index,value in self.__dicCharges['Général'].iteritems():
+        for index,value in self._dicCharges['Général'].iteritems():
            
             if planComptable.get_poste_by_code(str(value)).empty:
 
@@ -53,14 +53,14 @@ class Charges():
                 if value not in missing_codes :
                     print("Numero : "+str(value) + " pas dans le plan comptable")
                     missing_codes.append(value)
-                    self.__write_missing_code_in_file(f,value)
+                    self._write_missing_code_in_file(f,value)
 
         return charges
 
-    def __associe_chantier_poste(self,planComptable):
+    def _associe_chantier_poste(self,planComptable):
         '''On associe les numéro de comptes comptable aux postes associés dans le        plan comptable'''
-        charges = self.__dicCharges
-        for index,value in self.__dicCharges['Général'].iteritems():
+        charges = self._dicCharges
+        for index,value in self._dicCharges['Général'].iteritems():
             poste = planComptable.get_poste_by_code(str(value))['POSTE'].values[0]
             sousPoste = planComptable.get_poste_by_code(str(value))['SOUS POSTE'].values[0]
             charges.loc[index,'POSTE'] = poste
@@ -68,29 +68,29 @@ class Charges():
         
         return charges
     
-    def __split_by_chantiers(self):
+    def _split_by_chantiers(self):
         '''On divise les données des charges dans un dictionnaire utilisant les code        de chantier comme clé'''
         dicChantiers = {}
         nomChantiers = []
-        for index,row in self.__dicCharges.iterrows():
+        for index,row in self._dicCharges.iterrows():
             value = row['Section analytique']
             if not is_in_dic(str(value),nomChantiers):
                 nomChantiers.append(str(value))
         for nom in nomChantiers:
-            dicChantiers[nom] = self.__dicCharges.loc[self.__dicCharges['Section analytique'] == nom]
+            dicChantiers[nom] = self._dicCharges.loc[self._dicCharges['Section analytique'] == nom]
 
         return dicChantiers
     
     def get_chantier_names(self):
         names = []
-        for key in self.__dicChantiers:
+        for key in self._dicChantiers:
             names.append(key)
         return names
 
     def get_raw_chantier(self,code):
         '''Renvoie les données pour un chantier particulier'''
-        return self.__dicChantiers[code]
+        return self._dicChantiers[code]
 
     def get_raw_charges(self):
         '''Renvoie le tableau de charges'''
-        return self.__dicCharges
+        return self._dicCharges
