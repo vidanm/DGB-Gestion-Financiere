@@ -3,7 +3,7 @@
 # DGB-Gesfin
 ## Logiciel de gestion financière
 
-[ Dépendances ]
+### Dépendances
 - Python
 - Pandas
 - Flask
@@ -16,8 +16,8 @@
 - Les intitulés de colonnes doivent se trouver sur la 2ème ligne
 
 #### Chantiers / Comptes de charges / Structure
-Vérifier la présence des champs ‘Journal’ / ‘Général’ / ‘Date’ / ‘Débit’ / ‘Crédit’ / ‘Section analytique’
+- Vérifier la présence des champs ‘Journal’ / ‘Général’ / ‘Date’ / ‘Débit’ / ‘Crédit’ / ‘Section analytique’
 
 #### Budget
-Les noms des postes et des sous postes doivent impérativement correspondre aux noms donnés dans le plan
+- Les noms des postes et des sous postes doivent impérativement correspondre aux noms donnés dans le plan
 comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'oeuvre"
