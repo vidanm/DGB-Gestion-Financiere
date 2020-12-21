@@ -1,5 +1,5 @@
 
-# DGB-Gesfin *Logiciel de gestion financière*
+# Logiciel de gestion financière DGB
 ![DGB LOGO](https://github.com/vidanm/DGB-Gestion/blob/master/images/DGB.jpeg)
 
 ### Dépendances
@@ -22,4 +22,8 @@
 comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'oeuvre"
 
 ## Présentation
+### HTML
 ![HTML Example](https://github.com/vidanm/DGB-Gestion/blob/master/images/htmlExample.png)
+
+### Reportlab
+![Reportlab Example](https://github.com/vidanm/DGB-Gestion/blob/master/images/Materiels.png)
