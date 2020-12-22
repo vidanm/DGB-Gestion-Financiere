@@ -30,14 +30,14 @@ class Postes():
     
     
 
-    def _depenses_mois_chantier(self,row):
+    def _depenses_mois(self,row):
         '''Rajoute la dépense de la ligne row dans la case dépenses du mois'''
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
         return 0
 
     
 
-    def _depenses_annee_chantier(self,row):
+    def _depenses_annee(self,row):
         '''Rajoute la dépense de la ligne row dans la case dépenses de l'année'''
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
         return 0
@@ -46,14 +46,25 @@ class Postes():
 
     def calcul_chantier(self,dfChantier,mois,annee):
         ''' Calcul les dépenses du mois et de l'année pour le chantier'''
+    
+        
+
         for index,row in dfChantier.iterrows():
             date = row['Date']
             if (date.year == annee):
         
-                self._depenses_annee_chantier(row)
+                self._depenses_annee(row)
                 if (date.month == mois):
-                    self._depenses_mois_chantier(row)
+                    self._depenses_mois(row)
         #self._calcul_total_chantier(mois)
+
+    def calcul_structure(self,dfStructure,mois,annee):
+        for index,row in dfStructure.iterrows():
+            date = row['Date']
+            if (date.year == annee):
+                self._depenses_annee(row)
+                if (date.month == mois):
+                    self._depenses_mois(row)
 
     
 

@@ -1,7 +1,7 @@
 import sys
 import os
 import time
-from flask import Flask,send_file,request,flash,redirect,url_for,render_template
+from flask import Flask,send_file,request,flash,redirect,url_for,render_template,send_from_directory
 from werkzeug.utils import secure_filename
 from app.dataprocess.plan_comptable import *
 from app.dataprocess.poste import *
@@ -14,12 +14,14 @@ postes.calcul_chantier(charges.get_raw_chantier("19-GP-ROSN"),6,2020)
 '''
 
 UPLOAD_FOLDER= 'var'
+DOWNLOAD_FOLDER = 'bibl'
 ALLOWED_EXTENSIONS = ['xlsx']
 
 app = Flask("DGB Gesfin")
 
 app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
 codes_missing = open("missing_numbers.txt","w")
 expected_files = ['plan','charges']
@@ -96,11 +98,13 @@ def chantpdf():
         if (plan == None or charges == None):
             return "Missing file"
 
+        filename = "bibl/"+code+"_"+request.form['date']+".pdf"
         postes = Postes(plan,code)
         postes.calcul_chantier(charges.get_raw_chantier(code),6,2020)
+        postes.calcul_structure(charges.get_struct(),6,2020)
         postes.calcul_pfdc_budget()
         postes.round_2dec_df()
-        pdf = PDF("bibl/"+code+".pdf")
+        pdf = PDF(filename)
         
         for nom in postes.nomPostes:
             pdf.new_page(nom,code)
@@ -108,7 +112,7 @@ def chantpdf():
             pdf.save_page()
 
         pdf.save_pdf()
-        return send_file("bibl/"+code+".pdf",as_attachment=True)
+        return send_file(filename,as_attachment=True)
     return "A"
 
 
@@ -137,10 +141,20 @@ def upload_file():
     return render_template("upload.html")
  
 
+@app.route('/loading')
+def loading_page():
+    return render_template("loader.html")
+
 
 @app.route('/bibliotheque')
 def bibliotheque() :
     out = "<!DOCTYPE HTML><html><body>"
     for filename in os.listdir('bibl'):
-        out += '<a href="file:///bibl/'+filename+'" download>'+filename+'</a><br>'
+        out += '<a href="/download/'+filename+'">'+filename+'</a><br>'
     return out + "</body></html>"
+
+@app.route('/download/<path:filename>', methods=['GET','POST'])
+def download(filename):
+    bibl = os.path.join(app.root_path,app.config['DOWNLOAD_FOLDER'])
+    return send_from_directory(directory=bibl,filename=filename)
+

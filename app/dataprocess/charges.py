@@ -87,12 +87,20 @@ class Charges():
             names.append(key)
         return names
 
-    
+    def get_with_approximation(self,approx):
+        names = self.get_chantier_names()
+        for name in names:
+            if approx in name:    
+                return name
+
 
     def get_raw_chantier(self,code):
         '''Renvoie les données pour un chantier particulier'''
         return self._dicChantiers[code]
 
+    
+    def get_struct(self):
+        return self._dicChantiers[self.get_with_approximation("STRUCT")]
     
 
     def get_raw_charges(self):
