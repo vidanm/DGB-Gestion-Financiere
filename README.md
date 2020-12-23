@@ -16,6 +16,7 @@
 
 #### Chantiers / Comptes de charges / Structure
 - Vérifier la présence des champs ‘Journal’ / ‘Général’ / ‘Date’ / ‘Débit’ / ‘Crédit’ / ‘Section analytique’
+- La section analytique des lignes de charges de la structure doivent comporter 'STRUCT'
 
 #### Budget
 - Les noms des postes et des sous postes doivent impérativement correspondre aux noms donnés dans le plan
