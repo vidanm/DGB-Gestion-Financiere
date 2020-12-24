@@ -5,26 +5,26 @@ from datetime import date
 class ChiffreAffaire():
     
     
-    def __init__(self,dicCharges):
-        self.__dicCharges = dicCharges.get_raw_charges()
-        self.__delete_ach_lines()
-        self.__ca_mois = pd.DataFrame()
-        self.__ca_annee = pd.DataFrame() 
+    def __init__(self,charges):
+        self._charges = charges
+        self._delete_ach_lines()
+        self._ca_mois = pd.DataFrame()
+        self._ca_annee = pd.DataFrame() 
         
 
     
-    def __delete_ach_lines(self):
+    def _delete_ach_lines(self):
         ''' Elimine toutes les lignes d'achats pour ne garder que les ventes '''
-        for index,value in self.__dicCharges['Journal'].iteritems():
+        for index,value in self._charges['Journal'].iteritems():
             if value != 'VEN':
-                self.__dicCharges = self.__dicCharges.drop(index=index)
+                self._charges = self._charges.drop(index=index)
 
     
 
     def calcul_ca_mois(self,mois,annee):
         ''' Calcul le chiffre d'affaire du mois de l'année donné en argument '''
         result = 0.0
-        for index,row in self.__dicCharges.iterrows():
+        for index,row in self._charges.iterrows():
             date = row['Date']
             if (date.month == mois and date.year == annee):
                 print(str(date) + ' / ' + str(row['Crédit']))

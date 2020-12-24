@@ -5,18 +5,17 @@ from .read_file import read_budget
 
 class ParentPoste():
     
-    def __init__(self,planComptable):
-        pc = planComptable.get_dataframe()
+    def __init__(self,dfPlanComptable):
         self.nomPostes = []
         self.dicPostes = {}
-        for index,row in pc.iterrows():
+        for index,row in dfPlanComptable.iterrows():
             value = row['POSTE']
             if not is_in_dic(str(value),self.nomPostes):
                 self.nomPostes.append(str(value))
 
         for nom in self.nomPostes:
-            self.dicPostes[nom] = pc.loc['POSTE'] == nom]
-            self.dicPostes[nom] = self.dicPostes[nom].drop(columns=['POSTE','EX.','N° DE COMPTE','EX. '])
+            self.dicPostes[nom] = dfPlanComptable.loc[dfPlanComptable['POSTE'] == nom]
+            self.dicPostes[nom] = self.dicPostes[nom].drop(columns=['POSTE','N° DE COMPTE','EX.'])
             self.dicPostes[nom]['Dépenses du mois'] = 0
             self.dicPostes[nom]["Dépenses de l'année"] = 0
             self.dicPostes[nom] = self.dicPostes[nom].set_index('SOUS POSTE')

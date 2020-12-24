@@ -33,7 +33,14 @@
 				<input type="submit" value="Générer"></input>
 			</form>
 
-		<button> Bilan de la structure </button>
+			<button onclick="showChantier('structureform')"> Bilan de la structure </button>
+			<form id="structureform" method=post action='/synthese_structure'>
+				<br>
+				<input type="month" name="date"></input>
+				<br><br>
+				<input type="submit" value="Générer"></input>
+			</form>
+
 		<button onclick="window.location.href='/upload'"> Importer Fichiers </button>
 		<button onclick="window.location.href='/bibliotheque'"> Bibliothèque </button> 
 		</div>

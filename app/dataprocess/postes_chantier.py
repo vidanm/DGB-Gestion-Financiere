@@ -6,9 +6,10 @@ from .postesparent import ParentPoste
 
 class ChantierPoste(ParentPoste):
 
-    def __init__(self,planComptable,dfChantier):
-        super.__init__(planComptable)
+    def __init__(self,planComptable,dfChantier,codeChantier):
+        super(ChantierPoste,self).__init__(planComptable.get_pc_chantier())
         self.charges = dfChantier
+        self.codeChantier = codeChantier
         for nom in self.nomPostes:
             self.dicPostes[nom]['Budget'] = 0
             self.dicPostes[nom]['RAD'] = 0
@@ -16,13 +17,13 @@ class ChantierPoste(ParentPoste):
             self.dicPostes[nom]['Ecart PFDC/Budget'] = 0
 
     
-    def calcul_chantier(mois,annee):
+    def calcul_chantier(self,mois,annee):
         for index,row in self.charges.iterrows():
             date = row['Date']
             if (date.year == annee):
-                super._depenses_annees(row)
+                super(ChantierPoste,self)._depenses_annee(row)
                 if (date.month == mois):
-                    super._depenses_mois(row)
+                    super(ChantierPoste,self)._depenses_mois(row)
                     
     def _ajoute_budget_chantier(self,dfBudget):
         '''Ajoute le budget dans les cases de postes correspondantes'''
