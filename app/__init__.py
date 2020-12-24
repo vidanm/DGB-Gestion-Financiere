@@ -103,7 +103,7 @@ def chantpdf():
             return "Missing file"
 
         filename = "bibl/"+code+"_"+request.form['date']+".pdf"
-        postes = ChantierPoste(plan,charges.get_raw_chantier(code),code)
+        postes = ChantierPoste(plan,charges,code)
         postes.calcul_chantier(6,2020)
         postes.calcul_pfdc_budget(budget)
         postes.round_2dec_df()
@@ -129,7 +129,7 @@ def structpdf():
             return "Missing file"
 
         filename = "bibl/STRUCT_"+request.form['date']+".pdf"
-        postes = StructPoste(plan,charges.get_struct())
+        postes = StructPoste(plan,charges)
         postes.calcul_structure(6,2020)
         postes.round_2dec_df()
         pdf = PDF(filename)

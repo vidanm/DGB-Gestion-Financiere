@@ -6,9 +6,9 @@ from .postesparent import ParentPoste
 
 class ChantierPoste(ParentPoste):
 
-    def __init__(self,planComptable,dfChantier,codeChantier):
+    def __init__(self,planComptable,charges,codeChantier):
         super(ChantierPoste,self).__init__(planComptable.get_pc_chantier())
-        self.charges = dfChantier
+        self.charges = charges.get_raw_chantier(codeChantier)
         self.codeChantier = codeChantier
         for nom in self.nomPostes:
             self.dicPostes[nom]['Budget'] = 0

@@ -4,7 +4,10 @@ import datetime as dt
 from .read_file import read_budget
 
 class ParentPoste():
-    
+    '''Prochaine etape on lis toutes les charges dans cette classe ci au lieu des classes inférieures.
+    On ne sépare pas le plan comptable en 2.
+    Ensuite on effectue les opérations ( calcul %CA / PFDC ) dans les classes enfants '''
+
     def __init__(self,dfPlanComptable):
         self.nomPostes = []
         self.dicPostes = {}
@@ -21,9 +24,12 @@ class ParentPoste():
             self.dicPostes[nom] = self.dicPostes[nom].set_index('SOUS POSTE')
 
     def _depenses_mois(self,row):
-        self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
+        if is_in_dic(row['POSTE']):
+            self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
+        else:
+            self.dicPostes[row['POSTE']]
         return 0;
-
+    
     def _depenses_annee(self,row):
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
         return 0;

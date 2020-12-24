@@ -6,7 +6,7 @@ from .read_file import read_budget
 class Postes():
     
 
-    def __init__(self,planComptable,codeChantier):
+    def __init__(self,planComptable,charges,codeChantier):
         pc = planComptable.get_dataframe()
         self.codeChantier = codeChantier
         self.dfBudget = read_budget("/home/vidan/Documents/DGB/Resultat_chantier/Prevision/Budget.xlsx")
@@ -26,6 +26,8 @@ class Postes():
             self.dicPostes[nom]['RAD'] = 0
             self.dicPostes[nom]['PFDC'] = 0
             self.dicPostes[nom]['Ecart PFDC/Budget'] = 0
+            self.dicPostes[nom]['%CA MOIS'] = 0
+            self.dicPostes[nom]['%CA Cumul'] = 0
             self.dicPostes[nom] = self.dicPostes[nom].set_index('SOUS POSTE')
     
     
@@ -75,7 +77,16 @@ class Postes():
 
         return 0
 
-
+    def _ajoute_chiffre_affaire(self,mois,annee):
+        ca = ChiffreAffarie(self.charges)
+        ca_mois = ca.calcul_ca_mois(mois,annee)
+        ca_annee = ca.calcul_ca_annee(annee)
+        for nom in self.nomPostes:
+            for index,row in self.dicPostes[nom].iterrows():
+                depenses_mois = self.dicPostes[nom].loc[row.name,'Dépenses du mois']
+                depenses_cumul = self.dicPostes[nom].loc[row.name,"Dépenses de l'année"]
+                self.dicPostes[nom].loc[row.name,'%CA MOIS'] = depenses_mois / ca_mois
+                self.dicPOstes[nom].loc[row.name,'%CA Cumul'] = depenses_cumul / ca_annee
 
     def calcul_pfdc_budget(self):
         '''Calcul le pfdc et l'ecart pfdc budget'''

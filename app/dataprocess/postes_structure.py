@@ -5,9 +5,10 @@ import datetime as dt
 from .postesparent import ParentPoste
 
 class StructPoste(ParentPoste):
-    def __init__(self,planComptable,dfStruct):
+    def __init__(self,planComptable,charges):
         super(StructPoste,self).__init__(planComptable.get_pc_structure())
-        self.charges = dfStruct
+        self.charges = charges.get_struct()
+        self.chargesglob = charges.get_raw_charges()
         for nom in self.nomPostes:
             self.dicPostes[nom]['%CA MOIS'] = 0
             self.dicPostes[nom]['%CA Cumul'] = 0
@@ -23,7 +24,7 @@ class StructPoste(ParentPoste):
         self._ajoute_chiffre_affaire(mois,annee)
 
     def _ajoute_chiffre_affaire(self,mois,annee):
-        ca = ChiffreAffaire(self.charges)
+        ca = ChiffreAffaire(self.chargesglob)
         ca_mois = ca.calcul_ca_mois(mois,annee)
         ca_annee = ca.calcul_ca_annee(annee)
         for nom in self.nomPostes:
