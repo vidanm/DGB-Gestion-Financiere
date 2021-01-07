@@ -29,7 +29,7 @@ class ChiffreAffaire():
             if (date.month == mois and date.year == annee):
                 print(str(date) + ' / ' + str(row['Crédit']))
                 result += row['Crédit']
-        
+        print("CHIFFRE DAFFAIRE MOIS : "+str(result))
         return result
 
 
@@ -38,8 +38,13 @@ class ChiffreAffaire():
         ''' Calcul le chiffre d'affaire de l'année donnée en argument '''
         today = date.today()
         result = 0.0
-        for i in range (1,today.month):
-            result += self.calcul_ca_mois(i,today.year)
-
+        if (today.year == annee):
+            for i in range (1,today.month):
+                result += self.calcul_ca_mois(i,annee)
+        else:
+            for i in range(1,12):
+                result += self.calcul_ca_mois(i,annee)
+        
+        print("CHIFFRE DAFFAIRE CUMUL : "+str(result))
         return result
 

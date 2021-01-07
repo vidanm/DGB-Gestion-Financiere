@@ -141,7 +141,7 @@ class PDF():
         numTable = dataframe.to_numpy().tolist()
         numTable.insert(0,np.array(dataframe.columns.values).tolist())
         #self.ajoute_total(numTable)
-        self.eliminate_zeros_add_euros(numTable)
+        #self.eliminate_zeros_add_euros(numTable)
 
         t = Table(numTable,rowHeights=rowHeights)
         t.setStyle(self.tablestyle)

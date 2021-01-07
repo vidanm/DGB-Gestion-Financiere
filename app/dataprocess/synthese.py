@@ -19,7 +19,6 @@ class Synthese():
     def ajoute_synthese_annee(self,data):
         self.synthese_annee = self.synthese_annee.append(data,ignore_index=True)
 
-    
 
     def calcul_synthese_annee(self,mois,annee):
         chantier_names = self.charges.get_chantier_names()
@@ -48,7 +47,7 @@ class Synthese():
     
 
     def ajoute_budget(self):
-        dfBudget = read_budget("/home/vidan/Documents/DGB/Resultat_chantier/Prevision/Budget.xlsx")
+        dfBudget = read_budget("var/budget.xlsx")
         chantier_names = self.charges.get_chantier_names()
         print(self.synthese_annee)
         for name in chantier_names:

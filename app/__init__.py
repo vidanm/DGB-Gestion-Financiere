@@ -104,8 +104,7 @@ def chantpdf():
 
         filename = "bibl/"+code+"_"+request.form['date']+".pdf"
         postes = ChantierPoste(plan,charges,code)
-        postes.calcul_chantier(6,2020)
-        postes.calcul_pfdc_budget(budget)
+        postes.calcul_chantier(6,2020,budget)
         postes.round_2dec_df()
         pdf = PDF(filename)
         
@@ -113,6 +112,10 @@ def chantpdf():
             pdf.new_page(nom,code)
             pdf.add_table(postes.dicPostes[nom])
             pdf.save_page()
+
+        gesprev = postes.calcul_ges_prev()
+        pdf.new_page("Gestion previsionnelle","GP")
+        pdf.add_table(gesprev)
 
         pdf.save_pdf()
         return send_file(filename,as_attachment=True)
