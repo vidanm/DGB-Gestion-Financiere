@@ -24,15 +24,10 @@ class ParentPoste():
             self.dicPostes[nom] = self.dicPostes[nom].set_index('SOUS POSTE')
 
     def _depenses_mois(self,row):
-        if is_in_dic(row['POSTE']):
-            self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
-        else:
-            self.dicPostes[row['POSTE']]
-        return 0;
+        self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
     
     def _depenses_annee(self,row):
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
-        return 0;
 
     def round_2dec_df(self):
         for nom in self.nomPostes:

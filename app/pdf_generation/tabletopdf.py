@@ -28,7 +28,7 @@ class PDF():
             ('FONTSIZE',(0,0),(-1,-1),8),
             ('ALIGN',(0,0),(-1,-1),"CENTER"),
             ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
-            ('BACKGROUND',(0,0),(-1,0),dark),
+            ('BACKGROUND',(0,0),(-1,0),'BLACK'),
             ('TEXTCOLOR',(0,0),(-1,0),lightwhite),
             ('BACKGROUND',(1,1),(-1,-1),lightgrey),
             ('BACKGROUND',(0,-1),(-1,-1),yellow)
@@ -38,6 +38,24 @@ class PDF():
         self.c.setFillColorRGB(1,1,1)
         self.c.rect(0,0,A4[1],A4[0],fill=1)
         self.c.setFillColorRGB(0,0,0)
+
+    def struct_style(self,row_nom):
+        style = [
+            ('FACE',(0,0),(-1,-1),"Helvetica-Bold"),
+            ('FONTSIZE',(0,0),(-1,-1),8),
+            ('ALIGN',(0,0),(-1,-1),"CENTER"),
+            ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
+            ('BACKGROUND',(0,0),(-1,0),'BLACK'),
+            ('TEXTCOLOR',(0,0),(-1,0),lightwhite),
+            ('BACKGROUND',(1,1),(-1,-1),lightgrey),
+            ('BACKGROUND',(0,-1),(-1,-1),yellow)
+            ]
+
+        for i in row_nom:
+            style.append(('BACKGROUND',(0,i),(-1,i),'BLACK'))
+            style.append(('TEXTCOLOR',(0,i),(0,i),lightwhite))
+
+        return TableStyle(style)
 
     def new_page_synthese(self,titre,sousTitre,dataframe):
         return 0
@@ -92,6 +110,26 @@ class PDF():
                         
         return numTable
 
+    def add_struct_table(self,dataframe,row_noms,x='center',y='center'):
+        dataframe = dataframe.reset_index()
+        rowHeights = (len(dataframe)+1)*[12]
+        rowHeights[0] = 20
+        numTable = dataframe.to_numpy().tolist()
+        numTable.insert(0,np.array(dataframe.columns.values).tolist())
+        #self.eliminate_zeros_add_euros(numTable)
+        
+        t = Table(numTable,rowHeights=rowHeights)
+        t.setStyle(self.struct_style(row_noms))
+        w,h = t.wrapOn(self.c,0,0)
+        
+        
+
+        if (x == -1 or x =='center'):
+            x=(A4[1]/2)-(w/2)
+        if (y == -1 or y == 'center'):
+            y=(A4[0]/2)-(h/2)
+
+        t.drawOn(self.c,x,y)
 
     def add_table(self,dataframe,x=-1,y=-1):
         """Ajoute un tableau a la feuille active. Le coin bas droite

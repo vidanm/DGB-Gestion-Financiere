@@ -131,14 +131,12 @@ def structpdf():
         filename = "bibl/STRUCT_"+request.form['date']+".pdf"
         postes = StructPoste(plan,charges)
         postes.calcul_structure(6,2020)
-        postes.round_2dec_df()
         pdf = PDF(filename)
-
-        for nom in postes.nomPostes:
-            pdf.new_page(nom,code)
-            pdf.add_table(postes.dicPostes[nom])
-            pdf.save_page()
+        pdf.new_page("STRUCT",code)
+        pdf.add_struct_table(postes.format_for_pdf(),postes.row_noms)
+        pdf.save_page()
         pdf.save_pdf()
+
         return send_file(filename,as_attachment=True)
     return "B"
 
