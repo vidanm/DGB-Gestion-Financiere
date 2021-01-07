@@ -140,7 +140,7 @@ class BarChart11(_DrawingEditorMixin,Drawing):
         self.legend.variColumn       = True
         #self.legend.subCols.minWidth = self.chart1.width/2
         #self.legend.colorNamePairs   = Auto(obj=self.chart1)
-        self.legend.colorNamePairs   = [(PCMYKColor(100,60,0,50,alpha=85), u'Microsoft'), (PCMYKColor(66,13,0,22,alpha=85), u'Russel 2000 Index'), (PCMYKColor(100,0,90,50,alpha=85), u'NASDAQ Composite Index')]
+        self.legend.colorNamePairs   = [(PCMYKColor(100,60,0,50,alpha=85), u'PFDC'), (PCMYKColor(66,13,0,22,alpha=85), u'Depenses'), (PCMYKColor(100,0,90,50,alpha=85), u'Budget')]
         self.legend.deltay           = 5
         self.legend.y                = 20
         #self.chart1.categoryAxis.reverseDirection     = 1
@@ -152,7 +152,7 @@ class BarChart11(_DrawingEditorMixin,Drawing):
         self.label1.y              = self.height
         self.label1.fontName       = self._fontNameDemi
         self.label1.fontSize       = 8
-        self.label1._text          = 'Equity Composition'
+        self.label1._text          = 'Synthese'
         # label2
         '''self._add(self,Label(),name='label2',validate=None,desc=None)
         self.label2.x              = self.chart2.x-self.chart1.x
