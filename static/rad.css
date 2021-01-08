@@ -174,3 +174,24 @@ td.text-center {
 td.text-right {
   text-align: right;
 }
+
+#confirm {
+	margin-left:40%;
+	margin-top:50px;
+	width:20%;
+	padding:10px;
+	color:#666B85;
+	text-align:center;
+	background:rgba(180,199,231,255);
+	border-radius:20px;
+	border-color:rgba(190,210,240,255);
+	outline:none;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+	transition:all 0.1s;
+}
+
+#confirm:active{
+	border:none;
+	border-color:rgba(180,199,231,255);
+	box-shadow:0 5px 10px rgba(0,0,0,0);
+}

@@ -10,6 +10,7 @@ from app.dataprocess.postesparent import *
 from app.dataprocess.postes_chantier import *
 from app.dataprocess.postes_structure import *
 from app.dataprocess.read_file import read_budget
+from app.dataprocess.dataframe_to_html import *
 
 '''
 postes = Postes(plan)
@@ -106,7 +107,11 @@ def chantpdf():
         postes = ChantierPoste(plan,charges,code)
         postes.calcul_chantier(6,2020,budget)
         postes.round_2dec_df()
-        pdf = PDF(filename)
+        convert_single_dataframe_to_html_table(postes.dicPostes["MO"],"MO","Juin","2020","19-GP-ROSN")
+
+        return render_template("rad.html")
+        
+        '''pdf = PDF(filename)
         
         for nom in postes.nomPostes:
             pdf.new_page(nom,code)
@@ -118,7 +123,7 @@ def chantpdf():
         pdf.add_table(gesprev)
 
         pdf.save_pdf()
-        return send_file(filename,as_attachment=True)
+        return send_file(filename,as_attachment=True)'''
     return "A"
 
 
