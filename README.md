@@ -8,6 +8,18 @@
 - Flask
 - Reportlab
 
+### Fonctionnalités
+
+#### Synthèse Chantier
+###### Récapitulatif des dépenses par postes et sous postes
+
+#### Bilan Structure
+##### Récapitulatif des dépenses de la structure par postes et sous postes
+
+#### Synthèse Globale
+###### Récapitulatif des dépenses par chantier sur le mois et l'année
+La synthèse globale ne prendra en compte que les chantiers dont la propre synthèse de chantier a déjà été générée.
+
 ### Instructions de bonne utilisation
 
 #### Le Plan Comptable
@@ -21,6 +33,7 @@
 #### Budget
 - Les noms des postes et des sous postes doivent impérativement correspondre aux noms donnés dans le plan
 comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'oeuvre"
+
 
 ## Présentation
 ### HTML
