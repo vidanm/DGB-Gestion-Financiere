@@ -5,8 +5,11 @@ h1 {
 	font-size:40px;
 	font-weight:300;
 	margin:auto;
+	padding:10px;
+	margin-top:5%;
 	text-align:center;
-	color:rgba(47,85,151,255);
+	color:#666B85;
+	background-color:rgba(180,199,231,255);
 }
 
 th.tab-title {
@@ -24,7 +27,7 @@ body {
 
 .title h1{
 	width:100%;
-	margin-bottom:10%;
+	margin-bottom:-5%;
 }
 
 div.table-title {
@@ -54,7 +57,9 @@ div.table-title {
   border-collapse: collapse;
   height: 320px;
   margin: auto;
+  margin-top:0;
   max-width: 1000px;
+  padding-top:0px;
   padding:5px;
   width: 100%;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -178,6 +183,7 @@ td.text-right {
 #confirm {
 	margin-left:40%;
 	margin-top:50px;
+	margin-bottom:50px;
 	width:20%;
 	padding:10px;
 	color:#666B85;

@@ -27,7 +27,7 @@ def read_comptable(path):
     dfCompteSite['N° DE COMPTE'] = dfCompteSite['N° DE COMPTE'].apply(str)
     dfCompteStruct['N° DE COMPTE'] = dfCompteStruct['N° DE COMPTE'].apply(str)
     
-    values = {'SOUS POSTE':'Sous poste non défini'}
+    values = {'SOUS POSTE':'/'}
     dfCompteSite = dfCompteSite.fillna(value=values)
     dfCompteStruct = dfCompteStruct.fillna(value=values)
     return (dfCompteSite,dfCompteStruct)

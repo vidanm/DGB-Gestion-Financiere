@@ -17,6 +17,7 @@ class ParentPoste():
                 self.nomPostes.append(str(value))
 
         for nom in self.nomPostes:
+            # C'EST ICI CE QU'IL FAUT CORRIGER
             self.dicPostes[nom] = dfPlanComptable.loc[dfPlanComptable['POSTE'] == nom]
             self.dicPostes[nom] = self.dicPostes[nom].drop(columns=['POSTE','N° DE COMPTE','EX.'])
             self.dicPostes[nom]['Dépenses du mois'] = 0

@@ -1,6 +1,4 @@
 import sys
-import os
-import time
 from flask import Flask,send_file,request,flash,redirect,url_for,render_template,send_from_directory
 from werkzeug.utils import secure_filename
 from app.dataprocess.plan_comptable import *
@@ -22,7 +20,6 @@ DOWNLOAD_FOLDER = 'bibl'
 ALLOWED_EXTENSIONS = ['xlsx']
 
 app = Flask("DGB Gesfin")
-
 app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
@@ -30,8 +27,18 @@ app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 codes_missing = open("missing_numbers.txt","w")
 expected_files = ['plan','charges','budget']
 
+postes = None #Stockage des donnees sous pdf
+mois = "" #Mois du pdf genere
+code = "" #Code chantier STRUCT ou GLOB du pdf
+date = "" #Date complete du pdf genere
 
 def check_file_here():
+    '''
+        Verifie la presence des fichiers prerequis qui sont : 
+        - Le Plan Comptable
+        - Les Charges
+        - Le Budget
+    '''
     plan = None;
     charges = None;
     for filename in os.listdir('var'):
@@ -46,13 +53,22 @@ def check_file_here():
 
 
 def allowed_file(filename):
+    
+    '''
+        Verifie le bon format des fichiers prerequis fournis par l'utilisateur
+    '''
+
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-
 @app.route('/')
 def index():
+    
+    '''
+        Page d'accueil
+    '''
+
     charges_modif = time.ctime(os.path.getmtime('var/charges.xlsx'))
     plan_modif = time.ctime(os.path.getmtime('var/plan.xlsx'))
 
@@ -60,21 +76,14 @@ def index():
 
 
 
-@app.route('/rad')
-def rad():
-    return render_template("rad.html")
-
-
-
-@app.route('/table')
-def table():
-    table = postes.dicPostes["MO"]
-    return table.to_html()
-
-
-
 @app.route('/synthese_globale',methods=['POST','GET'])
 def syntpdf():
+
+    '''
+        Generation de la synthese
+        Sauvegarde en pdf
+    '''
+
     plan,charges,budget = check_file_here()
     if (plan == None or charges == None):
         return "Missing file"
@@ -93,7 +102,17 @@ def syntpdf():
 
 @app.route('/synthese_chantier',methods=['POST','GET'])
 def chantpdf():
+
+    '''
+        Generation de la synthese du chantier
+        Affichage en HTML pour permettre a l'utilisateur
+        l'entree du Reste A Depenser
+    '''
     
+    global code
+    global date
+    global postes
+
     if request.method == 'POST':
         date = request.form['date']
         print(date)
@@ -107,36 +126,65 @@ def chantpdf():
         postes = ChantierPoste(plan,charges,code)
         postes.calcul_chantier(6,2020,budget)
         postes.round_2dec_df()
-        convert_single_dataframe_to_html_table(postes.dicPostes["MO"],"MO","Juin","2020","19-GP-ROSN")
+        convert_single_dataframe_to_html_table(postes.dicPostes,"Juin","2020","19-GP-ROSN")
 
         return render_template("rad.html")
         
-        '''pdf = PDF(filename)
-        
-        for nom in postes.nomPostes:
-            pdf.new_page(nom,code)
-            pdf.add_table(postes.dicPostes[nom])
-            pdf.save_page()
-
-        gesprev = postes.calcul_ges_prev()
-        pdf.new_page("Gestion previsionnelle","GP")
-        pdf.add_table(gesprev)
-
-        pdf.save_pdf()
-        return send_file(filename,as_attachment=True)'''
+        ''''''
     return "A"
+
+@app.route('/rad',methods=['POST'])
+def rad():
+    '''
+        Suite de chantpdf()
+        Recupere les Reste A Depenser entree precedemment par
+        l'utilisateur
+        Calcul les donnees manquantes, la gestion previsionnelle
+        Sauvegarde le tout en PDF
+    '''
+    global postes #Défini dans chantpdf()
+    global code #Défini dans chantpdf()
+    global date #Défini dans chantpdf()
+    filename = "bibl/"+date+"/"+code+".pdf"
+    
+    if not (os.path.exists("bibl/"+date)):
+        os.makedirs("bibl/"+date)
+
+    for value in request.form:
+        poste,sousposte = value.split('$')
+        postes.ajoute_rad(poste,sousposte,request.form[value])
+    postes.calcul_pfdc_budget()
+    postes.calcul_total_chantier()
+    postes.calcul_ges_prev()
+    postes.round_2dec_df()
+
+    pdf = PDF(filename)   
+    for nom in postes.nomPostes:
+        pdf.new_page(nom,code)
+        pdf.add_table(postes.dicPostes[nom])
+        pdf.save_page()
+
+    pdf.save_pdf()
+    return send_file(filename,as_attachment=True)
 
 
 @app.route('/synthese_structure',methods=['POST','GET'])
 def structpdf():
+    '''
+        Generation du bilan de la structure
+    '''
     if request.method == 'POST':
         date = request.form['date']
-        code = "Structure"
+        code = "STRUCT"
         plan,charges,budget = check_file_here();
         if (plan == None or charges == None):
             return "Missing file"
 
-        filename = "bibl/STRUCT_"+request.form['date']+".pdf"
+        
+        filename = "bibl/"+date+"/"+code+".pdf"
+        if not (os.path.exists("bibl/"+date)):
+            os.makedirs("bibl/"+date)        
+
         postes = StructPoste(plan,charges)
         postes.calcul_structure(6,2020)
         pdf = PDF(filename)
@@ -151,6 +199,11 @@ def structpdf():
 
 @app.route('/upload',methods=['GET','POST'])
 def upload_file():
+    '''
+        Page permettant a l'utilisateur 
+        le telechargement sur le serveur, 
+        des fichiers prerequis pour le calcul des bilans
+    '''
     if request.method == 'POST':
         files = []
         # check if the post request has the file part
@@ -175,11 +228,19 @@ def upload_file():
 
 @app.route('/loading')
 def loading_page():
+    '''
+        Pas utilise
+    '''
     return render_template("loader.html")
 
 
 @app.route('/bibliotheque')
 def bibliotheque() :
+    
+    '''
+        Obsolete ( Pas forcement d'interet )
+    '''
+    
     out = "<!DOCTYPE HTML><html><body>"
     for filename in os.listdir('bibl'):
         out += '<a href="/download/'+filename+'">'+filename+'</a><br>'
@@ -187,6 +248,23 @@ def bibliotheque() :
 
 @app.route('/download/<path:filename>', methods=['GET','POST'])
 def download(filename):
+    
+    '''
+        Obsolete ( Telechargement depuis la bibliotheque )
+    '''
+
     bibl = os.path.join(app.root_path,app.config['DOWNLOAD_FOLDER'])
     return send_from_directory(directory=bibl,filename=filename)
+
+
+@app.route('/table')
+def table():\
+
+    '''
+        Obsolete ?
+    '''
+
+    table = postes.dicPostes["MO"]
+    return table.to_html()
+
 
