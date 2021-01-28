@@ -1,4 +1,5 @@
 import sys
+import time
 from flask import Flask,send_file,request,flash,redirect,url_for,render_template,send_from_directory
 from werkzeug.utils import secure_filename
 from app.dataprocess.plan_comptable import *
@@ -156,6 +157,7 @@ def rad():
     postes.calcul_pfdc_budget()
     postes.calcul_total_chantier()
     postes.calcul_ges_prev()
+    postes.dicPostes["GESPREV"].iloc[-1].to_csv("bibl/"+date+"/"+code+"_tt.csv")
     postes.round_2dec_df()
 
     pdf = PDF(filename)   

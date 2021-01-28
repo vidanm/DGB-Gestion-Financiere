@@ -14,4 +14,7 @@ window.addEventListener("load", function(){
 
 	var y = document.getElementById('chantierform');
 	y.style.display = "none";
+
+	var z = document.getElementById('structureform');
+	z.style.display = "none";
 });
