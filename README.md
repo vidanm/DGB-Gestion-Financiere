@@ -17,7 +17,7 @@ Récapitulatif des dépenses par postes et sous postes
 Récapitulatif des dépenses de la structure par postes et sous postes
 
 #### Synthèse Globale
-Récapitulatif des dépenses par chantier sur le mois et l'année
+Récapitulatif des dépenses par chantier sur le mois et l'année 
 La synthèse globale ne prendra en compte que les chantiers dont la propre synthèse de chantier a déjà été générée.
 
 ### Instructions de bonne utilisation
@@ -26,7 +26,7 @@ La synthèse globale ne prendra en compte que les chantiers dont la propre synth
 - Les intitulés de lignes doivent se trouver sur la 1ère colonne pour le section chantier et la 5ème colonne pour la section structure
 - Les intitulés de colonnes doivent se trouver sur la 2ème ligne
 
-!!! Une seule ligne par sous-poste ! Pour avoir plusieurs compte pour un sous poste, respecter le format suivant :
+! UNE SEULE LIGNE PAR SOUS POSTE ! Pour avoir plusieurs compte pour un sous poste, respecter le format suivant :
 NOM DU SOUS POSTE | NUMERO 1 / NUMERO 2 / NUMERO 3
 
 #### Chantiers / Comptes de charges / Structure
