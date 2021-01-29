@@ -52,7 +52,6 @@ button {
 	font-size:20px;
 	background-color:#ffffff;
 	color:#000000;
-	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 
 }
 
@@ -63,8 +62,11 @@ p {
 #buttons {
 	padding:20px;
 	margin:auto;
-	margin-top:8%;
+	margin-top:3%;
 	width:30%;
+	background-color:rgba(255,255,255,1);
+	box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+
 	padding:2%;
 	border-radius:30px;
 	display:flex;
@@ -103,7 +105,7 @@ input[type=text],input[type=month],input[type=submit] {
 	border-radius:5px;
 	border-color:rgba(0,0,0,0.8);
 	padding:7px;
-	background-color:rgba(255,255,255,0.8);
+	background-color:rgba(225,225,225,1);
 	text-align:center;
 	
 	font-family: "Montserrat",sans-serif;
