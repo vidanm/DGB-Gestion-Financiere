@@ -2,8 +2,8 @@ from .postes_chantier import *
 from pandas import Index
 
 HTML_HEAD = "<head><meta charset='UTF-8'><title>Rentrer Reste à dépenser</title><link rel='stylesheet' type='text/css' href="+'"{{ url_for("static",filename="rad.css") }}'+'"></head>'
-HTML_TITLE_HEAD = "<body><div class='title'><h1>"
-HTML_TITLE_BOT = "</h1></div>"
+HTML_TITLE_HEAD = "<body><div id='image'><img src='https://dgb.construction/wp-content/uploads/2019/06/dgb.png'></div><h1>"
+HTML_TITLE_BOT = "</h1>"
 HTML_TABLE_HEAD = "<table class='table-fill'><thead><tr>"
 
 HTML_TABLE_TITLE_HEAD = "<th class='text-left'>"
