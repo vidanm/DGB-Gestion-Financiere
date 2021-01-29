@@ -1,2 +1,2 @@
-web: gunicorn app:app/__init__ --preload
+web: gunicorn app:app
 heroku ps:scale web=1

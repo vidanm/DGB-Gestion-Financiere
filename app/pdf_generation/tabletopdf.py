@@ -13,7 +13,7 @@ import PIL.Image
 import os.path
 import numpy as np
 
-locale.setlocale(locale.LC_ALL,'fr_FR.utf8')
+locale.setlocale(locale.LC_ALL,'en_US.utf8')
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 class PDF():
