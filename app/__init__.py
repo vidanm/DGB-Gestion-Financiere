@@ -84,7 +84,8 @@ def syntpdf():
         Generation de la synthese
         Sauvegarde en pdf
     '''
-
+    global date
+    date = request.form['date']
     plan,charges,budget = check_file_here()
     if (plan == None or charges == None):
         return "Missing file"
@@ -93,7 +94,7 @@ def syntpdf():
     pdf = PDF("bibl/Synthese.pdf")
     syn.calcul_synthese_annee(6,2020)
 
-    pdf.new_page("Synthese","Juin 2020")
+    pdf.new_page("Synthese",date)
     pdf.add_table(syn.synthese_annee,x='center',y='center')
     pdf.create_bar_graph()
     pdf.save_page()
@@ -163,6 +164,7 @@ def rad():
     pdf = PDF(filename)   
     for nom in postes.nomPostes:
         pdf.new_page(nom,code)
+        pdf.add_sidetitle(str(date))
         pdf.add_table(postes.dicPostes[nom])
         pdf.save_page()
 
@@ -191,6 +193,7 @@ def structpdf():
         postes.calcul_structure(6,2020)
         pdf = PDF(filename)
         pdf.new_page("STRUCT",code)
+        pdf.add_sidetitle(str(date))
         pdf.add_struct_table(postes.format_for_pdf(),postes.row_noms)
         pdf.save_page()
         pdf.save_pdf()

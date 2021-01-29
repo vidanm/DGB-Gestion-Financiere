@@ -21,16 +21,17 @@ class PDF():
     def __init__(self,nom):
         self.nom = nom
         self.c = canvas.Canvas(nom,pagesize=(A4[1],A4[0]))
-        #self.logo = os.path.join('../../images/DGB.jpeg
+        self.logo = os.path.join('images/DGB.jpeg')
         self.__background()
         self.tablestyle = TableStyle([
             ('FACE',(0,0),(-1,-1),"Helvetica-Bold"),
+            ('GRID', (0,0), (-1,-1), 0.1, colors.black),
             ('FONTSIZE',(0,0),(-1,-1),8),
             ('ALIGN',(0,0),(-1,-1),"CENTER"),
             ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
-            ('BACKGROUND',(0,0),(-1,0),'BLACK'),
-            ('TEXTCOLOR',(0,0),(-1,0),lightwhite),
-            ('BACKGROUND',(1,1),(-1,-1),lightgrey),
+            ('BACKGROUND',(0,0),(-1,0),bleuciel),
+            ('TEXTCOLOR',(0,0),(-1,0),"BLACK"),
+            ('BACKGROUND',(1,1),(-1,-1),"WHITE"),
             ('BACKGROUND',(0,-1),(-1,-1),yellow)
             ])
 
@@ -42,12 +43,13 @@ class PDF():
     def struct_style(self,row_nom):
         style = [
             ('FACE',(0,0),(-1,-1),"Helvetica-Bold"),
+            ('LINEABOVE', (0,1), (-1,-1), 0.1, colors.black),
             ('FONTSIZE',(0,0),(-1,-1),8),
             ('ALIGN',(0,0),(-1,-1),"CENTER"),
             ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
-            ('BACKGROUND',(0,0),(-1,0),'BLACK'),
-            ('TEXTCOLOR',(0,0),(-1,0),lightwhite),
-            ('BACKGROUND',(1,1),(-1,-1),lightgrey),
+            ('BACKGROUND',(0,0),(-1,0),bleuciel),
+            ('TEXTCOLOR',(0,0),(-1,0),"BLACK"),
+            ('BACKGROUND',(1,1),(-1,-1),"WHITE"),
             ('BACKGROUND',(0,-1),(-1,-1),yellow)
             ]
 
@@ -59,6 +61,11 @@ class PDF():
 
     def new_page_synthese(self,titre,sousTitre,dataframe):
         return 0
+
+    def draw_header(self):
+        self.c.setFillColor(bleu)
+        self.c.rect(inch,A4[0]-inch*1.5,A4[1]-2*inch,inch,fill=1)
+        self.c.setFillColorRGB(0,0,0)
 
     def ajoute_total(self,numTable):
         total = [ [0] * 7 ]
@@ -159,10 +166,17 @@ class PDF():
     def add_barplot(self,dataframe,x=-1,y=-1):
         return 0   
 
+    def add_sidetitle(self,text):
+        self.c.setFillColor("WHITE")
+        self.c.drawString(inch*1.1,A4[0]-inch*1.14,text)
+        self.c.setFillColor("BLACK")
+
     def new_page(self,titre,sousTitre):
         '''Ecris le titre et le sous titre sur une feuille'''
         self.__background()
-        #self.c.drawImage(self.logo,0,A4[0]-inch*1.41) #Draw Logo
+        self.draw_header()
+        self.c.drawImage(self.logo,A4[1]-inch*2,A4[0]-inch*1.39,width=50,height=50) #Draw Logo
+        self.c.setFillColor("WHITE")
         self.c.setFont("Helvetica-Bold",30) #Draw Title
         self.c.drawCentredString(A4[1]/2,A4[0] - inch,titre) 
 
