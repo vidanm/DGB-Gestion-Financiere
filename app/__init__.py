@@ -18,7 +18,7 @@ postes.calcul_chantier(charges.get_raw_chantier("19-GP-ROSN"),6,2020)
 
 UPLOAD_FOLDER= 'var'
 DOWNLOAD_FOLDER = 'bibl'
-ALLOWED_EXTENSIONS = ['xlsx']
+ALLOWED_EXTENSIONS = ['xls']
 
 app = Flask("DGB Gesfin")
 app.config.from_object('config')
@@ -44,11 +44,11 @@ def check_file_here():
     charges = None;
     for filename in os.listdir('var'):
         if filename == 'plan':
-            plan = PlanComptable('var/plan.xlsx')
+            plan = PlanComptable('var/plan.xls')
         if filename == 'charges':
-            charges = Charges('var/charges.xlsx',plan,codes_missing)
+            charges = Charges('var/charges.xls',plan,codes_missing)
         if 'budget' in filename:
-            budget = read_budget('var/budget.xlsx')
+            budget = read_budget('var/budget.xls')
     
     return (plan,charges,budget)
 
@@ -70,8 +70,8 @@ def index():
         Page d'accueil
     '''
 
-    charges_modif = time.ctime(os.path.getmtime('var/charges.xlsx'))
-    plan_modif = time.ctime(os.path.getmtime('var/plan.xlsx'))
+    charges_modif = time.ctime(os.path.getmtime('var/charges.xls'))
+    plan_modif = time.ctime(os.path.getmtime('var/plan.xls'))
 
     return render_template("index.html") + '<p>' + 'Dernière mise à jour du fichier de charges : '+ str(charges_modif) + '</p><p>' + 'Dernière mise à jour du plan comptable : '+str(plan_modif) + '</p>'
 
@@ -222,7 +222,7 @@ def upload_file():
                 continue
             if file and allowed_file(file.filename):
                 filename = fileit
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename+".xlsx"))
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename+".xls"))
         return redirect(url_for('upload_file',
                                     filename=filename))
     return render_template("upload.html")
