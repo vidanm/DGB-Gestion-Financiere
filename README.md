@@ -22,6 +22,8 @@ La synthèse globale ne prendra en compte que les chantiers dont la propre synth
 
 ### Instructions de bonne utilisation
 
+Les fichiers Excel doivent être importés sous le format .xls et non .xlsx
+
 #### Le Plan Comptable
 - Les intitulés de lignes doivent se trouver sur la 1ère colonne pour le section chantier et la 5ème colonne pour la section structure
 - Les intitulés de colonnes doivent se trouver sur la 2ème ligne
@@ -40,7 +42,7 @@ comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'
 
 ## Présentation
 ### HTML
-![HTML Example](https://github.com/vidanm/DGB-Gestion/blob/master/images/htmlExample.png)
+![HTML Example](https://github.com/vidanm/DGB_Gesfin/blob/master/images/Capture%20d%E2%80%99%C3%A9cran%20de%202021-01-29%2015-53-25.png)
 
 ### Reportlab
-![Reportlab Example](https://github.com/vidanm/DGB-Gestion/blob/master/images/Materiels.png)
+![Reportlab Example](https://github.com/vidanm/DGB_Gesfin/blob/master/images/Capture%20d%E2%80%99%C3%A9cran%20de%202021-01-29%2015-52-55.png)
