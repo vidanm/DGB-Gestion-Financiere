@@ -1,6 +1,6 @@
 Flask==1.1.2
 numpy==1.19.5
-pandas==1.2.0
+pandas==1.1.5
 Pillow==8.1.0
 requests==2.25.1
 requests-file==1.5.1
