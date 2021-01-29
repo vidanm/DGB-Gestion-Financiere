@@ -44,5 +44,4 @@ comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'
 ### HTML
 ![HTML Example](https://github.com/vidanm/DGB_Gesfin/blob/master/images/Capture%20d%E2%80%99%C3%A9cran%20de%202021-01-29%2015-53-25.png)
 
-### Reportlab
-![Reportlab Example](https://github.com/vidanm/DGB_Gesfin/blob/master/images/Capture%20d%E2%80%99%C3%A9cran%20de%202021-01-29%2015-52-55.png)
+![HTML Example 2](https://github.com/vidanm/DGB_Gesfin/blob/master/images/Capture%20d%E2%80%99%C3%A9cran%20de%202021-01-29%2015-52-55.png)
