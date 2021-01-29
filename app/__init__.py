@@ -43,9 +43,10 @@ def check_file_here():
     plan = None;
     charges = None;
     for filename in os.listdir('var'):
+        print(filename)
         if 'plan.xls' == filename:
             plan = PlanComptable('var/plan.xls')
-            if 'charges.xls' == filename:
+        if 'charges.xls' == filename and plan != None:
                 charges = Charges('var/charges.xls',plan,codes_missing)
         if 'budget.xls' == filename:
             budget = read_budget('var/budget.xls')
