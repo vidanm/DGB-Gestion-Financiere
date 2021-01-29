@@ -47,7 +47,7 @@ class Synthese():
     
 
     def ajoute_budget(self):
-        dfBudget = read_budget("var/budget.xlsx")
+        dfBudget = read_budget("var/budget.xls")
         chantier_names = self.charges.get_chantier_names()
         print(self.synthese_annee)
         for name in chantier_names:
