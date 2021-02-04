@@ -1,3 +1,10 @@
+'''
+
+Ce fichier permet la transformation en html dans le style du site des données de synthese
+chantier dans le but de laisser a l'utilisateur la possibilité de rentrer les restes a dépenser
+
+'''
+
 from .postes_chantier import *
 from pandas import Index
 

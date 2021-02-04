@@ -15,6 +15,13 @@ class Synthese():
         self.synthese_cumul = self.synthese_annee.copy(deep=True)
     
     
+    def csv_of_precalculated_chantiers(self,annee,mois):
+        chantier_csv = {}
+        if (os.path.exists("bibl/"+date)):
+            for filename in os.listdir('bibl/'+annee):
+                code = filename[0:-7]
+                chantier_csv[code] = pd.read_csv("bibl/"+annee+"/"+filename,index_col=0)
+        return chantier_csv
 
     def ajoute_synthese_annee(self,data):
         self.synthese_annee = self.synthese_annee.append(data,ignore_index=True)
@@ -22,9 +29,10 @@ class Synthese():
 
     def calcul_synthese_annee(self,mois,annee):
         chantier_names = self.charges.get_chantier_names()
+        #2020-06 -> 2020-6 chantier_csv = self.csv_of_precalculated_chantiers(annee,mois)
         for name in chantier_names:
             
-            if 'DIV' in name or 'STRUCT' in name:
+            if 'DIV' in name or 'STRUCT' in name or name in chantier_csv.keys:
                 continue
 
             chantier_line = ["",0,0,0,0,0,0,0,0]

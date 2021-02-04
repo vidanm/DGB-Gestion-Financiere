@@ -4,9 +4,6 @@ import datetime as dt
 from .read_file import read_budget
 
 class ParentPoste():
-    '''Prochaine etape on lis toutes les charges dans cette classe ci au lieu des classes inférieures.
-    On ne sépare pas le plan comptable en 2.
-    Ensuite on effectue les opérations ( calcul %CA / PFDC ) dans les classes enfants '''
 
     def __init__(self,dfPlanComptable):
         self.nomPostes = []
@@ -31,11 +28,13 @@ class ParentPoste():
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
 
     def round_2dec_df(self):
-        for nom in self.nomPostes:
+        for nom in self.dicPostes.keys():
             self.dicPostes[nom] = self.dicPostes[nom].round(2)
 
     def get_postes_names(self):
         return self.nomPostes
 
+    def remove_poste(self,poste):
+        self.dicPostes.pop(poste)
         
 

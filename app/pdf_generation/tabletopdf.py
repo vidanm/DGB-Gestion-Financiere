@@ -1,12 +1,15 @@
 import locale
 
 from .colors import *
+from rlextra.graphics.quickchart import QuickChart
+from reportlab.lib.corp import white, black
+from reportlab.graphics.shapes import Drawing, _DrawingEditorMixin
+from reportlab.lib.colors import green, red
 from reportlab.lib.pagesizes import letter,A4,landscape
 from reportlab.lib.units import inch
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-from reportlab.graphics.shapes import Drawing
 from reportlab.graphics.charts.barcharts import VerticalBarChart
 
 import PIL.Image
@@ -76,34 +79,42 @@ class PDF():
         total[0][0] = 'Total'
         numTable.append(total[0])
     
-    def create_bar_graph(self):
-        '''d = Drawing(A4[0],A4[1])
-        bar = VerticalBarChart()
-        bar.x = 0
-        bar.y = 50
-        bar.width = 500
-        bar.height = 500
-        data = [[1,2,3,None,None,None,5,10,5,2,6,8,3,5],
-                [10,5,2,6,8,3,5,10,5,2,6,8,3,5],
-                [5,7,2,8,8,2,5,10,5,2,6,8,3,5],
-                [2,10,2,1,8,9,5,10,5,2,6,8,3,5],
-                ]
-        bar.data = data
-        bar.barWidth = 100
-        bar.barSpacing = 20
-        bar.groupSpacing = 50
-        bar.categoryAxis.categoryNames = ['2015','2016','2017',
-                                          '2018','2019','2020',
-                                          '2021','2022','2023',
-                                          '2024','2025','2026',
-                                          '2027','2028']
-        bar.bars[0].fillColor = lightgrey
-        bar.bars[1].fillColor = lightwhite
-        bar.bars[2].fillColor = lightgrey
-        bar.bars.fillColor = dark
-        d.add(bar,'')
-        d.drawOn(self.c,0,0)
-        '''
+    def create_bar_graph(self,width,height,postes):
+        pfdc = []
+        budget = []
+        dep = []
+
+        for key in postes.dicPostes.keys():
+            if key != "GESPREV" and key != "FACTURATION CLIENT":
+                pfdc.append(postes.dicPostes[key].iloc[-1]["PFDC"])
+                budget.append(postes.dicPostes[key].iloc[-1]["Budget"])
+                dep.append(postes.dicPostes[key].iloc[-1]["Dépenses de l'année"])
+
+        d = Drawing(width,height)
+        d.add(QuickChart(),name='chart')
+        d.chart.height               = height
+        d.chart.width                = width
+        d.chart.seriesNames          ='PFDC','Budget','Dépenses cumulées'
+        d.chart.seriesRelation       = 'sidebyside'
+        d.chart.dataLabelsFontSize   = 10
+        d.chart.legendFontSize = 10
+        d.chart.chartColors = [bleu,bleuciel,yellow]
+        d.chart.data                 = [pfdc,budget,dep]
+        d.chart.chartType='bar'
+        d.chart.titleText            = ''
+        d.chart.xTitleText           = ''
+        d.chart.xAxisFontSize        = 10
+        d.chart.xAxisLabelAngle      = 30
+        d.chart.yAxisFontSize        = 10
+        #d.chart.yAxisLabelAngle      = 30
+        d.chart.categoryNames        = list(postes.dicPostes.keys())
+        d.chart.dataLabelsAlignment        = 'bottom'
+        #d.chart.pointerLabelMode     = 'leftAndRight'
+        d.chart.bgColor              = None
+        d.chart.plotColor            = None
+        d.chart.titleFontColor       = black
+        #d.rotate(90)
+        d.drawOn(self.c,inch,inch*0.1)
 
     def eliminate_zeros_add_euros(self,numTable):
         point = 0
@@ -163,8 +174,6 @@ class PDF():
 
         t.drawOn(self.c,x,y)
 
-    def add_barplot(self,dataframe,x=-1,y=-1):
-        return 0   
 
     def add_sidetitle(self,text):
         self.c.setFillColor("WHITE")

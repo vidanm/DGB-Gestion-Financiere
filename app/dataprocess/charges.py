@@ -89,12 +89,15 @@ class Charges():
     
 
     def get_chantier_names(self):
+        '''Renvoie tout les noms de chantiers'''
         names = []
         for key in self._dicChantiers:
             names.append(key)
         return names
 
     def get_with_approximation(self,approx):
+        '''Renvoie le nom reel en fonction d'une approximation
+        STRUCT -> 20-STRUCT0'''
         names = self.get_chantier_names()
         for name in names:
             if approx in name:    

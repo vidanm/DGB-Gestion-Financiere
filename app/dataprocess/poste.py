@@ -1,3 +1,5 @@
+'''OBSOLETE ???'''
+
 from .plan_comptable import *
 from .charges import *
 import datetime as dt

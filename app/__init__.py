@@ -1,3 +1,4 @@
+import pandas as pd
 import sys
 import time
 from flask import Flask,send_file,request,flash,redirect,url_for,render_template,send_from_directory
@@ -118,7 +119,10 @@ def chantpdf():
 
     if request.method == 'POST':
         date = request.form['date']
-        print(date)
+        year = date[0:4]
+        month = date[5:7]
+        print(month)
+        print(year)
         code = request.form['code']
 
         plan,charges,budget = check_file_here();
@@ -127,9 +131,9 @@ def chantpdf():
 
         filename = "bibl/"+code+"_"+request.form['date']+".pdf"
         postes = ChantierPoste(plan,charges,code)
-        postes.calcul_chantier(6,2020,budget)
+        postes.calcul_chantier(int(month),int(year),budget)
         postes.round_2dec_df()
-        convert_single_dataframe_to_html_table(postes.dicPostes,"Juin","2020","19-GP-ROSN")
+        convert_single_dataframe_to_html_table(postes.dicPostes,month,year,code)
 
         return render_template("rad.html")
         
@@ -159,16 +163,24 @@ def rad():
     postes.calcul_pfdc_budget()
     postes.calcul_total_chantier()
     postes.calcul_ges_prev()
+    postes.remove_poste("FACTURATION CLIENT")
     postes.dicPostes["GESPREV"].iloc[-1].to_csv("bibl/"+date+"/"+code+"_tt.csv")
+    #postes.dicPostes["GESPREV"].iloc[-1] = pd.read_csv("bibl/"+date+"/"+code+"_tt.csv")
+    #print(postes.dicPostes["GESPREV"].iloc[-1])
     postes.round_2dec_df()
+    pdf = PDF(filename)
 
-    pdf = PDF(filename)   
-    for nom in postes.nomPostes:
+    for nom in postes.dicPostes.keys():
         pdf.new_page(nom,code)
         pdf.add_sidetitle(str(date))
-        pdf.add_table(postes.dicPostes[nom])
-        pdf.save_page()
+        if (nom == "GESPREV"):
+            pdf.add_table(postes.dicPostes[nom],y=A4[0]-inch*4)
+            pdf.create_bar_graph(600,250,postes)
+        else :
+            pdf.add_table(postes.dicPostes[nom])
 
+        pdf.save_page()
+    
     pdf.save_pdf()
     return send_file(filename,as_attachment=True)
 
