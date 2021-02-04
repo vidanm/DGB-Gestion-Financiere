@@ -13,4 +13,5 @@ reportlab==3.5.59
 six==1.15.0
 Werkzeug==1.0.1
 xlrd==2.0.1
-rlextra -i "https://dgbheroku:herokudgb*15@www.reportlab.com/pypi/"
+rlextra 
+-i "https://dgbheroku:herokudgb*15@www.reportlab.com/pypi/"
