@@ -79,8 +79,40 @@ class PDF():
 
         total[0][0] = 'Total'
         numTable.append(total[0])
-    
-    def create_bar_graph(self,width,height,postes):
+    def create_bar_syntgraph(self,width,height,synt):
+        pfdc = synt["PFDC"].tolist()
+        budget = synt["BUDGET"].tolist()
+        dep = synt["DEP CUMULEES"].tolist()
+        
+        d = Drawing(width,height)
+        d.add(QuickChart(),name='chart')
+        d.chart.height               = height
+        d.chart.width                = width
+        d.chart.seriesNames          ='PFDC','Budget','Dépenses cumulées'
+        d.chart.seriesRelation       = 'sidebyside'
+        d.chart.dataLabelsFontSize   = 10
+        d.chart.legendFontSize = 10
+        d.chart.chartColors = [bleu,bleuciel,yellow]
+        d.chart.data                 = [pfdc,budget,dep]
+        d.chart.chartType='bar'
+        d.chart.titleText            = ''
+        d.chart.xTitleText           = ''
+        d.chart.xAxisFontSize        = 10
+        d.chart.xAxisLabelAngle      = 30
+        d.chart.yAxisFontSize        = 10
+        #d.chart.yAxisLabelAngle      = 30
+        d.chart.categoryNames        = synt.index.tolist()
+        d.chart.dataLabelsAlignment        = 'bottom'
+        #d.chart.pointerLabelMode     = 'leftAndRight'
+        d.chart.bgColor              = None
+        d.chart.plotColor            = None
+        d.chart.titleFontColor       = black
+        #d.rotate(90)
+        d.drawOn(self.c,inch,inch*0.1)
+
+
+
+    def create_bar_gesprevgraph(self,width,height,postes):
         pfdc = []
         budget = []
         dep = []

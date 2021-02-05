@@ -103,8 +103,8 @@ def syntpdf():
     syn.calcul_synthese_annee(int(month),int(year))
 
     pdf.new_page("Synthese",date)
-    pdf.add_table(syn.synthese_annee,x='center',y='center')
-    #pdf.create_bar_graph(600,250,syn.synthese_annee)
+    pdf.add_table(syn.synthese_annee,y=A4[0]-inch*4.5)
+    pdf.create_bar_syntgraph(600,250,syn.synthese_annee)
     pdf.save_page()
     pdf.save_pdf()
     return send_file("bibl/Synthese.pdf",as_attachment=True)
@@ -183,7 +183,7 @@ def rad():
         pdf.add_sidetitle(str(date))
         if (nom == "GESPREV"):
             pdf.add_table(postes.dicPostes[nom],y=A4[0]-inch*4)
-            pdf.create_bar_graph(600,250,postes)
+            pdf.create_bar_gesprevgraph(600,250,postes)
         else :
             pdf.add_table(postes.dicPostes[nom])
 
