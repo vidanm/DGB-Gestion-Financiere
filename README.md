@@ -1,11 +1,12 @@
 # Logiciel de gestion financière DGB
 ![DGB LOGO](https://github.com/vidanm/DGB-Gestion/blob/master/images/DGB.jpeg)
 
+https://dgb-gestionfinanciere.herokuapp.com/
+
 ### Dépendances
-- Python
-- Pandas
-- Flask
-- Reportlab
+- [Pandas](https://github.com/pandas-dev/pandas)
+- [Flask](https://github.com/pallets/flask)
+- [Reportlab](https://github.com/MrBitBucket/reportlab-mirror)
 
 ### Fonctionnalités
 
