@@ -21,7 +21,8 @@
 
 ### Instructions de bonne utilisation
 
-Les fichiers Excel doivent être importés sous le format .xls et non .xlsx
+Les fichiers Excel doivent être importés sous le format .xls et non .xlsx .
+
 Ils doivent respecter le format de nommage suivant : INTITULE-ANNEE.xls
 ( Exemple : CHARGES-2020.xls )
 
