@@ -15,6 +15,8 @@ class StructPoste(ParentPoste):
             self.dicPostes[nom]['%CA Cumul'] = 0
 
     def calcul_structure(self,mois,annee):
+        mois = int(mois)
+        annee = int(annee)
         for index,row in self.charges.iterrows():
             date = row['Date']
             if (row['POSTE'] in self.nomPostes):
@@ -47,6 +49,6 @@ class StructPoste(ParentPoste):
             for index,row in self.dicPostes[nom].iterrows():
                 depenses_mois = self.dicPostes[nom].loc[row.name,'Dépenses du mois']
                 depenses_cumul = self.dicPostes[nom].loc[row.name,"Dépenses de l'année"]
-                self.dicPostes[nom].loc[row.name,'%CA MOIS'] = depenses_mois / ca_mois
-                self.dicPostes[nom].loc[row.name,'%CA Cumul'] = depenses_cumul / ca_annee
+                self.dicPostes[nom].loc[row.name,'%CA MOIS'] = depenses_mois*100 / ca_mois
+                self.dicPostes[nom].loc[row.name,'%CA Cumul'] = depenses_cumul*100 / ca_annee
     

@@ -46,7 +46,7 @@ class PDF():
     def struct_style(self,row_nom):
         style = [
             ('FACE',(0,0),(-1,-1),"Helvetica-Bold"),
-            ('LINEABOVE', (0,1), (-1,-1), 0.1, colors.black),
+            ('GRID', (0,0), (-1,-1), 0.1, "BLACK"),
             ('FONTSIZE',(0,0),(-1,-1),8),
             ('ALIGN',(0,0),(-1,-1),"CENTER"),
             ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
@@ -57,7 +57,8 @@ class PDF():
             ]
 
         for i in row_nom:
-            style.append(('BACKGROUND',(0,i),(-1,i),'BLACK'))
+            style.append(('BACKGROUND',(0,i),(-1,i),bleu))
+            style.append(('TEXTCOLOR',(0,i),(-1,i),bleu))
             style.append(('TEXTCOLOR',(0,i),(0,i),lightwhite))
 
         return TableStyle(style)
@@ -128,12 +129,26 @@ class PDF():
                         
         return numTable
 
-    def add_struct_table(self,dataframe,row_noms,x='center',y='center'):
+    def convert_struct_string(self,numTable):
+        for i in range(0,len(numTable)):
+            for j in range(0,len(numTable[i])):
+                if (type(numTable[i][j]) is float):
+                    if (j>2):
+                        numTable[i][j] = "{:.2f}".format(numTable[i][j])+" %" if numTable[i][j] != 0 else "/"
+                    else:
+                        numTable[i][j] = "{:.2f}".format(numTable[i][j])+" €" if numTable[i][j] != 0 else "/"
+
+        return numTable
+    
+
+
+    def add_struct_table(self,dataframe,row_noms,x='center',y='center',size=1):
         dataframe = dataframe.reset_index()
-        rowHeights = (len(dataframe)+1)*[12]
+        rowHeights = (len(dataframe)+1)*[12*size]
         rowHeights[0] = 20
         numTable = dataframe.to_numpy().tolist()
         numTable.insert(0,np.array(dataframe.columns.values).tolist())
+        numTable = self.convert_struct_string(numTable)
         #self.eliminate_zeros_add_euros(numTable)
         
         t = Table(numTable,rowHeights=rowHeights)
@@ -145,8 +160,8 @@ class PDF():
         if (x == -1 or x =='center'):
             x=(A4[1]/2)-(w/2)
         if (y == -1 or y == 'center'):
-            y=(A4[0]/2)-(h/2)
-
+            y=(A4[0]/2)-(h/2)-inch*0.8
+        
         t.drawOn(self.c,x,y)
 
     def add_table(self,dataframe,x=-1,y=-1):

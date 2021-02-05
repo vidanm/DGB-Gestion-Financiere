@@ -2,7 +2,7 @@ from .charges import *
 from .read_file import read_budget
 import pandas as pd
 import datetime as dt
-
+import codecs
 
 class Synthese():
     
@@ -15,28 +15,35 @@ class Synthese():
         self.synthese_cumul = self.synthese_annee.copy(deep=True)
     
     
-    def csv_of_precalculated_chantiers(self,annee,mois):
+    def precalc_pfdc(self,mois,annee):
         chantier_csv = {}
+        date = str(annee) + "-" + (str(mois) if len(str(mois)) == 2 else "0"+str(mois))
         if (os.path.exists("bibl/"+date)):
-            for filename in os.listdir('bibl/'+annee):
+            for filename in os.listdir('bibl/'+date):
                 code = filename[0:-7]
-                chantier_csv[code] = pd.read_csv("bibl/"+annee+"/"+filename,index_col=0)
+                with open("bibl/"+date+"/"+filename,'rb') as file:
+                    chantier_csv[code] = file.read()
+
         return chantier_csv
 
     def ajoute_synthese_annee(self,data):
         self.synthese_annee = self.synthese_annee.append(data,ignore_index=True)
 
-
     def calcul_synthese_annee(self,mois,annee):
+        
         chantier_names = self.charges.get_chantier_names()
-        #2020-06 -> 2020-6 chantier_csv = self.csv_of_precalculated_chantiers(annee,mois)
+        chantier_csv = self.precalc_pfdc(mois,annee)
+        
         for name in chantier_names:
             
-            if 'DIV' in name or 'STRUCT' in name or name in chantier_csv.keys:
+            if 'DIV' in name or 'STRUCT' in name:
                 continue
 
             chantier_line = ["",0,0,0,0,0,0,0,0]
             chantier_line[0] = name
+            
+            if name in chantier_csv.keys():
+                chantier_line[4] = float(chantier_csv[name])
 
             for index,row in self.charges.get_raw_chantier(name).iterrows():
                 date = row['Date']
@@ -50,6 +57,7 @@ class Synthese():
         
         self.synthese_annee = self.synthese_annee.set_index("CHANTIER")
         self.ajoute_budget()
+        self.calcul_marges()
         self.synthese_annee = self.synthese_annee.round(2)
         
     
@@ -57,15 +65,28 @@ class Synthese():
     def ajoute_budget(self):
         dfBudget = read_budget("var/budget.xls")
         chantier_names = self.charges.get_chantier_names()
-        print(self.synthese_annee)
         for name in chantier_names:
             if name in dfBudget.columns :
                 for index,row in dfBudget.iterrows():
-                    #print(name)
-                    #print(row[name])
-                    print(self.synthese_annee.loc[name])
                     self.synthese_annee.loc[name,"BUDGET"] += row[name]
     
-    #def calcul_pfdc(self):
-        
-    #def calcul_marges(self):
+    def calcul_marges(self):
+        chantier_names = self.charges.get_chantier_names()
+        for name in chantier_names:
+            if 'DIV' in name or 'STRUCT' in name:
+                continue
+            
+            budget = self.synthese_annee.loc[name,"BUDGET"]
+            pfdc = self.synthese_annee.loc[name,"PFDC"]
+            depcum = self.synthese_annee.loc[name,"DEP CUMULEES"]
+            
+
+            print(type(budget))
+            print(type(pfdc))
+
+            if budget != 0:
+                self.synthese_annee.loc[name,"MARGE THEORIQUE (€)"] = budget - pfdc
+                self.synthese_annee.loc[name,"MARGE THEORIQUE (%)"] = pfdc*100/budget
+                self.synthese_annee.loc[name,"MARGE BRUTE (€)"] = budget - depcum
+                self.synthese_annee.loc[name,"MARGE BRUTE (%)"] = depcum*100/budget
+

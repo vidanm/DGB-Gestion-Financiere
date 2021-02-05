@@ -98,7 +98,7 @@ def syntpdf():
 
     pdf.new_page("Synthese",date)
     pdf.add_table(syn.synthese_annee,x='center',y='center')
-    pdf.create_bar_graph()
+    #pdf.create_bar_graph(600,250,syn.synthese_annee)
     pdf.save_page()
     pdf.save_pdf()
     return send_file("bibl/Synthese.pdf",as_attachment=True)
@@ -164,7 +164,9 @@ def rad():
     postes.calcul_total_chantier()
     postes.calcul_ges_prev()
     postes.remove_poste("FACTURATION CLIENT")
-    postes.dicPostes["GESPREV"].iloc[-1].to_csv("bibl/"+date+"/"+code+"_tt.csv")
+    with open("bibl/"+date+"/"+code+"_tt.txt","w") as file:
+        file.write(str(postes.dicPostes["GESPREV"].iloc[-1]["PFDC"]))
+
     #postes.dicPostes["GESPREV"].iloc[-1] = pd.read_csv("bibl/"+date+"/"+code+"_tt.csv")
     #print(postes.dicPostes["GESPREV"].iloc[-1])
     postes.round_2dec_df()
@@ -192,6 +194,8 @@ def structpdf():
     '''
     if request.method == 'POST':
         date = request.form['date']
+        year = date[0:4]
+        month = date[5:7]
         code = "STRUCT"
         plan,charges,budget = check_file_here();
         if (plan == None or charges == None):
@@ -203,11 +207,11 @@ def structpdf():
             os.makedirs("bibl/"+date)        
 
         postes = StructPoste(plan,charges)
-        postes.calcul_structure(6,2020)
+        postes.calcul_structure(month,year)
         pdf = PDF(filename)
-        pdf.new_page("STRUCT",code)
+        pdf.new_page("STRUCT","")
         pdf.add_sidetitle(str(date))
-        pdf.add_struct_table(postes.format_for_pdf(),postes.row_noms)
+        pdf.add_struct_table(postes.format_for_pdf(),postes.row_noms,size=0.8)
         pdf.save_page()
         pdf.save_pdf()
 
