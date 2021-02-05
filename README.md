@@ -19,7 +19,7 @@
     > Récapitulatif des dépenses par chantier sur le mois et l'année 
     > La synthèse globale ne prendra en compte que les chantiers dont la propre synthèse de chantier a déjà été générée.
 
-### Instructions de bonne utilisation
+### Imports des fichiers excel
 
 Les fichiers Excel doivent être importés sous le format .xls et non .xlsx .
 
