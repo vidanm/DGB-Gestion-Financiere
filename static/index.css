@@ -2,7 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
 
-body, h1,h2,button{
+body, h1,h2,button,p{
 	font-family: "Montserrat",sans-serif;
 	font-weight:700;
 	text-align:center;
@@ -55,9 +55,6 @@ button {
 	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.2);
 }
 
-p {
-	font-size:13px;
-}
 
 #buttons {
 	padding:20px;
@@ -98,7 +95,7 @@ div#loading {
   animation: spin 2s linear infinite;
 }
 
-input[type=text],input[type=month],input[type=submit] {
+input[type=file],input[type=text],input[type=month],input[type=submit] {
 	font-family:
 	outline:none;
 	border:0;

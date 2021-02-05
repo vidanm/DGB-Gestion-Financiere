@@ -91,13 +91,16 @@ def syntpdf():
     '''
     global date
     date = request.form['date']
+    year = date[0:4]
+    month = date[5:7]
+
     plan,charges,budget = check_file_here()
     if (plan == None or charges == None):
         return "Missing file"
 
     syn = Synthese(charges)
     pdf = PDF("bibl/Synthese.pdf")
-    syn.calcul_synthese_annee(6,2020)
+    syn.calcul_synthese_annee(int(month),int(year))
 
     pdf.new_page("Synthese",date)
     pdf.add_table(syn.synthese_annee,x='center',y='center')
@@ -280,16 +283,5 @@ def download(filename):
 
     bibl = os.path.join(app.root_path,app.config['DOWNLOAD_FOLDER'])
     return send_from_directory(directory=bibl,filename=filename)
-
-
-@app.route('/table')
-def table():\
-
-    '''
-        Obsolete ?
-    '''
-
-    table = postes.dicPostes["MO"]
-    return table.to_html()
 
 
