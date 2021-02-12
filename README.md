@@ -1,11 +1,12 @@
 # Logiciel de gestion financière DGB
 ![DGB LOGO](https://github.com/vidanm/DGB-Gestion/blob/master/images/DGB.jpeg)
 
+https://dgb-gestionfinanciere.herokuapp.com/
+
 ### Dépendances
-- Python
-- Pandas
-- Flask
-- Reportlab
+- [Pandas](https://github.com/pandas-dev/pandas)
+- [Flask](https://github.com/pallets/flask)
+- [Reportlab](https://github.com/MrBitBucket/reportlab-mirror)
 
 ### Fonctionnalités
 
@@ -19,9 +20,12 @@
     > Récapitulatif des dépenses par chantier sur le mois et l'année 
     > La synthèse globale ne prendra en compte que les chantiers dont la propre synthèse de chantier a déjà été générée.
 
-### Instructions de bonne utilisation
+### Imports des fichiers excel
 
-Les fichiers Excel doivent être importés sous le format .xls et non .xlsx
+Les fichiers Excel doivent être importés sous le format .xls et non .xlsx .
+
+Ils doivent respecter le format de nommage suivant : INTITULE-ANNEE.xls
+( Exemple : CHARGES-2020.xls )
 
 - Le Plan Comptable
     1. Les intitulés de lignes doivent se trouver sur la 1ère colonne pour le section chantier et la 5ème colonne pour la section structure.
