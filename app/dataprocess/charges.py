@@ -1,6 +1,5 @@
 from .plan_comptable import *
 from .basic_operations import *
-from .read_file import read_charges
 
 class Charges():
     '''
@@ -10,8 +9,11 @@ class Charges():
     Ne pas les utiliser en dehors.
     '''
     
-    def __init__(self,path,planComptable,f):
-        self._dicCharges = read_charges(path)
+    def __init__(self,charges,planComptable,f):
+        ''' Prends les charges lues par CustomReaderFile(), 
+        une instance de la classe PlanComptable(), 
+        et un fichier d'ecriture pour les codes manquants'''
+        self._dicCharges = charges
         self._dicCharges = self._delete_code_without_poste(planComptable,f)
         self._dicCharges = self._associe_compte_poste(planComptable)
         self._dicChantiers = self._split_by_chantiers()
@@ -22,7 +24,6 @@ class Charges():
         C'est utilisé quand un code du fichier charges n'est pas présent dans le
         plan comptable'''
         f.write(str(code) + "\n")
-
     
 
     def _delete_code_without_poste(self,planComptable,f):
@@ -51,7 +52,6 @@ class Charges():
 
         return charges
 
-    
 
     def _associe_compte_poste(self,planComptable):
         '''On associe les numéro de comptes comptable aux postes associés dans le        plan comptable'''
@@ -63,7 +63,6 @@ class Charges():
             charges.loc[index,'SOUS POSTE'] = sousPoste
         
         return charges
-    
     
 
     def _split_by_chantiers(self):
@@ -87,7 +86,6 @@ class Charges():
         return dicChantiers
     
     
-
     def get_chantier_names(self):
         '''Renvoie tout les noms de chantiers'''
         names = []

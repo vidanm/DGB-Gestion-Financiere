@@ -1,7 +1,6 @@
 from .plan_comptable import *
 from .charges import *
 import datetime as dt
-from .read_file import read_budget
 
 class ParentPoste():
 

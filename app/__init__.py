@@ -9,13 +9,8 @@ from app.pdf_generation.tabletopdf import *
 from app.dataprocess.postesparent import *
 from app.dataprocess.postes_chantier import *
 from app.dataprocess.postes_structure import *
-from app.dataprocess.read_file import read_budget
 from app.dataprocess.dataframe_to_html import *
-
-'''
-postes = Postes(plan)
-postes.calcul_chantier(charges.get_raw_chantier("19-GP-ROSN"),6,2020)
-'''
+from app.dataprocess.read_file import *
 
 UPLOAD_FOLDER= 'var'
 DOWNLOAD_FOLDER = 'bibl'
@@ -28,34 +23,23 @@ app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
 codes_missing = open("missing_numbers.txt","w")
 expected_files = ['plan','charges','budget']
+annee_disponibles = []
 
 postes = None #Stockage des donnees sous pdf
 mois = "" #Mois du pdf genere
 code = "" #Code chantier STRUCT ou GLOB du pdf
 date = "" #Date complete du pdf genere
 
-def check_file_here():
-    '''
-        Verifie la presence des fichiers prerequis qui sont : 
-        - Le Plan Comptable
-        - Les Charges
-        - Le Budget
-    '''
-    plan = None;
-    charges = None;
-    for filename in os.listdir('var'):
-        print(filename)
-        if 'plan.xls' == filename:
-            plan = PlanComptable('var/plan.xls')
-        if 'budget.xls' == filename:
-            budget = read_budget('var/budget.xls')
-    
-    for filename in os.listdir('var'):
-        '''On doit deja avoir rencontre le fichier plan avant de pouvoir traiter le fichier de charges'''
-        if 'charges.xls' == filename:
-            charges = Charges('var/charges.xls',plan,codes_missing)
-    
-    return (plan,charges,budget)
+
+def get_files(path,year):
+
+    try:
+        files = CustomFileReader("var/",year)
+    except Exception as error:
+        files = None
+        raise error
+
+    return files
 
 
 def allowed_file(filename):
@@ -75,14 +59,14 @@ def index():
         Page d'accueil
     '''
 
-    charges_modif = time.ctime(os.path.getmtime('var/charges.xls'))
-    plan_modif = time.ctime(os.path.getmtime('var/plan.xls'))
+    #charges_modif = time.ctime(os.path.getmtime('var/charges.xls'))
+    #plan_modif = time.ctime(os.path.getmtime('var/plan.xls'))
 
-    return render_template("index.html") + '<p>' + 'Dernière mise à jour du fichier de charges : '+ str(charges_modif) + '</p><p>' + 'Dernière mise à jour du plan comptable : '+str(plan_modif) + '</p>'
+    return render_template("index.html") #+ '<p>' + 'Dernière mise à jour du fichier de charges : '+ str(charges_modif) + '</p><p>' + 'Dernière mise à jour du plan comptable : '+str(plan_modif) + '</p>'
 
 
 
-@app.route('/synthese_globale',methods=['POST','GET'])
+@app.route('/synthese_globale',methods=['POST'])
 def syntpdf():
 
     '''
@@ -94,13 +78,18 @@ def syntpdf():
     year = date[0:4]
     month = date[5:7]
 
-    plan,charges,budget = check_file_here()
-    if (plan == None or charges == None):
-        return "Missing file"
+    try:
+        files = get_files("var/",year)
+    except Exception as error:
+        return "Erreur de lecture de fichiers : "+ str(error)  
 
+    plan = PlanComptable(files.get_plan())
+    charges = Charges(files.get_charges(),plan,codes_missing)
+    budget = files.get_budget()
+    
     syn = Synthese(charges)
     pdf = PDF("bibl/Synthese.pdf")
-    syn.calcul_synthese_annee(int(month),int(year))
+    syn.calcul_synthese_annee(int(month),int(year),budget)
 
     pdf.new_page("Synthese",date)
     pdf.add_table(syn.synthese_annee,y=A4[0]-inch*4.5)
@@ -110,7 +99,7 @@ def syntpdf():
     return send_file("bibl/Synthese.pdf",as_attachment=True)
 
 
-@app.route('/synthese_chantier',methods=['POST','GET'])
+@app.route('/synthese_chantier',methods=['POST'])
 def chantpdf():
 
     '''
@@ -123,28 +112,31 @@ def chantpdf():
     global date
     global postes
 
-    if request.method == 'POST':
-        date = request.form['date']
-        year = date[0:4]
-        month = date[5:7]
-        print(month)
-        print(year)
-        code = request.form['code']
+    date = request.form['date']
+    year = date[0:4]
+    month = date[5:7]
+    print(month)
+    print(year)
+    code = request.form['code']
 
-        plan,charges,budget = check_file_here();
-        if (plan == None or charges == None):
-            return "Missing file"
+    try:
+        files = get_files("var/",year)
+    except Exception as error:
+        return "Erreur de lecture de fichiers : "+ str(error)
 
-        filename = "bibl/"+code+"_"+request.form['date']+".pdf"
-        postes = ChantierPoste(plan,charges,code)
-        postes.calcul_chantier(int(month),int(year),budget)
-        postes.round_2dec_df()
-        convert_single_dataframe_to_html_table(postes.dicPostes,month,year,code)
 
-        return render_template("rad.html")
-        
-        ''''''
-    return "A"
+    plan = PlanComptable(files.get_plan())
+    charges = Charges(files.get_charges(),plan,codes_missing)
+    budget = files.get_budget()
+    
+    filename = "bibl/"+code+"_"+request.form['date']+".pdf"
+    postes = ChantierPoste(plan,charges,code)
+    postes.calcul_chantier(int(month),int(year),budget)
+    postes.round_2dec_df()
+    convert_single_dataframe_to_html_table(postes.dicPostes,month,year,code)
+
+    return render_template("rad.html")
+    
 
 @app.route('/rad',methods=['POST'])
 def rad():
@@ -165,7 +157,9 @@ def rad():
 
     for value in request.form:
         poste,sousposte = value.split('$')
+        print(request.form[value])
         postes.ajoute_rad(poste,sousposte,request.form[value])
+    
     postes.calcul_pfdc_budget()
     postes.calcul_total_chantier()
     postes.calcul_ges_prev()
@@ -203,11 +197,16 @@ def structpdf():
         year = date[0:4]
         month = date[5:7]
         code = "STRUCT"
-        plan,charges,budget = check_file_here();
-        if (plan == None or charges == None):
-            return "Missing file"
 
-        
+        try:
+            files = get_files("var/",year)
+        except Exception as error:
+            return "Erreur de lecture de fichiers : "+ str(error)
+
+        plan = PlanComptable(files.get_plan())
+        charges = Charges(files.get_charges(),plan,codes_missing)
+        budget = files.get_budget()
+      
         filename = "bibl/"+date+"/"+code+".pdf"
         if not (os.path.exists("bibl/"+date)):
             os.makedirs("bibl/"+date)        
@@ -253,35 +252,5 @@ def upload_file():
                                     filename=filename))
     return render_template("upload.html")
  
-
-@app.route('/loading')
-def loading_page():
-    '''
-        Pas utilise
-    '''
-    return render_template("loader.html")
-
-
-@app.route('/bibliotheque')
-def bibliotheque() :
-    
-    '''
-        Obsolete ( Pas forcement d'interet )
-    '''
-    
-    out = "<!DOCTYPE HTML><html><body>"
-    for filename in os.listdir('bibl'):
-        out += '<a href="/download/'+filename+'">'+filename+'</a><br>'
-    return out + "</body></html>"
-
-@app.route('/download/<path:filename>', methods=['GET','POST'])
-def download(filename):
-    
-    '''
-        Obsolete ( Telechargement depuis la bibliotheque )
-    '''
-
-    bibl = os.path.join(app.root_path,app.config['DOWNLOAD_FOLDER'])
-    return send_from_directory(directory=bibl,filename=filename)
 
 

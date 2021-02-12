@@ -1,0 +1,22 @@
+Exercise 1.1 
+
+simple ( simple 2 3 4 ) 5 6
+simple ( 2 * ( 3 + 4 ) ) 5 6
+simple ( 2 * 7 ) 5 6
+simple 14 5 6
+14 * ( 5 + 6 )
+14 * 11
+154
+
+Exercise 1.2
+(a - b) a b => a²- b²
+
+(a - b) a b
+{unfold}
+(a - b) * ( a + b )
+{distribution}
+( a²+ ab- ab - b²
+{substraction}
+=> a²+ ²
+
+

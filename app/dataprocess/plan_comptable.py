@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import numpy as np
 from .basic_operations import *
-from .read_file import read_comptable
 
 class PlanComptable():
     '''On sépare le plan en structure/chantier car c'est le seul moyen qu'on a de savoir si un
@@ -26,8 +25,8 @@ class PlanComptable():
         self._dfComptable = self._dfComptable.append(row,ignore_index=True)
 
 
-    def __init__(self,path):
-        (self._dfPlanChantier,self._dfPlanStruct) = read_comptable(path)
+    def __init__(self,plan):
+        (self._dfPlanChantier,self._dfPlanStruct) = plan
         self._dfComptable = self._dfPlanChantier.append(self._dfPlanStruct,ignore_index=True)
         self._dfComptable['N° DE COMPTE'] = self._dfComptable['N° DE COMPTE'].apply(str)
 

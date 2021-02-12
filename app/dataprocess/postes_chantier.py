@@ -1,7 +1,6 @@
 from .plan_comptable import *
 from .charges import *
 import datetime as dt
-from .read_file import read_budget
 from .postesparent import ParentPoste
 
 class ChantierPoste(ParentPoste):
@@ -34,7 +33,7 @@ class ChantierPoste(ParentPoste):
             self.dicPostes[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[self.codeChantier])
 
     def ajoute_rad(self,poste,sousposte,rad):
-        if rad.isnumeric():
+        if rad.replace('.','').isnumeric():
             self.dicPostes[poste].loc[sousposte,"RAD"] = float(rad)
 
     def calcul_pfdc_budget(self):
