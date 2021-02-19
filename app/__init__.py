@@ -86,13 +86,19 @@ def syntpdf():
     plan = PlanComptable(files.get_plan())
     charges = Charges(files.get_charges(),plan,codes_missing)
     budget = files.get_budget()
+    CA = ChiffreAffaire(charges.get_raw_charges())
     
+    camois = CA.calcul_ca_mois(int(month),int(year))
+    cacumul = CA.calcul_ca_annee(int(year))
+
     syn = Synthese(charges)
     pdf = PDF("bibl/Synthese.pdf")
     syn.calcul_synthese_annee(int(month),int(year),budget)
+    syn.calcul_tableau_ca(camois,cacumul)
 
     pdf.new_page("Synthese",date)
     pdf.add_table(syn.synthese_annee,y=A4[0]-inch*4.5)
+    pdf.add_table(syn.total_ca_marge,y=inch*3,x=A4[1]-inch*5)
     pdf.create_bar_syntgraph(600,250,syn.synthese_annee)
     pdf.save_page()
     pdf.save_pdf()

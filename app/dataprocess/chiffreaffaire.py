@@ -27,9 +27,7 @@ class ChiffreAffaire():
         for index,row in self._charges.iterrows():
             date = row['Date']
             if (date.month == mois and date.year == annee):
-                print(str(date) + ' / ' + str(row['Crédit']))
                 result += row['Crédit']
-        print("CHIFFRE DAFFAIRE MOIS : "+str(result))
         return result
 
 
@@ -45,6 +43,5 @@ class ChiffreAffaire():
             for i in range(1,12):
                 result += self.calcul_ca_mois(i,annee)
         
-        print("CHIFFRE DAFFAIRE CUMUL : "+str(result))
         return result
 

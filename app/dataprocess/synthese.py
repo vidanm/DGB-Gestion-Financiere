@@ -12,7 +12,10 @@ class Synthese():
         self.charges = charges
         self.synthese_annee = pd.DataFrame(None,None,columns=self.col)
         self.synthese_cumul = self.synthese_annee.copy(deep=True)
-    
+        
+        self.total_depenses_cumul = 0 
+        self.total_depenses_mois = 0
+   
     
     def precalc_pfdc(self,mois,annee):
         '''Rajout des csv des chantiers dont la synthese a deja ete calcules'''
@@ -59,7 +62,7 @@ class Synthese():
         self.ajoute_budget(budget)
         self.calcul_marges()
         self.synthese_annee = self.synthese_annee.round(2)
-        
+        self._calcul_total()
     
 
     def ajoute_budget(self,budget):
@@ -89,5 +92,15 @@ class Synthese():
                 self.synthese_annee.loc[name,"MARGE BRUTE (€)"] =  round(budget-depcum,2)
                 self.synthese_annee.loc[name,"MARGE BRUTE (%)"] = round(depcum*100/budget,2)
 
-    def calcul_tableau_ca(chiffreAffaire):
-        pass
+    def _calcul_total(self):
+        self.total_depenses_cumul = round(self.synthese_annee['DEP CUMULEES'].sum(),2)
+        self.total_depenses_mois = round(self.synthese_annee['DEP DU MOIS'].sum(),2)
+    
+    def calcul_tableau_ca(self,camois,cacumul):
+        '''Doit etre appele apres le calcul de la synthese et le calcul du total'''
+        camois = round(camois,2)
+        cacumul = round(cacumul,2)
+        self.total_ca_marge = pd.DataFrame(np.array([[camois,self.total_depenses_mois,camois-self.total_depenses_mois,100*round(self.total_depenses_mois/camois,2)],[cacumul,self.total_depenses_cumul,100*round(cacumul-self.total_depenses_cumul,2),100*round(self.total_depenses_cumul/cacumul,2)]]),columns=["CA","Depenses","Marge brute","Marge brute %"])
+        s = pd.Series(["Mois","Année"])
+        self.total_ca_marge = self.total_ca_marge.set_index(s)
+        print(self.total_ca_marge)
