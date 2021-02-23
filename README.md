@@ -3,6 +3,8 @@
 
 https://dgb-gestionfinanciere.herokuapp.com/
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0d9c8b09c33b40bb8db12b0d60a397c9)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vidanm/DGB_Gesfin&amp;utm_campaign=Badge_Grade)
+
 ## Dépendances
 - [Pandas](https://github.com/pandas-dev/pandas)
 - [Flask](https://github.com/pallets/flask)
