@@ -1,4 +1,4 @@
-'''OBSOLETE ???'''
+"""OBSOLETE ???"""
 
 from .read_file import read_budget
 from .basic_operations import is_in_dic
@@ -34,21 +34,21 @@ class Postes():
     
 
     def _depenses_mois(self,row):
-        '''Rajoute la dépense de la ligne row dans la case dépenses du mois'''
+        """Rajoute la dépense de la ligne row dans la case dépenses du mois"""
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
         return 0
 
     
 
     def _depenses_annee(self,row):
-        '''Rajoute la dépense de la ligne row dans la case dépenses de l'année'''
+        """Rajoute la dépense de la ligne row dans la case dépenses de l'année"""
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
         return 0
 
     
 
     def calcul_chantier(self,dfChantier,mois,annee):
-        ''' Calcul les dépenses du mois et de l'année pour le chantier'''
+        """ Calcul les dépenses du mois et de l'année pour le chantier"""
     
         
 
@@ -72,7 +72,7 @@ class Postes():
     
 
     def _ajoute_budget_chantier(self,dfBudget):
-        '''Ajoute le budget dans les cases de postes correspondantes'''
+        """Ajoute le budget dans les cases de postes correspondantes"""
         for index,row in dfBudget.iterrows():
             self.dicPostes[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[self.codeChantier])
 
@@ -92,7 +92,7 @@ class Postes():
     """
 
     def calcul_pfdc_budget(self):
-        '''Calcul le pfdc et l'ecart pfdc budget'''
+        """Calcul le pfdc et l'ecart pfdc budget"""
         for nom in self.nomPostes:
             for index,row in self.dicPostes[nom].iterrows():
                 print(row)
@@ -104,7 +104,7 @@ class Postes():
 
 
     def round_2dec_df(self):
-        '''Arrondi tout les nombres à 2 chiffres après la virgule'''
+        """Arrondi tout les nombres à 2 chiffres après la virgule"""
         for nom in self.nomPostes:
             self.dicPostes[nom] = self.dicPostes[nom].round(2)
 
@@ -115,7 +115,7 @@ class Postes():
 
 
     def _calcul_total_chantier(self,mois):
-        '''Calcul du total des dépenses'''
+        """Calcul du total des dépenses"""
         totalmois = 0
         totalannee = 0
         for poste in self.dicPostes:

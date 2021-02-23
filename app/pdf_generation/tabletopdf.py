@@ -16,6 +16,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 class PDF():
     
     def __init__(self,nom):
+        """ Permets la generation des différents pdf ( synthese / structure etc. )""" 
         self.nom = nom
         self.c = canvas.Canvas(nom,pagesize=(A4[1],A4[0]))
         self.logo = os.path.join('images/DGB.jpeg')

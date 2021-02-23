@@ -1,17 +1,18 @@
 from .basic_operations import is_in_dic
 
 class Charges():
-    '''
+    
+    """
     S'occupe de traiter le fichier excel contenant toutes les charges
 
     Les méthodes commençant par _ sont des méthodes internes a la classe
     Ne pas les utiliser en dehors.
-    '''
+    """
     
     def __init__(self,charges,planComptable,f):
-        ''' Prends les charges lues par CustomReaderFile(), 
+        """ Prends les charges lues par CustomReaderFile(), 
         une instance de la classe PlanComptable(), 
-        et un fichier d'ecriture pour les codes manquants'''
+        et un fichier d'ecriture pour les codes manquants"""
         self._dicCharges = charges
         self._dicCharges = self._delete_code_without_poste(planComptable,f)
         self._dicCharges = self._associe_compte_poste(planComptable)
@@ -19,15 +20,15 @@ class Charges():
 
 
     def _write_missing_code_in_file(self,f,code):
-        '''Ecris dans un fichier externe le numéro de code spécifié en argument.
+        """Ecris dans un fichier externe le numéro de code spécifié en argument.
         C'est utilisé quand un code du fichier charges n'est pas présent dans le
-        plan comptable'''
+        plan comptable"""
         f.write(str(code) + "\n")
     
 
     def _delete_code_without_poste(self,planComptable,f):
-        '''On elimine les lignes dont le numéro de compte n'est pas spécifié
-        dans le plan comptable'''
+        """On elimine les lignes dont le numéro de compte n'est pas spécifié
+        dans le plan comptable"""
         missing_codes = []
         charges = self._dicCharges
 
@@ -36,8 +37,8 @@ class Charges():
             if planComptable.get_poste_by_code(str(value)).empty:
 
                 if (int(value/100000) == 7):
-                    '''Les codes comptables commencant par 7 sont des ventes et doivent
-                    toujours être pris en compte en tant que tels'''
+                    """Les codes comptables commencant par 7 sont des ventes et doivent
+                    toujours être pris en compte en tant que tels"""
                     planComptable.ajoute_code(value,"Vente sans poste","Vente sans sous poste")
                     continue
 
@@ -53,7 +54,7 @@ class Charges():
 
 
     def _associe_compte_poste(self,planComptable):
-        '''On associe les numéro de comptes comptable aux postes associés dans le        plan comptable'''
+        """On associe les numéro de comptes comptable aux postes associés dans le        plan comptable"""
         charges = self._dicCharges
         for index,value in self._dicCharges['Général'].iteritems():
             poste = planComptable.get_poste_by_code(str(value))['POSTE'].values[0]
@@ -65,17 +66,17 @@ class Charges():
     
 
     def _split_by_chantiers(self):
-        '''On divise les données des charges dans un dictionnaire utilisant les code        de chantier comme clé'''
+        """On divise les données des charges dans un dictionnaire utilisant les code        de chantier comme clé"""
         dicChantiers = {}
         nomChantiers = []
         for index,row in self._dicCharges.iterrows():
             value = row['Section analytique']
             
 
-            '''
+            """
             Il faut écrire une fonction qui modifie dans les charges tout les 20-STRUCT0 en STRUCT
             if 'STRUCT' in str(value):
-                value = 'STRUCT'''
+                value = 'STRUCT"""
 
             if not is_in_dic(str(value),nomChantiers):
                 nomChantiers.append(str(value))
@@ -86,15 +87,15 @@ class Charges():
     
     
     def get_chantier_names(self):
-        '''Renvoie tout les noms de chantiers'''
+        """Renvoie tout les noms de chantiers"""
         names = []
         for key in self._dicChantiers:
             names.append(key)
         return names
 
     def get_with_approximation(self,approx):
-        '''Renvoie le nom reel en fonction d'une approximation
-        STRUCT -> 20-STRUCT0'''
+        """Renvoie le nom reel en fonction d'une approximation
+        STRUCT -> 20-STRUCT0"""
         names = self.get_chantier_names()
         for name in names:
             if approx in name:    
@@ -102,7 +103,7 @@ class Charges():
 
 
     def get_raw_chantier(self,code):
-        '''Renvoie les données pour un chantier particulier'''
+        """Renvoie les données pour un chantier particulier"""
         return self._dicChantiers[code]
 
     
@@ -111,5 +112,5 @@ class Charges():
     
 
     def get_raw_charges(self):
-        '''Renvoie le tableau de charges'''
+        """Renvoie le tableau de charges"""
         return self._dicCharges

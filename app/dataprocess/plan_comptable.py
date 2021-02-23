@@ -2,11 +2,11 @@ import pandas as pd
 import numpy as np
 
 class PlanComptable():
-    '''On sépare le plan en structure/chantier car c'est le seul moyen qu'on a de savoir si un
-    poste est un poste appartenant a la structure ou appartenant au chantier'''
+    """On sépare le plan en structure/chantier car c'est le seul moyen qu'on a de savoir si un
+    poste est un poste appartenant a la structure ou appartenant au chantier"""
 
     def get_poste_by_code(self,code):
-        '''Renvoie le poste en fonction du code donné'''
+        """Renvoie le poste en fonction du code donné"""
         return self._dfComptable.loc[self._dfComptable['N° DE COMPTE'].str.contains(code,na=False)]
 
     

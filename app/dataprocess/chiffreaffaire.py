@@ -13,7 +13,7 @@ class ChiffreAffaire():
 
     
     def _delete_ach_lines(self):
-        ''' Elimine toutes les lignes d'achats pour ne garder que les ventes '''
+        """ Elimine toutes les lignes d'achats pour ne garder que les ventes """
         for index,value in self._charges['Journal'].iteritems():
             if value != 'VEN':
                 self._charges = self._charges.drop(index=index)
@@ -21,7 +21,7 @@ class ChiffreAffaire():
     
 
     def calcul_ca_mois(self,mois,annee):
-        ''' Calcul le chiffre d'affaire du mois de l'année donné en argument '''
+        """ Calcul le chiffre d'affaire du mois de l'année donné en argument """
         result = 0.0
         for index,row in self._charges.iterrows():
             date = row['Date']
@@ -32,7 +32,7 @@ class ChiffreAffaire():
 
     
     def calcul_ca_annee(self,annee):
-        ''' Calcul le chiffre d'affaire de l'année donnée en argument '''
+        """ Calcul le chiffre d'affaire de l'année donnée en argument """
         today = date.today()
         result = 0.0
         if (today.year == annee):

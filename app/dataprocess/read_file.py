@@ -9,12 +9,10 @@ class CustomFileReader():
             self._charges = self._read_charges(path+"Charges"+year+".xls")
         except :
             raise FileNotFoundError("Fichier de charges manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'Charges"+year+".xls'")
-        
         try:
             self._pc = self._read_comptable(path+"PlanComptable"+year+".xls")
         except: 
             raise FileNotFoundError("Fichier Plan Comptable manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'PlanComptable"+year+".xls'")
-
         try:
             self._budget = self._read_budget(path+"Budget"+year+".xls")
         except:
@@ -36,14 +34,12 @@ class CustomFileReader():
         try:
             charges = pd.read_excel(path) 
         except Exception as error:
-            print(type(error))
-            print(error)
             raise error
-
         charges = charges.drop(columns=['Type','Référence interne','Date réf. externe','Auxiliaire','N°'])
         charges = charges.fillna(0)
         charges['POSTE'] = ''
         charges['SOUS POSTE'] = ''
+        self._charges = charges
         return charges
 
 
@@ -59,11 +55,10 @@ class CustomFileReader():
         dfCompteSite = dfCompteSite[pd.notnull(dfCompteSite['N° DE COMPTE'])]
         dfCompteStruct = dfCompteStruct[pd.notnull(dfCompteStruct['N° DE COMPTE.1'])]
         dfCompteStruct = dfCompteStruct.rename(columns={'N° DE COMPTE.1': 'N° DE COMPTE','POSTE.1' : 'POSTE','SOUS POSTE.1' : 'SOUS POSTE','EX..1':'EX.'})
-        '''dfCompteSite = dfCompteSite.append(dfCompteStruct,ignore_index=True)'''
+        #dfCompteSite = dfCompteSite.append(dfCompteStruct,ignore_index=True)
         
         dfCompteSite['N° DE COMPTE'] = dfCompteSite['N° DE COMPTE'].apply(str)
         dfCompteStruct['N° DE COMPTE'] = dfCompteStruct['N° DE COMPTE'].apply(str)
-        
         values = {'SOUS POSTE':'/'}
         dfCompteSite = dfCompteSite.fillna(value=values)
         dfCompteStruct = dfCompteStruct.fillna(value=values)

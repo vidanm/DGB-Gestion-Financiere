@@ -17,7 +17,7 @@ class Synthese():
    
     
     def precalc_pfdc(self,mois,annee):
-        '''Rajout des csv des chantiers dont la synthese a deja ete calcules'''
+        """Rajout des csv des chantiers dont la synthese a deja ete calcules"""
         chantier_csv = {}
         date = str(annee) + "-" + (str(mois) if len(str(mois)) == 2 else "0"+str(mois))
         if (os.path.exists("bibl/"+date)):
@@ -32,7 +32,7 @@ class Synthese():
         self.synthese_annee = self.synthese_annee.append(data,ignore_index=True)
 
     def calcul_synthese_annee(self,mois,annee,budget):
-        "Calcul de la synthese des dépenses d'une année en omettant la structure"
+        """Calcul de la synthese des dépenses d'une année en omettant la structure"""
         chantier_names = self.charges.get_chantier_names()
         chantier_csv = self.precalc_pfdc(mois,annee)
         
@@ -128,8 +128,8 @@ class Synthese():
         self.total_depenses_mois = round(self.synthese_annee['DEP DU MOIS'].sum(),2)
     
     def calcul_tableau_ca(self,camois,cacumul):
-        '''Doit etre appele apres le calcul de la synthese et le calcul du total
-        Se charge de mettre en forme le tableau du chiffre d'affaire'''
+        """Doit etre appele apres le calcul de la synthese et le calcul du total
+        Se charge de mettre en forme le tableau du chiffre d'affaire"""
         camois = round(camois,2)
         cacumul = round(cacumul,2)
         self.total_ca_marge = pd.DataFrame(np.array([[camois,self.total_depenses_mois,camois-self.total_depenses_mois,round(100*(self.total_depenses_mois/camois),2)],[cacumul,self.total_depenses_cumul,round(cacumul-self.total_depenses_cumul,2),round(100*(self.total_depenses_cumul/cacumul),2)]]),columns=["CA","Depenses","Marge brute","Marge brute %"])

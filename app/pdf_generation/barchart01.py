@@ -8,6 +8,7 @@ from reportlab.graphics.charts.textlabels import Label
 
 class SpecialHorizontalBarChart(HorizontalBarChart):
     def __init__(drawing, _fontName, _fontSize, color):
+        """ BarChart from reportlab gallery """
         HorizontalBarChart.__init__(drawing)
         drawing.x                       = 45
         drawing.y                       = 24

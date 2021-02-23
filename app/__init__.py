@@ -44,9 +44,9 @@ def get_files(path,year):
 
 def allowed_file(filename):
     
-    '''
+    """
         Verifie le bon format des fichiers prerequis fournis par l'utilisateur
-    '''
+    """
 
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -55,9 +55,9 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     
-    '''
+    """
         Page d'accueil
-    '''
+    """
 
     #charges_modif = time.ctime(os.path.getmtime('var/charges.xls'))
     #plan_modif = time.ctime(os.path.getmtime('var/plan.xls'))
@@ -69,10 +69,10 @@ def index():
 @app.route('/synthese_globale',methods=['POST'])
 def syntpdf():
 
-    '''
+    """
         Generation de la synthese
         Sauvegarde en pdf
-    '''
+    """
     global date
     date = request.form['date']
     year = date[0:4]
@@ -108,11 +108,11 @@ def syntpdf():
 @app.route('/synthese_chantier',methods=['POST'])
 def chantpdf():
 
-    '''
+    """
         Generation de la synthese du chantier
         Affichage en HTML pour permettre a l'utilisateur
         l'entree du Reste A Depenser
-    '''
+    """
     
     global code
     global date
@@ -151,13 +151,13 @@ def chantpdf():
 
 @app.route('/rad',methods=['POST'])
 def rad():
-    '''
+    """
         Suite de chantpdf()
         Recupere les Reste A Depenser entree precedemment par
         l'utilisateur
         Calcul les donnees manquantes, la gestion previsionnelle
         Sauvegarde le tout en PDF
-    '''
+    """
     global postes #Défini dans chantpdf()
     global code #Défini dans chantpdf()
     global date #Défini dans chantpdf()
@@ -200,9 +200,9 @@ def rad():
 
 @app.route('/synthese_structure',methods=['POST','GET'])
 def structpdf():
-    '''
+    """
         Generation du bilan de la structure
-    '''
+    """
     if request.method == 'POST':
         date = request.form['date']
         year = date[0:4]
@@ -237,11 +237,11 @@ def structpdf():
 
 @app.route('/upload',methods=['GET','POST'])
 def upload_file():
-    '''
+    """
         Page permettant a l'utilisateur 
         le telechargement sur le serveur, 
         des fichiers prerequis pour le calcul des bilans
-    '''
+    """
     if request.method == 'POST':
         #files = []
         # check if the post request has the file part
