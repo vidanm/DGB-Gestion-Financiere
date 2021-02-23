@@ -101,7 +101,7 @@ input[type=file],
 input[type=text],
 input[type=month],
 input[type=submit] {
-  font-family: outline:;
+  font-family: outline;
   border: 0;
   border-radius: 5px;
   border-color: rgba(0, 0, 0, 0.8);
