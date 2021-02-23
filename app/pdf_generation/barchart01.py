@@ -1,13 +1,10 @@
 "Dual Bar charts on one canvas."
-from reportlab.lib.colors import PCMYKColor, Color, CMYKColor, black, red
+from reportlab.lib.colors import PCMYKColor, black
 from reportlab.graphics.charts.legends import Legend
-from reportlab.graphics.shapes import Drawing, _DrawingEditorMixin, String, Line
-from reportlab.lib.validators import Auto
-from reportlab.pdfbase.pdfmetrics import stringWidth, EmbeddedType1Face, registerTypeFace, Font, registerFont
+from reportlab.graphics.shapes import Drawing, _DrawingEditorMixin
 from reportlab.lib.formatters import DecimalFormatter
 from reportlab.graphics.charts.barcharts import HorizontalBarChart
 from reportlab.graphics.charts.textlabels import Label
-from reportlab.graphics.charts.barcharts import HorizontalBarChart
 
 class SpecialHorizontalBarChart(HorizontalBarChart):
     def __init__(drawing, _fontName, _fontSize, color):

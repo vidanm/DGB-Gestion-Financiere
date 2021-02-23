@@ -5,8 +5,8 @@ chantier dans le but de laisser a l'utilisateur la possibilité de rentrer les r
 
 '''
 
-from .postes_chantier import *
-from pandas import Index
+#from .postes_chantier import *
+#from pandas import Index
 
 HTML_HEAD = "<head><meta charset='UTF-8'><title>Rentrer Reste à dépenser</title><link rel='stylesheet' type='text/css' href="+'"{{ url_for("static",filename="rad.css") }}'+'"></head>'
 HTML_TITLE_HEAD = "<body><div id='image'><img src='https://dgb.construction/wp-content/uploads/2019/06/dgb.png'></div><h1>"
@@ -25,7 +25,7 @@ HTML_BOT = "<input type='submit' id='confirm' form='rad'></input></form></body>"
 
 
 def convert_single_dataframe_to_html_table(dicPostes,mois,annee,chantier):
-    index_rad = 0
+    #index_rad = 0
     file = open("templates/rad.html","w")
 
     

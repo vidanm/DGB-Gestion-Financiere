@@ -1,7 +1,6 @@
-from dataprocess.charges import *
-from dataprocess.synthese import *
-import pandas as pd
-import datetime as dt
+from dataprocess.charges import Charges
+from dataprocess.synthese import Synthese
+from dataprocess.plan_comptable import PlanComptable
 
 codes_missing = open("missing_numbers.txt","w")
 plan = PlanComptable('/home/vidan/DGBGesfinFlask/var/plan.xlsx')

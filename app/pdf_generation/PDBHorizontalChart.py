@@ -1,4 +1,4 @@
-from .colors import *
+"""from .colors import *
 from reportlab.lib.colors import PCMYKColor, Color, CMYKColor, black, red
 from reportlab.graphics.charts.legends import Legend
 from reportlab.graphics.shapes import Drawing, _DrawingEditorMixin, String, Line
@@ -32,6 +32,7 @@ class PDBHorizontalBarChart(HorizontalBarChart):
         drawing.barLabels.dx = 5
         drawing.barLabels.dy = 0
         drawing.barLabels.boxTarget = 'hi'
-        drawing.valueAxis.labels.f
-        drawing.
-        drawing.
+        #drawing.valueAxis.labels.f
+        #drawing.
+        #drawing.
+        """

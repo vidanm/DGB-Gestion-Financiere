@@ -1,7 +1,5 @@
-import os
 import pandas as pd
 import numpy as np
-from .basic_operations import *
 
 class PlanComptable():
     '''On sépare le plan en structure/chantier car c'est le seul moyen qu'on a de savoir si un

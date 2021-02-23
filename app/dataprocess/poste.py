@@ -1,9 +1,8 @@
 '''OBSOLETE ???'''
 
-from .plan_comptable import *
-from .charges import *
-import datetime as dt
 from .read_file import read_budget
+from .basic_operations import is_in_dic
+import pandas as pd
 
 class Postes():
     
@@ -79,8 +78,9 @@ class Postes():
 
         return 0
 
+    """ OBSOLETE ? 
     def _ajoute_chiffre_affaire(self,mois,annee):
-        ca = ChiffreAffarie(self.charges)
+        ca = ChiffreAffaire(self.charges)
         ca_mois = ca.calcul_ca_mois(mois,annee)
         ca_annee = ca.calcul_ca_annee(annee)
         for nom in self.nomPostes:
@@ -89,6 +89,7 @@ class Postes():
                 depenses_cumul = self.dicPostes[nom].loc[row.name,"Dépenses de l'année"]
                 self.dicPostes[nom].loc[row.name,'%CA MOIS'] = depenses_mois / ca_mois
                 self.dicPOstes[nom].loc[row.name,'%CA Cumul'] = depenses_cumul / ca_annee
+    """
 
     def calcul_pfdc_budget(self):
         '''Calcul le pfdc et l'ecart pfdc budget'''

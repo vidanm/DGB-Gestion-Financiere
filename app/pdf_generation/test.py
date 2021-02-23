@@ -1,4 +1,4 @@
-"Dual Bar charts on one canvas."
+"""Dual Bar charts on one canvas."
 from reportlab.lib.colors import PCMYKColor, Color, CMYKColor, black, red
 from reportlab.graphics.charts.legends import Legend
 from reportlab.graphics.shapes import Drawing, _DrawingEditorMixin, String, Line
@@ -166,4 +166,4 @@ class BarChart11(_DrawingEditorMixin,Drawing):
         self.label2._text          = 'Fixed Income Composition'
 
 if __name__=="__main__": #NORUNTESTS
-    BarChart11().save(formats=['pdf'],outDir='.',fnRoot=None)
+    BarChart11().save(formats=['pdf'],outDir='.',fnRoot=None)"""

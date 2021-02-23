@@ -1,7 +1,6 @@
-from .charges import *
 import pandas as pd
-import datetime as dt
-import codecs
+import numpy as np
+import os
 
 class Synthese():
     
@@ -44,7 +43,6 @@ class Synthese():
 
             chantier_line = ["",0,0,0,0,0,0,0,0]
             chantier_line[0] = name
-            
             if name in chantier_csv.keys():
                 chantier_line[4] = round(float(chantier_csv[name]),2)
 
@@ -90,7 +88,7 @@ class Synthese():
                 self.synthese_annee.loc[name,"MARGE THEORIQUE (%)"] = round(pfdc*100/budget,2)
                 self.synthese_annee.loc[name,"MARGE BRUTE (€)"] =  round(budget-depcum,2)
                 self.synthese_annee.loc[name,"MARGE BRUTE (%)"] = round(depcum*100/budget,2)
-    
+    """
     def calcul_synthese_glissant(self,budgetprec,chargesprec):
         #Calcul de la synthese des dépenses des chantiers sur 2 ans
         #PAS FINI
@@ -119,11 +117,11 @@ class Synthese():
             self.ajoute_synthese_annee(out)
         
         self.synthese_annee = self.synthese_annee.set_index("CHANTIER")
-        self.ajoute_budget(budget)
+        self.ajoute_budget(budgetprec)
         self.calcul_marges()
         self.synthese_annee = self.synthese_annee.round(2)
         self._calcul_total()
-
+    """
 
     def _calcul_total(self):
         self.total_depenses_cumul = round(self.synthese_annee['DEP CUMULEES'].sum(),2)

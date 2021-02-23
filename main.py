@@ -1,7 +1,8 @@
 import sys
 sys.path.append("/home/vidan/Documents/DGB/Gesfin/src")
-from dataprocess.charges import *
-from dataprocess.chiffreaffaire import *
+from dataprocess.charges import Charges
+from dataprocess.chiffreaffaire import ChiffreAffaire
+from dataprocess.plan_comptable import PlanComptable
 
 plan = PlanComptable("~/Documents/DGB/Resultat_chantier/plan comptable/PLAN COMPTABLE DGB 2020.xlsx")
 codes_missing = open("missing_numbers.txt","w")

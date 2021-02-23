@@ -1,9 +1,6 @@
-from .plan_comptable import *
-from .charges import *
-from .chiffreaffaire import *
-import datetime as dt
+from .chiffreaffaire import ChiffreAffaire
 from .postesparent import ParentPoste
-from pandas import *
+import pandas as pd
 
 class StructPoste(ParentPoste):
     def __init__(self,planComptable,charges):
@@ -30,12 +27,12 @@ class StructPoste(ParentPoste):
         self.row_noms = [1] #On garde les positions des noms de poste pour pouvoir les colorier différemment
         for nom in self.nomPostes:
             if (self.nomPostes.index(nom) == 0):
-                title = DataFrame([[]],[nom])
-                dfStruct = DataFrame(self.dicPostes[nom])
+                title = pd.DataFrame([[]],[nom])
+                dfStruct = pd.DataFrame(self.dicPostes[nom])
                 dfStruct = title.append(dfStruct)
             else:
                 self.row_noms.append(len(dfStruct)+1)
-                title = DataFrame([[]],[nom])
+                title = pd.DataFrame([[]],[nom])
                 dfStruct = dfStruct.append(title)
                 dfStruct = dfStruct.append(self.dicPostes[nom])
 

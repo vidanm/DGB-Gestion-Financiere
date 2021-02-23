@@ -1,16 +1,16 @@
-import pandas as pd
-import sys
-import time
-from flask import Flask,send_file,request,flash,redirect,url_for,render_template,send_from_directory
-from werkzeug.utils import secure_filename
-from app.dataprocess.plan_comptable import *
-from app.dataprocess.synthese import *
-from app.pdf_generation.tabletopdf import *
-from app.dataprocess.postesparent import *
-from app.dataprocess.postes_chantier import *
-from app.dataprocess.postes_structure import *
-from app.dataprocess.dataframe_to_html import *
-from app.dataprocess.read_file import *
+from flask import Flask,send_file,request,flash,redirect,url_for,render_template
+from app.dataprocess.plan_comptable import PlanComptable
+from app.dataprocess.synthese import Synthese
+from app.pdf_generation.tabletopdf import PDF
+from app.dataprocess.postes_chantier import ChantierPoste
+from app.dataprocess.charges import Charges
+from app.dataprocess.chiffreaffaire import ChiffreAffaire
+from app.dataprocess.postes_structure import StructPoste
+from app.dataprocess.dataframe_to_html import convert_single_dataframe_to_html_table
+from app.dataprocess.read_file import CustomFileReader
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import inch
+import os
 
 UPLOAD_FOLDER= 'var'
 DOWNLOAD_FOLDER = 'bibl'
@@ -135,7 +135,7 @@ def chantpdf():
     charges = Charges(files.get_charges(),plan,codes_missing)
     budget = files.get_budget()
     
-    filename = "bibl/"+code+"_"+request.form['date']+".pdf"
+    #filename = "bibl/"+code+"_"+request.form['date']+".pdf"
     postes = ChantierPoste(plan,charges,code)
     try :
         postes.calcul_chantier(int(month),int(year),budget)
@@ -216,7 +216,7 @@ def structpdf():
 
         plan = PlanComptable(files.get_plan())
         charges = Charges(files.get_charges(),plan,codes_missing)
-        budget = files.get_budget()
+        #budget = files.get_budget()
       
         filename = "bibl/"+date+"/"+code+".pdf"
         if not (os.path.exists("bibl/"+date)):
@@ -243,7 +243,7 @@ def upload_file():
         des fichiers prerequis pour le calcul des bilans
     '''
     if request.method == 'POST':
-        files = []
+        #files = []
         # check if the post request has the file part
         print(request.files)
         for fileit in expected_files :

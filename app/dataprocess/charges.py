@@ -1,5 +1,4 @@
-from .plan_comptable import *
-from .basic_operations import *
+from .basic_operations import is_in_dic
 
 class Charges():
     '''

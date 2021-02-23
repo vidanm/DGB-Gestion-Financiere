@@ -1,18 +1,12 @@
 import locale
 
-from .colors import *
+from .colors import black,lightwhite,bleu,bleuciel,yellow
 from rlextra.graphics.quickchart import QuickChart
-from reportlab.lib.corp import white, black
-from reportlab.graphics.shapes import Drawing, _DrawingEditorMixin
-from reportlab.lib.colors import green, red
-from reportlab.lib.pagesizes import letter,A4,landscape
+from reportlab.graphics.shapes import Drawing
+from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
-from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-from reportlab.graphics.charts.barcharts import VerticalBarChart
-
-import PIL.Image
+from reportlab.platypus import Table, TableStyle
 import os.path
 import numpy as np
 
@@ -28,7 +22,7 @@ class PDF():
         self.__background()
         self.tablestyle = TableStyle([
             ('FACE',(0,0),(-1,-1),"Helvetica-Bold"),
-            ('GRID', (0,0), (-1,-1), 0.1, colors.black),
+            ('GRID', (0,0), (-1,-1), 0.1, black),
             ('FONTSIZE',(0,0),(-1,-1),8),
             ('ALIGN',(0,0),(-1,-1),"CENTER"),
             ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
@@ -151,7 +145,6 @@ class PDF():
         d.drawOn(self.c,inch,inch*0.1)
 
     def eliminate_zeros_add_euros(self,numTable):
-        point = 0
         for i in range(1,len(numTable)):
             for j in range(1,len(numTable[0])):
                 if (numTable[i][j] == 0):
