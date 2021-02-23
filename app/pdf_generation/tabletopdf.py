@@ -47,13 +47,14 @@ class PDF():
         style = [
             ('FACE',(0,0),(-1,-1),"Helvetica-Bold"),
             ('GRID', (0,0), (-1,-1), 0.1, "BLACK"),
-            ('FONTSIZE',(0,0),(-1,-1),8),
+            ('FONTSIZE',(0,0),(-1,-1),7),
             ('ALIGN',(0,0),(-1,-1),"CENTER"),
             ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
             ('BACKGROUND',(0,0),(-1,0),bleuciel),
             ('TEXTCOLOR',(0,0),(-1,0),"BLACK"),
             ('BACKGROUND',(1,1),(-1,-1),"WHITE"),
-            ('BACKGROUND',(0,-1),(-1,-1),yellow)
+            ('BACKGROUND',(0,-1),(-1,-1),yellow),
+            ('TOPPADDING',(0,0),(-1,-1),5)
             ]
 
         for i in row_nom:
@@ -94,7 +95,7 @@ class PDF():
         d.chart.legendFontSize = 10
         d.chart.chartColors = [bleu,bleuciel,yellow]
         d.chart.data                 = [pfdc,budget,dep]
-        d.chart.chartType='bar'
+        d.chart.chartType='column'
         d.chart.titleText            = ''
         d.chart.xTitleText           = ''
         d.chart.xAxisFontSize        = 10
@@ -133,7 +134,7 @@ class PDF():
         d.chart.legendFontSize = 10
         d.chart.chartColors = [bleu,bleuciel,yellow]
         d.chart.data                 = [pfdc,budget,dep]
-        d.chart.chartType='bar'
+        d.chart.chartType='column'
         d.chart.titleText            = ''
         d.chart.xTitleText           = ''
         d.chart.xAxisFontSize        = 10
@@ -158,7 +159,7 @@ class PDF():
                 else :
                     asStr= str(numTable[i][j])
                     numTable[i][j] = asStr + " €"
-                        
+                    
         return numTable
 
     def convert_struct_string(self,numTable):

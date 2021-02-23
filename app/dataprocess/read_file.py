@@ -8,17 +8,20 @@ class CustomFileReader():
         try :
             self._charges = self._read_charges(path+"Charges"+year+".xls")
         except :
-            raise ValueError("Fichier de charges manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'Charges"+year+".xls'")
+            raise FileNotFoundError("Fichier de charges manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'Charges"+year+".xls'")
         
         try:
             self._pc = self._read_comptable(path+"PlanComptable"+year+".xls")
         except: 
-            raise ValueError("Fichier Plan Comptable manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'PlanComptable"+year+".xls'")
+            raise FileNotFoundError("Fichier Plan Comptable manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'PlanComptable"+year+".xls'")
 
         try:
             self._budget = self._read_budget(path+"Budget"+year+".xls")
         except:
-            raise ValueError("Fichier budget manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'Budget"+year+".xls'")
+            raise FileNotFoundError("Fichier budget manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'Budget"+year+".xls'")
+
+
+
 
     def get_charges(self):
         return self._charges
@@ -30,7 +33,13 @@ class CustomFileReader():
         return self._pc
 
     def _read_charges(self,path):
-        charges = pd.read_excel(path)
+        try:
+            charges = pd.read_excel(path) 
+        except Exception as error:
+            print(type(error))
+            print(error)
+            raise error
+
         charges = charges.drop(columns=['Type','Référence interne','Date réf. externe','Auxiliaire','N°'])
         charges = charges.fillna(0)
         charges['POSTE'] = ''

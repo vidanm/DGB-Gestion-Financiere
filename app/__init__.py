@@ -137,7 +137,12 @@ def chantpdf():
     
     filename = "bibl/"+code+"_"+request.form['date']+".pdf"
     postes = ChantierPoste(plan,charges,code)
-    postes.calcul_chantier(int(month),int(year),budget)
+    try :
+        postes.calcul_chantier(int(month),int(year),budget)
+    except Exception as e :
+        print(e)
+        return str(e)
+    
     postes.round_2dec_df()
     convert_single_dataframe_to_html_table(postes.dicPostes,month,year,code)
 
@@ -169,7 +174,7 @@ def rad():
     postes.calcul_pfdc_budget()
     postes.calcul_total_chantier()
     postes.calcul_ges_prev()
-    postes.remove_poste("FACTURATION CLIENT")
+    postes.remove_poste("PRODUITS")
     with open("bibl/"+date+"/"+code+"_tt.txt","w") as file:
         file.write(str(postes.dicPostes["GESPREV"].iloc[-1]["PFDC"]))
 
@@ -222,7 +227,7 @@ def structpdf():
         pdf = PDF(filename)
         pdf.new_page("STRUCT","")
         pdf.add_sidetitle(str(date))
-        pdf.add_struct_table(postes.format_for_pdf(),postes.row_noms,size=0.8)
+        pdf.add_struct_table(postes.format_for_pdf(),postes.row_noms,size=0.6)
         pdf.save_page()
         pdf.save_pdf()
 

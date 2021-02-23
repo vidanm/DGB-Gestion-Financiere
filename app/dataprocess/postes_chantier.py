@@ -29,8 +29,12 @@ class ChantierPoste(ParentPoste):
                     
     def _ajoute_budget_chantier(self,dfBudget):
         '''Ajoute le budget dans les cases de postes correspondantes'''
+        
         for index,row in dfBudget.iterrows():
-            self.dicPostes[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[self.codeChantier])
+            try :
+                self.dicPostes[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[self.codeChantier])
+            except :
+                raise ValueError("Le couple " + row['POSTE'] + " : " + row['SOUS-POSTE'] + "n'est pas présent dans le plan comptable")  
 
     def ajoute_rad(self,poste,sousposte,rad):
         if rad.replace('.','').isnumeric():
@@ -78,11 +82,12 @@ class ChantierPoste(ParentPoste):
         '''Calcul la gestion previsionnelle une fois que ttes 
         les autres données ont été calculées'''
         for nom in self.nomPostes:
-            if self.nomPostes.index(nom) == 0:
-                gesprev = pd.DataFrame(columns=self.dicPostes[nom].columns.copy())
-            line = self.dicPostes[nom].iloc[-1]
-            line.name = nom
-            gesprev = gesprev.append(line,ignore_index=False)
+            if nom != "PRODUITS":
+                if self.nomPostes.index(nom) == 0:
+                    gesprev = pd.DataFrame(columns=self.dicPostes[nom].columns.copy())
+                line = self.dicPostes[nom].iloc[-1]
+                line.name = nom
+                gesprev = gesprev.append(line,ignore_index=False)
         
         self.nomPostes.append("GESPREV")
         self.dicPostes["GESPREV"] = gesprev

@@ -9,6 +9,7 @@ class ParentPoste():
         self.dicPostes = {}
         for index,row in dfPlanComptable.iterrows():
             value = row['POSTE']
+            print(value)
             if not is_in_dic(str(value),self.nomPostes):
                 self.nomPostes.append(str(value))
 

@@ -1,15 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap');
 
-body, h1,h2,button{
-	font-family: "Montserrat",sans-serif;
-	text-align:center;
+body,
+h1,
+h2,
+button {
+  font-family: "Montserrat", sans-serif;
+  text-align: center;
 }
 
 p {
-	font-size:25px;
+  font-size: 25px;
 }
 
 *:focus {
-    outline: none;
+  outline: none;
 }
-
