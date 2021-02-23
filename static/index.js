@@ -9,12 +9,12 @@ function showChantier(id) {
 
 
 window.addEventListener("load", function(){
-	var x = document.getElementById('syntheseform');
+	var x = document.getElementById("syntheseform");
 	x.style.display = "none";
 
-	var y = document.getElementById('chantierform');
+	var y = document.getElementById("chantierform");
 	y.style.display = "none";
 
-	var z = document.getElementById('structureform');
+	var z = document.getElementById("structureform");
 	z.style.display = "none";
 });

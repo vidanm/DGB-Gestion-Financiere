@@ -59,7 +59,6 @@ button {
 }
 
 #buttons {
-  padding: 20px;
   margin: auto;
   margin-top: 3%;
   width: 30%;
@@ -101,7 +100,6 @@ input[type=file],
 input[type=text],
 input[type=month],
 input[type=submit] {
-  font-family: outline;
   border: 0;
   border-radius: 5px;
   border-color: rgba(0, 0, 0, 0.8);
