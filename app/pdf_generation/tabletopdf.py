@@ -37,7 +37,7 @@ class PDF():
         self.c.rect(0,0,A4[1],A4[0],fill=1)
         self.c.setFillColorRGB(0,0,0)
 
-    def struct_style(row_nom):
+    def struct_style(self,row_nom):
         style = [
             ('FACE',(0,0),(-1,-1),"Helvetica-Bold"),
             ('GRID', (0,0), (-1,-1), 0.1, "BLACK"),
@@ -63,7 +63,7 @@ class PDF():
         self.c.rect(inch,A4[0]-inch*1.5,A4[1]-2*inch,inch,fill=1)
         self.c.setFillColorRGB(0,0,0)
 
-    def ajoute_total(numTable):
+    def ajoute_total(self,numTable):
         total = [ [0] * 7 ]
         for i in range(1,len(numTable)):
             for j in range(1,len(numTable[0])):
@@ -142,7 +142,7 @@ class PDF():
         #d.rotate(90)
         d.drawOn(self.c,inch,inch*0.1)
 
-    def eliminate_zeros_add_euros(numTable):
+    def eliminate_zeros_add_euros(self,numTable):
         for i in range(1,len(numTable)):
             for j in range(1,len(numTable[0])):
                 if (numTable[i][j] == 0):
@@ -153,7 +153,7 @@ class PDF():
                     
         return numTable
 
-    def convert_struct_string(numTable):
+    def convert_struct_string(self,numTable):
         for i in range(0,len(numTable)):
             for j in range(0,len(numTable[i])):
                 if (type(numTable[i][j]) is float):

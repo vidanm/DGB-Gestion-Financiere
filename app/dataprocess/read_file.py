@@ -7,15 +7,15 @@ class CustomFileReader():
         year = str(year)
         print("Charges"+year)
         try :
-            self._charges = self._read_charges(path+"Charges"+year+".xls")
-        except :
+            self._read_charges(path+"Charges"+year+".xls")
+        except Exception as e:
             raise FileNotFoundError("Fichier de charges manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'Charges"+year+".xls'")
         try:
-            self._pc = self._read_comptable(path+"PlanComptable"+year+".xls")
+            self._read_comptable(path+"PlanComptable"+year+".xls")
         except: 
             raise FileNotFoundError("Fichier Plan Comptable manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'PlanComptable"+year+".xls'")
         try:
-            self._budget = self._read_budget(path+"Budget"+year+".xls")
+            self._read_budget(path+"Budget"+year+".xls")
         except:
             raise FileNotFoundError("Fichier budget manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'Budget"+year+".xls'")
 
@@ -28,7 +28,7 @@ class CustomFileReader():
     def get_plan(self):
         return self._pc
 
-    def _read_charges(path):
+    def _read_charges(self,path):
         try:
             charges = pd.read_excel(path) 
         except Exception as error:
@@ -38,10 +38,8 @@ class CustomFileReader():
         charges['POSTE'] = ''
         charges['SOUS POSTE'] = ''
         self._charges = charges
-        return charges
 
-
-    def _read_comptable(path):
+    def _read_comptable(self,path):
         """Conversion Excel -> DataFrame pandas."""
         dfCompteSite = pd.read_excel(path,header=1,usecols="A:D")
         dfCompteSite[['POSTE']] = dfCompteSite[['POSTE']].fillna(method='ffill')
@@ -60,10 +58,10 @@ class CustomFileReader():
         values = {'SOUS POSTE':'/'}
         dfCompteSite = dfCompteSite.fillna(value=values)
         dfCompteStruct = dfCompteStruct.fillna(value=values)
-        return (dfCompteSite,dfCompteStruct)
+        self._pc = (dfCompteSite,dfCompteStruct)
 
 
-    def _read_budget(path):
+    def _read_budget(self,path):
         dfBudget = pd.read_excel(path,header=3,usecols="A:J")
         #for (name,value) in dfBudget.iteritems():
          #   if (name != self.codeChantier and name != 'POSTE' and name != 'SOUS-POSTE'):
@@ -73,5 +71,4 @@ class CustomFileReader():
         dfBudget = dfBudget[dfBudget['SOUS-POSTE'].notna()]
         dfBudget = dfBudget.fillna(0)
         #dfBudget = dfBudget.dropna()
-        return dfBudget
-
+        self._budget = dfBudget

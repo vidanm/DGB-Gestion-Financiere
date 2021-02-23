@@ -16,7 +16,7 @@ class Synthese():
         self.total_depenses_mois = 0
    
     
-    def precalc_pfdc(mois,annee):
+    def precalc_pfdc(self,mois,annee):
         """Rajout des csv des chantiers dont la synthese a deja ete calcules"""
         chantier_csv = {}
         date = str(annee) + "-" + (str(mois) if len(str(mois)) == 2 else "0"+str(mois))
