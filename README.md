@@ -6,9 +6,9 @@ https://dgb-gestionfinanciere.herokuapp.com/
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0d9c8b09c33b40bb8db12b0d60a397c9)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vidanm/DGB_Gesfin&amp;utm_campaign=Badge_Grade)
 
 ## Dépendances
-  - [Pandas](https://github.com/pandas-dev/pandas)
-  - [Flask](https://github.com/pallets/flask)
-  - [Reportlab](https://github.com/MrBitBucket/reportlab-mirror)
+[Pandas](https://github.com/pandas-dev/pandas)
+[Flask](https://github.com/pallets/flask)
+[Reportlab](https://github.com/MrBitBucket/reportlab-mirror)
 
 ## Fonctionnalités
 
@@ -31,12 +31,15 @@ Ils doivent respecter le format de nommage suivant : INTITULE-ANNEE.xls
 
 ### Le Plan Comptable
 1.  Les intitulés de lignes doivent se trouver sur la 1ère colonne pour le section chantier et la 5ème colonne pour la section structure.
+
 2.  Les intitulés de colonnes doivent se trouver sur la 2ème ligne.
+
 3.  UNE SEULE LIGNE PAR SOUS POSTE ! Pour avoir plusieurs compte pour un sous poste, respecter le format suivant :
 `NOM DU SOUS POSTE | NUMERO 1 / NUMERO 2 / NUMERO 3`
 
 ### Chantiers / Comptes de charges / Structure
 1.  Vérifier la présence des champs ‘Journal’ / ‘Général’ / ‘Date’ / ‘Débit’ / ‘Crédit’ / ‘Section analytique’.
+
 2.  La section analytique des lignes de charges de la structure doivent comporter 'STRUCT'.
 
 ### Budget
