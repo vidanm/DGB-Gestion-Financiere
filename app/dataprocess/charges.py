@@ -1,12 +1,7 @@
 from .basic_operations import is_in_dic
 
 class Charges():
-    """
-    S'occupe de traiter le fichier excel contenant toutes les charges
-
-    Les méthodes commençant par _ sont des méthodes internes a la classe
-    Ne pas les utiliser en dehors.
-    """
+    """S'occupe de traiter le fichier excel contenant toutes les charges. Les méthodes commençant par _ sont des méthodes internes a la classe. Ne pas les utiliser en dehors."""
     
     def __init__(self,charges,planComptable,f):
         """Prends les charges lues par CustomReaderFile(), une instance de la classe PlanComptable(),et un fichier d'ecriture pour les codes manquants."""
@@ -36,7 +31,6 @@ class Charges():
                     planComptable.ajoute_code(value,"Vente sans poste","Vente sans sous poste")
                     continue
 
-                print("Ligne " + str(index) + " non prise en compte")
                 charges = charges.drop(index=index)
                 
                 if value not in missing_codes :
@@ -63,7 +57,7 @@ class Charges():
         """On divise les données des charges dans un dictionnaire utilisant les code de chantier comme clé."""
         dicChantiers = {}
         nomChantiers = []
-        for index,row in self._dicCharges.iterrows():
+        for _,row in self._dicCharges.iterrows():
             value = row['Section analytique']
             
             if not is_in_dic(str(value),nomChantiers):

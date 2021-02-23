@@ -15,7 +15,7 @@ class ChantierPoste(ParentPoste):
             self.dicPostes[nom]['Ecart PFDC/Budget'] = 0
 
     def calcul_chantier(self,mois,annee,dfBudget):
-        for index,row in self.charges.iterrows():
+        for _,row in self.charges.iterrows():
             date = row['Date']
             if (date.year == annee):
                 super(ChantierPoste,self)._depenses_annee(row)
@@ -28,7 +28,7 @@ class ChantierPoste(ParentPoste):
     def _ajoute_budget_chantier(self,dfBudget):
         """Ajoute le budget dans les cases de postes correspondantes."""
 
-        for index,row in dfBudget.iterrows():
+        for _,row in dfBudget.iterrows():
             try :
                 self.dicPostes[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[self.codeChantier])
             except :

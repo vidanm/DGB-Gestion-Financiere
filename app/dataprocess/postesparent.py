@@ -5,7 +5,7 @@ class ParentPoste():
     def __init__(self,dfPlanComptable):
         self.nomPostes = []
         self.dicPostes = {}
-        for index,row in dfPlanComptable.iterrows():
+        for _,row in dfPlanComptable.iterrows():
             value = row['POSTE']
             print(value)
             if not is_in_dic(str(value),self.nomPostes):

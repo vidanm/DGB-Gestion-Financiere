@@ -28,7 +28,6 @@ def convert_single_dataframe_to_html_table(dicPostes,mois,annee,chantier):
     #index_rad = 0
     file = open("templates/rad.html","w")
 
-    
     file.write(HTML_HEAD)
     file.write(HTML_TITLE_HEAD)
     file.write("Bilan "+str(chantier)+" | "+str(mois)+" "+str(annee))
@@ -41,7 +40,7 @@ def convert_single_dataframe_to_html_table(dicPostes,mois,annee,chantier):
 
     for key in dicPostes:
         dataframe = dicPostes[key]
-        
+
         if (first_df):
             file.write(HTML_TABLE_TITLE_HEAD)
             file.write(key)
@@ -55,7 +54,7 @@ def convert_single_dataframe_to_html_table(dicPostes,mois,annee,chantier):
                     file.write(HTML_TABLE_TITLE_HEAD)
                     file.write(str(col))
                     file.write(HTML_TABLE_TITLE_BOT)
-            
+
             file.write(HTML_TABLE_BODY_HEAD)
             first_df = False
         else :
@@ -69,7 +68,7 @@ def convert_single_dataframe_to_html_table(dicPostes,mois,annee,chantier):
             file.write(HTML_TABLE_ROW_HEAD)
             file.write(index)
             file.write(HTML_TABLE_ROW_BOT)
-            
+
             for cell in row:
                 index_cell += 1
                 if (index_cell not in skip_column):

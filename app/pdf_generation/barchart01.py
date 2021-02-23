@@ -74,7 +74,7 @@ class SpecialHorizontalBarChart(HorizontalBarChart):
         drawing.categoryAxis.labels.angle        = 0
         #drawing.chart.categoryAxis.tickShift          = 1
         drawing.categoryAxis.labels.dx           = -5
-        drawing.categoryAxis.labels.dy           = 0 
+        drawing.categoryAxis.labels.dy           = 0
         #drawing.categoryAxis.strokeDashArray     = (0,1,0)
         drawing.categoryAxis.labels.boxAnchor    = 'e'
         drawing.categoryAxis.labels.leading      = 5
@@ -101,8 +101,8 @@ class BarChart11(_DrawingEditorMixin,Drawing):
     def __init__(self,width=264,height=190,*args,**kw):
         Drawing.__init__(self,width,height,*args,**kw)
         # font
-        self._fontNameBook = 'Helvetica' 
-        self._fontNameDemi = 'Helvetica' 
+        self._fontNameBook = 'Helvetica'
+        self._fontNameDemi = 'Helvetica'
         self._fontSize = 5
         # colours
         color = PCMYKColor(0,51, 100, 1)

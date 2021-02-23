@@ -68,13 +68,13 @@ def syntpdf():
     try:
         files = get_files("var/",year)
     except Exception as error:
-        return "Erreur de lecture de fichiers : "+ str(error)  
+        return "Erreur de lecture de fichiers : "+ str(error)
 
     plan = PlanComptable(files.get_plan())
     charges = Charges(files.get_charges(),plan,codes_missing)
     budget = files.get_budget()
     CA = ChiffreAffaire(charges.get_raw_charges())
-    
+
     camois = CA.calcul_ca_mois(int(month),int(year))
     cacumul = CA.calcul_ca_annee(int(year))
 
@@ -90,7 +90,6 @@ def syntpdf():
     pdf.save_page()
     pdf.save_pdf()
     return send_file("bibl/Synthese.pdf",as_attachment=True)
-
 
 @app.route('/synthese_chantier',methods=['POST'])
 def chantpdf():
@@ -115,7 +114,7 @@ def chantpdf():
     plan = PlanComptable(files.get_plan())
     charges = Charges(files.get_charges(),plan,codes_missing)
     budget = files.get_budget()
-    
+
     #filename = "bibl/"+code+"_"+request.form['date']+".pdf"
     postes = ChantierPoste(plan,charges,code)
     try :
@@ -123,12 +122,11 @@ def chantpdf():
     except Exception as e :
         print(e)
         return str(e)
-    
+
     postes.round_2dec_df()
     convert_single_dataframe_to_html_table(postes.dicPostes,month,year,code)
 
     return render_template("rad.html")
-    
 
 @app.route('/rad',methods=['POST'])
 def rad():
@@ -137,7 +135,7 @@ def rad():
     global code #Défini dans chantpdf()
     global date #Défini dans chantpdf()
     filename = "bibl/"+date+"/"+code+".pdf"
-    
+
     if not (os.path.exists("bibl/"+date)):
         os.makedirs("bibl/"+date)
 
@@ -193,7 +191,7 @@ def structpdf():
       
         filename = "bibl/"+date+"/"+code+".pdf"
         if not (os.path.exists("bibl/"+date)):
-            os.makedirs("bibl/"+date)        
+            os.makedirs("bibl/"+date)
 
         postes = StructPoste(plan,charges)
         postes.calcul_structure(month,year)
