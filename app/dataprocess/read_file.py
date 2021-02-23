@@ -8,7 +8,7 @@ class CustomFileReader():
         print("Charges"+year)
         try :
             self._read_charges(path+"Charges"+year+".xls")
-        except Exception as e:
+        except:
             raise FileNotFoundError("Fichier de charges manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'Charges"+year+".xls'")
         try:
             self._read_comptable(path+"PlanComptable"+year+".xls")

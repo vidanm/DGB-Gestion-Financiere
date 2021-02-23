@@ -43,16 +43,13 @@ def get_files(path,year):
 
 def allowed_file(filename):
     """Verifie le bon format des fichiers prerequis fournis par l'utilisateur."""
-
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/')
 def index():
-    
     """Page d'accueil."""
-
     #charges_modif = time.ctime(os.path.getmtime('var/charges.xls'))
     #plan_modif = time.ctime(os.path.getmtime('var/plan.xls'))
 
@@ -98,7 +95,6 @@ def syntpdf():
 @app.route('/synthese_chantier',methods=['POST'])
 def chantpdf():
     """Generation de la synthese du chantier. Affichage en HTML pour permettre a l'utilisateur l'entree du Reste A Depenser."""
-    
     global code
     global date
     global postes

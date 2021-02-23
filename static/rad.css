@@ -62,7 +62,6 @@ div.table-title {
   text-transform: uppercase;
 }
 
-
 /*** Table Styles **/
 
 .table-fill {
@@ -73,8 +72,8 @@ div.table-title {
   margin: auto;
   margin-top: 0;
   max-width: 1000px;
-  padding-top: 0;
   padding: 5px;
+  padding-top: 0;
   width: 100%;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   animation: float 5s infinite;
@@ -102,7 +101,7 @@ th:last-child {
 
 tr {
   border-top: 1px solid #c1c3d1;
-  border-bottom-: 1px solid #c1c3d1;
+  border-bottom: 1px solid #c1c3d1;
   color: #666b85;
   font-size: 16px;
   font-weight: normal;
@@ -114,7 +113,6 @@ input {
   border-bottom: 1px solid #c1c3d1;
   font-family: helvetica;
   font-size: 20px;
-  font-weight: 100;
   text-align: center;
   color: #666b85;
   font-weight: 300;
@@ -130,6 +128,21 @@ tr:hover td {
   color:#FFFFFF;
   border-top: 1px solid #22262e;
 } */
+
+td {
+  background: #fff;
+  padding: 20px;
+  text-align: left;
+  vertical-align: middle;
+  font-weight: 300;
+  font-size: 18px;
+  text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #c1c3d1;
+}
+
+td:last-child {
+  border-right: 0;
+}
 
 tr:first-child {
   border-top: none;
@@ -156,20 +169,7 @@ tr:last-child td:last-child {
   border-bottom-right-radius: 3px;
 }
 
-td {
-  background: #fff;
-  padding: 20px;
-  text-align: left;
-  vertical-align: middle;
-  font-weight: 300;
-  font-size: 18px;
-  text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-  border-right: 1px solid #c1c3d1;
-}
 
-td:last-child {
-  border-right: 0;
-}
 
 th.text-left {
   text-align: left;
