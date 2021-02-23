@@ -3,6 +3,7 @@ import pandas as pd
 class CustomFileReader():
 
     def __init__(self,path,year):
+        """Permets la lecture des fichiers charges comptables et budget."""
         year = str(year)
         print("Charges"+year)
         try :
@@ -18,19 +19,16 @@ class CustomFileReader():
         except:
             raise FileNotFoundError("Fichier budget manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'Budget"+year+".xls'")
 
-
-
-
     def get_charges(self):
         return self._charges
-       
+
     def get_budget(self):
         return self._budget
-        
+
     def get_plan(self):
         return self._pc
 
-    def _read_charges(self,path):
+    def _read_charges(path):
         try:
             charges = pd.read_excel(path) 
         except Exception as error:
@@ -43,8 +41,8 @@ class CustomFileReader():
         return charges
 
 
-    def _read_comptable(self,path):
-        '''Conversion Excel -> DataFrame pandas'''
+    def _read_comptable(path):
+        """Conversion Excel -> DataFrame pandas."""
         dfCompteSite = pd.read_excel(path,header=1,usecols="A:D")
         dfCompteSite[['POSTE']] = dfCompteSite[['POSTE']].fillna(method='ffill')
 
@@ -56,7 +54,7 @@ class CustomFileReader():
         dfCompteStruct = dfCompteStruct[pd.notnull(dfCompteStruct['N° DE COMPTE.1'])]
         dfCompteStruct = dfCompteStruct.rename(columns={'N° DE COMPTE.1': 'N° DE COMPTE','POSTE.1' : 'POSTE','SOUS POSTE.1' : 'SOUS POSTE','EX..1':'EX.'})
         #dfCompteSite = dfCompteSite.append(dfCompteStruct,ignore_index=True)
-        
+
         dfCompteSite['N° DE COMPTE'] = dfCompteSite['N° DE COMPTE'].apply(str)
         dfCompteStruct['N° DE COMPTE'] = dfCompteStruct['N° DE COMPTE'].apply(str)
         values = {'SOUS POSTE':'/'}
@@ -65,7 +63,7 @@ class CustomFileReader():
         return (dfCompteSite,dfCompteStruct)
 
 
-    def _read_budget(self,path):
+    def _read_budget(path):
         dfBudget = pd.read_excel(path,header=3,usecols="A:J")
         #for (name,value) in dfBudget.iteritems():
          #   if (name != self.codeChantier and name != 'POSTE' and name != 'SOUS-POSTE'):
@@ -76,5 +74,4 @@ class CustomFileReader():
         dfBudget = dfBudget.fillna(0)
         #dfBudget = dfBudget.dropna()
         return dfBudget
-
 

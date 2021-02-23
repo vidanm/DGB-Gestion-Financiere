@@ -188,7 +188,7 @@ class PDF():
         t.drawOn(self.c,x,y)
 
     def add_table(self,dataframe,x=-1,y=-1):
-        """Ajoute un tableau a la feuille active. Le coin bas droite est représenté par (x,y)"""
+        """Ajoute un tableau a la feuille active. Le coin bas droite est représenté par (x,y)."""
         #TODO Rajouter la colonne des sous postes
         dataframe = dataframe.reset_index()
         rowHeights = (len(dataframe)+1)*[12]
@@ -202,8 +202,8 @@ class PDF():
         t.setStyle(self.tablestyle)
         w,h = t.wrapOn(self.c,0,0) #Draw Table
         
-        """ Si la position n'est pas définie par l'utilisateur
-        alors on ecris la table au milieu de la page """
+        #Si la position n'est pas définie par l'utilisateur alors on ecris la table au milieu de la page
+
         if (x == -1 or x == 'center'):
             x=(A4[1]/2)-(w/2)
         if (y == -1 or y == 'center'):
@@ -218,7 +218,7 @@ class PDF():
         self.c.setFillColor("BLACK")
 
     def new_page(self,titre,sousTitre):
-        """Ecris le titre et le sous titre sur une feuille"""
+        """Ecris le titre et le sous titre sur une feuille."""
         self.__background()
         self.draw_header()
         self.c.drawImage(self.logo,A4[1]-inch*2,A4[0]-inch*1.39,width=50,height=50) #Draw Logo
@@ -230,8 +230,7 @@ class PDF():
         self.c.drawCentredString(A4[1]/2,A4[0]-inch*1.3,sousTitre)
     
     def save_page(self):
-        """Sauvegarde la feuille active, 
-        une nouvelle feuille blanche est sélectionnée"""
+        """Sauvegarde la feuille active, une nouvelle feuille blanche est sélectionnée."""
         self.c.showPage()
 
 
