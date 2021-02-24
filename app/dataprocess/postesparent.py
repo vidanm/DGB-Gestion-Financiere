@@ -3,6 +3,7 @@ from .basic_operations import is_in_dic
 class ParentPoste():
 
     def __init__(self,dfPlanComptable):
+        """Classe abstraite. Objet hérité par ChantierPoste et StructPoste."""
         self.nomPostes = []
         self.dicPostes = {}
         for _,row in dfPlanComptable.iterrows():
@@ -20,9 +21,27 @@ class ParentPoste():
             self.dicPostes[nom] = self.dicPostes[nom].set_index('SOUS POSTE')
 
     def _depenses_mois(self,row):
+        """Ajoute une dépense du mois au dictionnaire des postes.
+
+            Parameters:
+            argument2 (pandas.Series): ligne des charges qui contient la dépense et le poste
+
+            Returns:
+            None
+
+        """
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
     
     def _depenses_annee(self,row):
+        """Ajoute une dépense de l'année au dictionnaire des postes.
+
+            Parameters:
+            argument2 (pandas.Series): ligne des charges qui contient la dépense et le poste
+
+            Returns:
+            None
+
+        """
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
 
     def round_2dec_df(self):

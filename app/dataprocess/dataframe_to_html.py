@@ -1,9 +1,5 @@
-'''
-
-Ce fichier permet la transformation en html dans le style du site des données de synthese
-chantier dans le but de laisser a l'utilisateur la possibilité de rentrer les restes a dépenser
-
-'''
+"""Ce fichier permet la transformation en html dans le style du site des données de synthese
+chantier dans le but de laisser a l'utilisateur la possibilité de rentrer les restes a dépenser"""
 
 #from .postes_chantier import *
 #from pandas import Index
@@ -74,9 +70,9 @@ def convert_single_dataframe_to_html_table(dicPostes,mois,annee,chantier):
                 if (index_cell not in skip_column):
                     file.write(HTML_TABLE_ROW_HEAD)
                     if (index_cell == input_col+1):
-                        id = key+"$"+index
+                        ind = key+"$"+index
                         file.write("<input type='text' form='rad'")
-                        file.write('name="'+id+'">')
+                        file.write('name="'+ind+'">')
                         file.write("</input>")
                     else:
                         file.write(str(cell))
