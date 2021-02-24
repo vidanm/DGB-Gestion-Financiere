@@ -26,8 +26,8 @@ https://dgb-gestionfinanciere.herokuapp.com/
 
 Les fichiers Excel doivent être importés sous le format .xls et non .xlsx .
 
-Ils doivent respecter le format de nommage suivant : INTITULE-ANNEE.xls
-( Exemple : CHARGES-2020.xls )
+Ils doivent respecter le format de nommage suivant : IntituleANNEE.xls
+( Exemple : Charges2020.xls )
 
 ### Le Plan Comptable
 1.  Les intitulés de lignes doivent se trouver sur la 1ère colonne pour le section chantier et la 5ème colonne pour la section structure.
