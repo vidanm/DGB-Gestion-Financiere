@@ -21,7 +21,8 @@ class ParentPoste():
             self.dicPostes[nom] = self.dicPostes[nom].set_index('SOUS POSTE')
 
     def _depenses_mois(self,row):
-        """Ajoute une dépense du mois au dictionnaire des postes.
+        """
+        Ajoute une dépense du mois au dictionnaire des postes.
 
             Parameters:
             argument2 (pandas.Series): ligne des charges qui contient la dépense et le poste
@@ -33,7 +34,8 @@ class ParentPoste():
         self.dicPostes[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
     
     def _depenses_annee(self,row):
-        """Ajoute une dépense de l'année au dictionnaire des postes.
+        """
+        Ajoute une dépense de l'année au dictionnaire des postes.
 
             Parameters:
             argument2 (pandas.Series): ligne des charges qui contient la dépense et le poste
