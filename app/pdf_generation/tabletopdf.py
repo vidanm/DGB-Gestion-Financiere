@@ -71,7 +71,7 @@ class PDF():
 
         total[0][0] = 'Total'
         numTable.append(total[0])
-    
+
     def create_bar_syntgraph(self,width,height,synt):
         pfdc = synt["PFDC"].tolist()
         budget = synt["BUDGET"].tolist()

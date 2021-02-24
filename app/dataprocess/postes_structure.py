@@ -3,7 +3,9 @@ from .postesparent import ParentPoste
 import pandas as pd
 
 class StructPoste(ParentPoste):
+
     def __init__(self,planComptable,charges):
+        """Trie les charges de la structure par postes."""
         super(StructPoste,self).__init__(planComptable.get_pc_structure())
         self.charges = charges.get_struct()
         self.chargesglob = charges.get_raw_charges()
@@ -14,7 +16,7 @@ class StructPoste(ParentPoste):
     def calcul_structure(self,mois,annee):
         mois = int(mois)
         annee = int(annee)
-        for index,row in self.charges.iterrows():
+        for _,row in self.charges.iterrows():
             date = row['Date']
             if (row['POSTE'] in self.nomPostes):
                 if (date.year == annee):
@@ -43,9 +45,9 @@ class StructPoste(ParentPoste):
         ca_mois = ca.calcul_ca_mois(mois,annee)
         ca_annee = ca.calcul_ca_annee(annee)
         for nom in self.nomPostes:
-            for index,row in self.dicPostes[nom].iterrows():
+            for _,row in self.dicPostes[nom].iterrows():
                 depenses_mois = self.dicPostes[nom].loc[row.name,'Dépenses du mois']
                 depenses_cumul = self.dicPostes[nom].loc[row.name,"Dépenses de l'année"]
                 self.dicPostes[nom].loc[row.name,'%CA MOIS'] = depenses_mois*100 / ca_mois
                 self.dicPostes[nom].loc[row.name,'%CA Cumul'] = depenses_cumul*100 / ca_annee
-    
+

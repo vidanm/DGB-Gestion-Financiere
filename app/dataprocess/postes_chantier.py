@@ -41,7 +41,7 @@ class ChantierPoste(ParentPoste):
     def calcul_pfdc_budget(self):
         """Calcul le pfdc et l'ecart pfdc budget."""
         for nom in self.nomPostes:
-            for index,row in self.dicPostes[nom].iterrows():
+            for _,row in self.dicPostes[nom].iterrows():
                 pfdc = row['RAD'] + row["Dépenses de l'année"]
                 self.dicPostes[nom].loc[row.name,"PFDC"] = pfdc
                 self.dicPostes[nom].loc[row.name,"Ecart PFDC/Budget"] = row['Budget'] - pfdc

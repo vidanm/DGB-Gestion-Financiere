@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 class Synthese():
-    
+
     def __init__(self,charges):
         """Calcule la synthese sur l'année de toutes les dépenses de tout les chantiers."""
         self.col = ['CHANTIER','BUDGET','DEP DU MOIS','DEP CUMULEES','PFDC','MARGE THEORIQUE (€)','MARGE THEORIQUE (%)','MARGE BRUTE (€)','MARGE BRUTE (%)']
@@ -17,7 +17,7 @@ class Synthese():
    
     
     def precalc_pfdc(self,mois,annee):
-        """Rajout des csv des chantiers dont la synthese a deja ete calcules"""
+        """Rajout des csv des chantiers dont la synthese a deja ete calcules."""
         chantier_csv = {}
         date = str(annee) + "-" + (str(mois) if len(str(mois)) == 2 else "0"+str(mois))
         if (os.path.exists("bibl/"+date)):
@@ -46,7 +46,7 @@ class Synthese():
             if name in chantier_csv.keys():
                 chantier_line[4] = round(float(chantier_csv[name]),2)
 
-            for index,row in self.charges.get_raw_chantier(name).iterrows():
+            for _,row in self.charges.get_raw_chantier(name).iterrows():
                 #On itere sur toutes les actions d'un chantier particulier
                 date = row['Date']
                 if (row['Journal'] == 'ACH') and (date.month <= mois) and (date.year == annee):
@@ -55,7 +55,7 @@ class Synthese():
                     if (date.month == mois):
                         #Le calcul des dépenses prends en compte les avoirs
                         chantier_line[2] += row['Débit'] - row['Crédit']
-            
+
             out = pd.DataFrame([chantier_line],columns=self.col)
             self.ajoute_synthese_annee(out)
         
@@ -70,7 +70,7 @@ class Synthese():
         chantier_names = self.charges.get_chantier_names()
         for name in chantier_names:
             if name in budget.columns :
-                for index,row in budget.iterrows():
+                for _,row in budget.iterrows():
                     self.synthese_annee.loc[name,"BUDGET"] += row[name]
     
     def calcul_marges(self):

@@ -12,7 +12,7 @@ class CustomFileReader():
             raise FileNotFoundError("Fichier de charges manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'Charges"+year+".xls'")
         try:
             self._read_comptable(path+"PlanComptable"+year+".xls")
-        except: 
+        except:
             raise FileNotFoundError("Fichier Plan Comptable manquant pour l'annee "+year+" : Importez le via le menu importer sous la forme 'PlanComptable"+year+".xls'")
         try:
             self._read_budget(path+"Budget"+year+".xls")
@@ -30,7 +30,7 @@ class CustomFileReader():
 
     def _read_charges(self,path):
         try:
-            charges = pd.read_excel(path) 
+            charges = pd.read_excel(path)
         except Exception as error:
             raise error
         charges = charges.drop(columns=['Type','Référence interne','Date réf. externe','Auxiliaire','N°'])

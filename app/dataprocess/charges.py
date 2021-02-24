@@ -1,8 +1,9 @@
 from .basic_operations import is_in_dic
 
 class Charges():
+
     """S'occupe de traiter le fichier excel contenant toutes les charges. Les méthodes commençant par _ sont des méthodes internes a la classe. Ne pas les utiliser en dehors."""
-    
+
     def __init__(self,charges,planComptable,f):
         """Prends les charges lues par CustomReaderFile(), une instance de la classe PlanComptable(),et un fichier d'ecriture pour les codes manquants."""
         self._dicCharges = charges
@@ -17,7 +18,7 @@ class Charges():
     
 
     def _delete_code_without_poste(self,planComptable,f):
-        """On elimine les lignes dont le numéro de compte n'est pas spécifié dans le plan comptable"""
+        """On elimine les lignes dont le numéro de compte n'est pas spécifié dans le plan comptable."""
         missing_codes = []
         charges = self._dicCharges
 
@@ -26,8 +27,7 @@ class Charges():
             if planComptable.get_poste_by_code(str(value)).empty:
 
                 if (int(value/100000) == 7):
-                    """Les codes comptables commencant par 7 sont des ventes et doivent
-                    toujours être pris en compte en tant que tels."""
+                    #Les codes comptables commencant par 7 sont des ventes et doivent toujours être pris en compte en tant que tels.
                     planComptable.ajoute_code(value,"Vente sans poste","Vente sans sous poste")
                     continue
 
@@ -79,7 +79,7 @@ class Charges():
         """Renvoie le nom reel en fonction d'une approximation STRUCT -> 20-STRUCT0."""
         names = self.get_chantier_names()
         for name in names:
-            if approx in name:    
+            if approx in name:
                 return name
 
 

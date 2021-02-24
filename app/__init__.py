@@ -1,3 +1,5 @@
+"""FLASK APPLICATION."""
+
 from flask import Flask,send_file,request,flash,redirect,url_for,render_template
 from app.dataprocess.plan_comptable import PlanComptable
 from app.dataprocess.synthese import Synthese
@@ -141,9 +143,8 @@ def rad():
 
     for value in request.form:
         poste,sousposte = value.split('$')
-        print(request.form[value])
         postes.ajoute_rad(poste,sousposte,request.form[value])
-    
+
     postes.calcul_pfdc_budget()
     postes.calcul_total_chantier()
     postes.calcul_ges_prev()
