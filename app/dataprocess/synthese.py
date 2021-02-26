@@ -88,41 +88,7 @@ class Synthese():
                 self.synthese_annee.loc[name,"MARGE THEORIQUE (%)"] = round(pfdc*100/budget,2)
                 self.synthese_annee.loc[name,"MARGE BRUTE (€)"] =  round(budget-depcum,2)
                 self.synthese_annee.loc[name,"MARGE BRUTE (%)"] = round(depcum*100/budget,2)
-    """
-    def calcul_synthese_glissant(self,budgetprec,chargesprec):
-        #Calcul de la synthese des dépenses des chantiers sur 2 ans
-        #PAS FINI
-        chantier_names = self.charges.get_chantier_names()
-        chantier_csv = self.precalc_pfdc(mois,annee)
-        
-        for name in chantier_names:
-            
-            if 'DIV' in name or 'STRUCT' in name:
-                continue
-
-            chantier_line = ["",0,0,0,0,0,0,0,0]
-            chantier_line[0] = name
-            
-            if name in chantier_csv.keys():
-                chantier_line[4] = round(float(chantier_csv[name]),2)
-
-            for index,row in self.charges.get_raw_chantier(name).iterrows():
-                date = row['Date']
-                if (row['Journal'] == 'ACH') and (date.month <= mois) and (date.year == annee):
-                    chantier_line[3] += row['Débit'] - row['Crédit']
-                    if (date.month == mois):
-                        chantier_line[2] += row['Débit'] - row['Crédit']
-            
-            out = pd.DataFrame([chantier_line],columns=self.col)
-            self.ajoute_synthese_annee(out)
-        
-        self.synthese_annee = self.synthese_annee.set_index("CHANTIER")
-        self.ajoute_budget(budgetprec)
-        self.calcul_marges()
-        self.synthese_annee = self.synthese_annee.round(2)
-        self._calcul_total()
-    """
-
+    
     def _calcul_total(self):
         self.total_depenses_cumul = round(self.synthese_annee['DEP CUMULEES'].sum(),2)
         self.total_depenses_mois = round(self.synthese_annee['DEP DU MOIS'].sum(),2)
