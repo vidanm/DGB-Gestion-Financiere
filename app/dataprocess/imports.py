@@ -1,5 +1,5 @@
 import pandas as pd
-from basic_operations import is_in_dic
+from .basic_operations import is_in_dic
 
 def get_expenses_file(filepath):
     """
@@ -85,7 +85,7 @@ def get_accounting_file(filepath):
 
     return (account_worksite,account_office)
 
-def get_finances_file(filepath):
+def get_budget_file(filepath):
     """
     Will read the finances excel file at $filepath
 

@@ -1,6 +1,6 @@
-from basic_operations import is_in_dic
-from accounting_plan import AccountingPlan
-from imports import get_accounting_file,get_worksite_expenses_csv
+from .basic_operations import is_in_dic
+from .accounting_plan import AccountingPlan
+from .imports import get_accounting_file,get_worksite_expenses_csv
 
 class Expenses():
     

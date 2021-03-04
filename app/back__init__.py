@@ -1,15 +1,15 @@
 """FLASK APPLICATION."""
 
 from flask import Flask,send_file,request,flash,redirect,url_for,render_template
-from app.dataprocess.accounting_plan import AccountingPlan
-#from app.dataprocess.synthese import Synthese
+from app.dataprocess.plan_comptable import PlanComptable
+from app.dataprocess.synthese import Synthese
 from app.pdf_generation.tabletopdf import PDF
-from app.dataprocess.worksite import Worksite
-from app.dataprocess.expenses import Expenses
-from app.dataprocess.revenues import Revenues
-from app.dataprocess.office import Office
+from app.dataprocess.postes_chantier import ChantierPoste
+from app.dataprocess.charges import Charges
+from app.dataprocess.chiffreaffaire import ChiffreAffaire
+from app.dataprocess.postes_structure import StructPoste
 from app.dataprocess.dataframe_to_html import convert_single_dataframe_to_html_table
-from app.dataprocess.imports import get_expenses_file,split_expenses_file_as_worksite_csv,get_worksite_expenses_csv,get_accounting_file,get_budget_file
+from app.dataprocess.read_file import CustomFileReader
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 import os
@@ -23,12 +23,24 @@ app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
-worksite_names_missing = open("missing_numbers.txt","w")
+codes_missing = open("missing_numbers.txt","w")
+expected_files = ['plan','charges','budget']
+annee_disponibles = []
 
-categories = None #Stockage des donnees sous pdf
-month = "" #Mois du pdf genere
-worksite_name = "" #Code chantier STRUCT ou GLOB du pdf
+postes = None #Stockage des donnees sous pdf
+mois = "" #Mois du pdf genere
+code = "" #Code chantier STRUCT ou GLOB du pdf
 date = "" #Date complete du pdf genere
+
+
+def get_files(path,year):
+
+    try:
+        files = CustomFileReader("var/",year)
+    except Exception as error:
+        files = None
+        raise error
+    return files
 
 
 def allowed_file(filename):
@@ -40,13 +52,16 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     """Page d'accueil."""
+    #charges_modif = time.ctime(os.path.getmtime('var/charges.xls'))
+    #plan_modif = time.ctime(os.path.getmtime('var/plan.xls'))
 
     return render_template("index.html") #+ '<p>' + 'Dernière mise à jour du fichier de charges : '+ str(charges_modif) + '</p><p>' + 'Dernière mise à jour du plan comptable : '+str(plan_modif) + '</p>'
 
 
-"""@app.route('/synthese_globale',methods=['POST'])
+
+@app.route('/synthese_globale',methods=['POST'])
 def syntpdf():
-    '''Generation de la synthese. Sauvegarde en pdf.'''
+    """Generation de la synthese. Sauvegarde en pdf."""
     global date
     date = request.form['date']
     year = date[0:4]
@@ -57,8 +72,8 @@ def syntpdf():
     except Exception as error:
         return "Erreur de lecture de fichiers : "+ str(error)
 
-    plan = AccountingPlan(files.get_plan())
-    charges = Charges(files.get_charges(),plan,worksite_names_missing)
+    plan = PlanComptable(files.get_plan())
+    charges = Charges(files.get_charges(),plan,codes_missing)
     budget = files.get_budget()
     CA = ChiffreAffaire(charges.get_raw_charges())
 
@@ -77,82 +92,79 @@ def syntpdf():
     pdf.save_page()
     pdf.save_pdf()
     return send_file("bibl/Synthese.pdf",as_attachment=True)
-"""
 
 @app.route('/synthese_chantier',methods=['POST'])
 def chantpdf():
     """Generation de la synthese du chantier. Affichage en HTML pour permettre a l'utilisateur l'entree du Reste A Depenser."""
-    global worksite_name
+    global code
     global date
-    global categories
+    global postes
 
     date = request.form['date']
     year = date[0:4]
     month = date[5:7]
-    worksite_name = request.form['code']
+    print(month)
+    print(year)
+    code = request.form['code']
 
-    #try:
-    accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable2020.xls"))
-    #except Exception as error:
-    #    return "Erreur de lecture de fichiers :"+ str(error)
-
-    #try:
-    worksite = Worksite(accounting_plan,worksite_name)
-    #except Exception as error:
-    #    return "Erreur de lecture de fichiers : "+ str(error)
-
-    #try:
-    budget = get_budget_file("var/Budget2020.xls")
-    #except Exception as error:
-    #    return "Erreur de lecture de fichiers :"+ str(error)
+    try:
+        files = get_files("var/",year)
+    except Exception as error:
+        return "Erreur de lecture de fichiers : "+ str(error)
 
 
-    #try :
-    worksite.calculate_worksite(int(month),int(year),budget)
-    #except Exception as e :
-    #    print(e)
-    #    return str(e)
+    plan = PlanComptable(files.get_plan())
+    charges = Charges(files.get_charges(),plan,codes_missing)
+    budget = files.get_budget()
 
-    worksite.round_2dec_df()
-    convert_single_dataframe_to_html_table(worksite.categories,month,year,worksite_name)
+    #filename = "bibl/"+code+"_"+request.form['date']+".pdf"
+    postes = ChantierPoste(plan,charges,code)
+    try :
+        postes.calcul_chantier(int(month),int(year),budget)
+    except Exception as e :
+        print(e)
+        return str(e)
+
+    postes.round_2dec_df()
+    convert_single_dataframe_to_html_table(postes.dicPostes,month,year,code)
 
     return render_template("rad.html")
 
 @app.route('/rad',methods=['POST'])
 def rad():
     """Suite de chantpdf(). Recupere les Reste A Depenser entree precedemment par l'utilisateur. Calcul les donnees manquantes, la gestion previsionnelle. Sauvegarde le tout en PDF."""
-    global categories #Défini dans chantpdf()
-    global worksite_name #Défini dans chantpdf()
+    global postes #Défini dans chantpdf()
+    global code #Défini dans chantpdf()
     global date #Défini dans chantpdf()
-    filename = "bibl/"+date+"/"+worksite_name+".pdf"
+    filename = "bibl/"+date+"/"+code+".pdf"
 
     if not (os.path.exists("bibl/"+date)):
         os.makedirs("bibl/"+date)
 
     for value in request.form:
-        category,subcategory = value.split('$')
-        categories.add_rad(poste,sousposte,request.form[value])
+        poste,sousposte = value.split('$')
+        postes.ajoute_rad(poste,sousposte,request.form[value])
 
-    categories.compose_pfdc_budget()
-    categories.add_worksite_total()
-    categories.calcul_ges_prev()
-    categories.remove_category("PRODUITS")
-    with open("bibl/"+date+"/"+worksite_name+"_tt.txt","w") as file:
-        file.write(str(categories.categories["GESPREV"].iloc[-1]["PFDC"]))
+    postes.calcul_pfdc_budget()
+    postes.calcul_total_chantier()
+    postes.calcul_ges_prev()
+    postes.remove_poste("PRODUITS")
+    with open("bibl/"+date+"/"+code+"_tt.txt","w") as file:
+        file.write(str(postes.dicPostes["GESPREV"].iloc[-1]["PFDC"]))
 
-    #categories.categories["GESPREV"].iloc[-1] = pd.read_csv("bibl/"+date+"/"+worksite_name+"_tt.csv")
-    #print(categories.categories["GESPREV"].iloc[-1])
-    categories.round_2dec_df()
+    #postes.dicPostes["GESPREV"].iloc[-1] = pd.read_csv("bibl/"+date+"/"+code+"_tt.csv")
+    #print(postes.dicPostes["GESPREV"].iloc[-1])
+    postes.round_2dec_df()
     pdf = PDF(filename)
 
-    for nom in categories.categories.keys():
-        pdf.new_page(nom,worksite_name)
+    for nom in postes.dicPostes.keys():
+        pdf.new_page(nom,code)
         pdf.add_sidetitle(str(date))
         if (nom == "GESPREV"):
-            pdf.add_table(categories.categories[nom],y=A4[0]-inch*4)
-            pdf.create_bar_gesprevgraph(600,250,categories)
+            pdf.add_table(postes.dicPostes[nom],y=A4[0]-inch*4)
+            pdf.create_bar_gesprevgraph(600,250,postes)
         else :
-            pdf.add_table(categories.categories[nom])
+            pdf.add_table(postes.dicPostes[nom])
 
         pdf.save_page()
     
@@ -167,27 +179,27 @@ def structpdf():
         date = request.form['date']
         year = date[0:4]
         month = date[5:7]
-        worksite_name = "STRUCT"
+        code = "STRUCT"
 
         try:
             files = get_files("var/",year)
         except Exception as error:
             return "Erreur de lecture de fichiers : "+ str(error)
 
-        plan = AccountingPlan(files.get_plan())
-        charges = Charges(files.get_charges(),plan,worksite_names_missing)
+        plan = PlanComptable(files.get_plan())
+        charges = Charges(files.get_charges(),plan,codes_missing)
         #budget = files.get_budget()
       
-        filename = "bibl/"+date+"/"+worksite_name+".pdf"
+        filename = "bibl/"+date+"/"+code+".pdf"
         if not (os.path.exists("bibl/"+date)):
             os.makedirs("bibl/"+date)
 
-        categories = StructPoste(plan,charges)
-        categories.calcul_structure(month,year)
+        postes = StructPoste(plan,charges)
+        postes.calcul_structure(month,year)
         pdf = PDF(filename)
         pdf.new_page("STRUCT","")
         pdf.add_sidetitle(str(date))
-        pdf.add_struct_table(categories.format_for_pdf(),categories.row_noms,size=0.6)
+        pdf.add_struct_table(postes.format_for_pdf(),postes.row_noms,size=0.6)
         pdf.save_page()
         pdf.save_pdf()
 

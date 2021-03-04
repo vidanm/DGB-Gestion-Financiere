@@ -16,7 +16,7 @@ class Revenues():
             if value != 'VEN':
                 self._expenses = self._expenses.drop(index=index)
 
-    def calcul_month_revenues(self,mois,annee):
+    def calculate_month_revenues(self,mois,annee):
         """Calcul le chiffre d'affaire du mois de l'année donné en argument."""
         result = 0.0
         for _,row in self._expenses.data.iterrows():

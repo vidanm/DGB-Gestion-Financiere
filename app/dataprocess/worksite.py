@@ -1,5 +1,7 @@
 from .categories import Categories
 from .imports import get_worksite_expenses_csv
+from .expenses import Expenses
+import datetime
 import pandas as pd
 import os
 
@@ -7,7 +9,8 @@ class Worksite(Categories):
 
     def __init__(self,accounting_plan,worksite_name,csv_path="var/csv/"):
         """Trie les expenses d'un chantier par postes."""
-        super(Worksite,self).__init__(accounting_plan.get_pc_chantier())
+        super(Worksite,self).__init__(accounting_plan.get_worksite_plan())
+        self.csv_path = csv_path
         self.worksite_name = worksite_name
         self.expenses = self.__get_all_data_of_worksite(accounting_plan)
         for name in self.category_names:
@@ -28,10 +31,10 @@ class Worksite(Categories):
     
     def calculate_worksite(self,month,year,budget):
         for _,row in self.expenses.data.iterrows():
-            date = row['Date']
-            if (date.year <= annee):
+            date = datetime.datetime.strptime(row['Date'],"%Y-%m-%d")
+            if (date.year <= year):
                 super(Worksite,self)._add_cumulative_expense(row)
-                if (date.month == mois):
+                if (date.month == month):
                     super(Worksite,self)._add_month_expense(row)
         
         self.__add_budget(budget)
