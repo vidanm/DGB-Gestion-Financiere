@@ -12,11 +12,11 @@ class AccountingPlan():
 
     def get_worksite_plan(self):
         #Verifier l'utilité 
-        return self._dfPlanChantier
+        return self.working_site_plan
 
     def get_office_plan(self):
         #Verifier l'utilité
-        return self._dfPlanStruct
+        return self.office_plan
 
     def add_code_to_plan(self,code,poste,sous_poste):
         row = pd.DataFrame(np.array([[code,poste,sous_poste]]),

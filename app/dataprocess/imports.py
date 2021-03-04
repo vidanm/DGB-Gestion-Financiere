@@ -1,5 +1,5 @@
 import pandas as pd
-from basic_operations import is_in_dic
+from .basic_operations import is_in_dic
 
 def get_expenses_file(filepath):
     """
@@ -43,6 +43,7 @@ def split_expenses_file_as_worksite_csv(filepath,outputpath):
 def get_worksite_expenses_csv(filepath):
     return pd.read_csv(filepath)
 
+
 def get_accounting_file(filepath):
     """
     Will read the accounting plan excel file at $filepath
@@ -84,7 +85,7 @@ def get_accounting_file(filepath):
 
     return (account_worksite,account_office)
 
-def get_finances_file(filepath):
+def get_budget_file(filepath):
     """
     Will read the finances excel file at $filepath
 
