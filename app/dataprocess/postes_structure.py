@@ -26,6 +26,7 @@ class StructPoste(ParentPoste):
         self._ajoute_chiffre_affaire(mois,annee)
 
     def format_for_pdf(self):
+        self.ajoute_total_poste()
         self.row_noms = [1] #On garde les positions des noms de poste pour pouvoir les colorier différemment
         for nom in self.nomPostes:
             if (self.nomPostes.index(nom) == 0):
@@ -50,4 +51,24 @@ class StructPoste(ParentPoste):
                 depenses_cumul = self.dicPostes[nom].loc[row.name,"Dépenses de l'année"]
                 self.dicPostes[nom].loc[row.name,'%CA MOIS'] = depenses_mois*100 / ca_mois
                 self.dicPostes[nom].loc[row.name,'%CA Cumul'] = depenses_cumul*100 / ca_annee
+
+    def ajoute_total_poste(self):
+        totalmois = 0
+        totalannee = 0
+        camois = 0
+        caannee = 0
+        for nom in self.nomPostes:
+            for index,row in self.dicPostes[nom].iterrows():
+                totalmois += self.dicPostes[nom].loc[row.name,"Dépenses du mois"]
+                totalannee += self.dicPostes[nom].loc[row.name,"Dépenses de l'année"]
+                camois += self.dicPostes[nom].loc[row.name,"%CA MOIS"]
+                caannee += self.dicPostes[nom].loc[row.name,"%CA Cumul"]
+
+        total = pd.DataFrame(
+                {"Dépenses du mois":[totalmois],
+                    "Dépenses de l'année":[totalannee],
+                    "%CA MOIS":[camois],
+                    "%CA Cumul":[caannee]},["TOTAL"])
+        
+        self.dicPostes[nom] = self.dicPostes[nom].append(total)
 

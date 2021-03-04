@@ -41,14 +41,14 @@ class PDF():
         style = [
             ('FACE',(0,0),(-1,-1),"Helvetica-Bold"),
             ('GRID', (0,0), (-1,-1), 0.1, "BLACK"),
-            ('FONTSIZE',(0,0),(-1,-1),7),
+            ('FONTSIZE',(0,0),(-1,-1),6),
             ('ALIGN',(0,0),(-1,-1),"CENTER"),
             ('VALIGN',(0,0),(-1,-1),"MIDDLE"),
             ('BACKGROUND',(0,0),(-1,0),bleuciel),
             ('TEXTCOLOR',(0,0),(-1,0),"BLACK"),
             ('BACKGROUND',(1,1),(-1,-1),"WHITE"),
             ('BACKGROUND',(0,-1),(-1,-1),yellow),
-            ('TOPPADDING',(0,0),(-1,-1),5)
+            ('TOPPADDING',(0,0),(-1,-1),6)
             ]
 
         for i in row_nom:
@@ -167,8 +167,8 @@ class PDF():
 
     def add_struct_table(self,dataframe,row_noms,x='center',y='center',size=1):
         dataframe = dataframe.reset_index()
-        rowHeights = (len(dataframe)+1)*[12*size]
-        rowHeights[0] = 20
+        rowHeights = (len(dataframe)+1)*[11*size]
+        rowHeights[0] = 18
         numTable = dataframe.to_numpy().tolist()
         numTable.insert(0,np.array(dataframe.columns.values).tolist())
         numTable = self.convert_struct_string(numTable)
