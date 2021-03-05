@@ -35,7 +35,7 @@ class Office(Categories):
     def calculate_office(self,month):
         month = int(month)
         year = int(self.year)
-        for _,row in self.expenses.iterrows():
+        for _,row in self.expenses.data.iterrows():
             date = datetime.datetime.strptime(row['Date'],"%Y-%m-%d")
             if (row['POSTE'] in self.category_names):
                 if (date.year == self.year):

@@ -3,6 +3,7 @@
 from flask import Flask,send_file,request,flash,redirect,url_for,render_template
 from app.dataprocess.accounting_plan import AccountingPlan
 #from app.dataprocess.synthese import Synthese
+from app.dataprocess.overview import Overview
 from app.pdf_generation.tabletopdf import PDF
 from app.dataprocess.worksite import Worksite
 from app.dataprocess.expenses import Expenses
@@ -44,7 +45,7 @@ def index():
     return render_template("index.html") #+ '<p>' + 'Dernière mise à jour du fichier de charges : '+ str(charges_modif) + '</p><p>' + 'Dernière mise à jour du plan comptable : '+str(plan_modif) + '</p>'
 
 
-"""@app.route('/synthese_globale',methods=['POST'])
+@app.route('/synthese_globale',methods=['POST'])
 def syntpdf():
     '''Generation de la synthese. Sauvegarde en pdf.'''
     global date
@@ -52,32 +53,25 @@ def syntpdf():
     year = date[0:4]
     month = date[5:7]
 
-    try:
-        files = get_files("var/",year)
-    except Exception as error:
-        return "Erreur de lecture de fichiers : "+ str(error)
+    accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable2020.xls"))
+    budget = get_budget_file("var/Budget2020.xls")
+    #revenues = Revenues(charges.get_raw_charges())
+    #camois = CA.calcul_ca_mois(int(month),int(year))
+    #cacumul = CA.calcul_ca_annee(int(year))
 
-    plan = AccountingPlan(files.get_plan())
-    charges = Charges(files.get_charges(),plan,worksite_names_missing)
-    budget = files.get_budget()
-    CA = ChiffreAffaire(charges.get_raw_charges())
-
-    camois = CA.calcul_ca_mois(int(month),int(year))
-    cacumul = CA.calcul_ca_annee(int(year))
-
-    syn = Synthese(charges)
+    overview = Overview(accounting_plan,month,year)
     pdf = PDF("bibl/Synthese.pdf")
-    syn.calcul_synthese_annee(int(month),int(year),budget)
-    syn.calcul_tableau_ca(camois,cacumul)
+
+    overview.calculate_data(int(month),int(year),budget)
+    #overview.calcul_tableau_ca(camois,cacumul)
 
     pdf.new_page("Synthese",date)
-    pdf.add_table(syn.synthese_annee,y=A4[0]-inch*4.5)
-    pdf.add_table(syn.total_ca_marge,y=inch*3,x=A4[1]-inch*5)
-    pdf.create_bar_syntgraph(600,250,syn.synthese_annee)
+    pdf.add_table(overview.data,y=A4[0]-inch*4.5)
+    #pdf.add_table(syn.total_ca_marge,y=inch*3,x=A4[1]-inch*5)
+    pdf.create_bar_syntgraph(600,250,overview.data)
     pdf.save_page()
     pdf.save_pdf()
     return send_file("bibl/Synthese.pdf",as_attachment=True)
-"""
 
 @app.route('/synthese_chantier',methods=['POST'])
 def chantpdf():

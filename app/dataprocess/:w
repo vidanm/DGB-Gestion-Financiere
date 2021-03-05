@@ -1,8 +1,7 @@
-from .revenues import Revenues
 from .expenses import Expenses
 from .imports import get_csv_expenses
+from accounting_plan import AccountingPlan
 import pandas as pd
-import datetime
 import numpy as np
 import os
 
@@ -15,29 +14,22 @@ class Overview():
         self.month = month
         self.year = year
         self.csv_path = csv_path
-        self.expenses = self.__get_all_worksites_data(month,year,accounting_plan)
+        self.expenses = self.__get_all_worksites_data(month,year)
         self.data = pd.DataFrame(None,None,columns=self.col)
         self.cumulative_expenses_total = 0
         self.month_expenses_total = 0
 
-    def __get_all_worksites_data(self,month,year,accounting_plan):
-        first_file_processed = False
+    def __get_all_worksites_data(self,month,year):
+        total = None
         for filename in os.listdir(self.csv_path):
-            if year in filename and 'STRUCT' not in filename and 'DIV' not in filename:
-                if not first_file_processed:
-                    print(filename)
+            if year in filename:
+                if total == None:
                     total = Expenses(get_csv_expenses(self.csv_path+filename),accounting_plan)
-                    first_file_processed = True
                 else:
-                    print(filename)
                     total += Expenses(get_csv_expenses(self.csv_path+filename),accounting_plan)
-                worksite_name = filename.split('_')[1].split('.')[0]
-                if worksite_name not in self.worksite_names:
-                    self.worksite_names.append(worksite_name)
-                
             else :
-                for name in self.worksite_names:
-                    if name in filename and int(filename[0:4]) < year:
+                for name in self.worksites_names:
+                    if name in filename:
                         total += Expenses(get_csv_expenses(self.csv_path+filename),accounting_plan)
         return total
 
@@ -60,48 +52,45 @@ class Overview():
         """Calcul de la synthese des dépenses d'une année en omettant la structure."""
         csv_worksite = self.precalc_pfdc(month,year)
         for name in self.worksite_names:
-            print(name)   
+            
+            if 'DIV' in name or 'STRUCT' in name:
+                continue
+
             worksite_line = ["",0,0,0,0,0,0,0,0,0]
             worksite_line[0] = name
             if name in csv_worksite.keys():
-                worksite_line[-2] = round(float(csv_worksite[name]),2)
+                worksite_line[4] = round(float(csv_worksite[name]),2)
 
-            for _,row in self.expenses.data.loc[self.expenses.data["Section analytique"] == name].iterrows():
+            for _,row in self.expenses.data.iterrows():
                 #On itere sur toutes les actions d'un chantier particulier
-                date = datetime.datetime.strptime(row['Date'],"%Y-%m-%d")
-                if (row['Journal'] == 'ACH') and (date.month <= month):
+                date = datetime.datetine.strptime(row['Date'],"%Y-%m-%d")
+                if (row['Journal'] == 'ACH') and (date.month <= month) and (date.year == year):
                     #Une action est une dépense si son champ journal est 'ACH'
-                    worksite_line[6] += row['Débit'] - row['Crédit']
-                    if (date.month == month) and (date.year == year):
+                    worksite_line[3] += row['Débit'] - row['Crédit']
+                    if (date.month == month):
                         #Le calculate des dépenses prends en compte les avoirs
-                        worksite_line[3] += row['Débit'] - row['Crédit']
+                        worksite_line[2] += row['Débit'] - row['Crédit']
 
             out = pd.DataFrame([worksite_line],columns=self.col)
             self.ajoute_data(out)
         
         self.data = self.data.set_index("CHANTIER")
         self.add_budget(budget)
-        self.add_revenues()
         self.calculate_margin()
         self.data = self.data.round(2)
         self._calculate_total()
 
-    def add_revenues(self):
-        for name in self.worksite_names:
-            worksite_revenue = Revenues(self.expenses.data.loc[self.expenses.data["Section analytique"] == name])
-            self.data.loc[name,"CA MOIS"] = worksite_revenue.calculate_month_revenues(self.month,self.year)
-            self.data.loc[name,"CA CUMUL"] = worksite_revenue.calculate_cumulative_revenues(self.year)
-            
-
     def add_budget(self,budget):
         """Ajoute les données dans la colonne budget de la synthèse."""
-        for name in self.worksite_names:
+        worksite_names = self.expenses.get_worksite_names()
+        for name in worksite_names:
             if name in budget.columns :
                 for _,row in budget.iterrows():
                     self.data.loc[name,"BUDGET"] += row[name]
     
     def calculate_margin(self):
-        for name in self.worksite_names:
+        worksite_names = self.expenses.get_worksite_names()
+        for name in worksite_names:
             if 'DIV' in name or 'STRUCT' in name:
                 continue
             
@@ -109,11 +98,11 @@ class Overview():
             pfdc = self.data.loc[name,"PFDC"]
             cumulative_expenses = self.data.loc[name,"DEP CUMULEES"]
             
-            #if budget != 0:
-            #    self.data.loc[name,"MARGE THEORIQUE (€)"] =  round(budget - pfdc,2)
-            #    self.data.loc[name,"MARGE THEORIQUE (%)"] = round(pfdc*100/budget,2)
-            #    self.data.loc[name,"MARGE BRUTE (€)"] =  round(budget-cumulative_expenses,2)
-            #    self.data.loc[name,"MARGE BRUTE (%)"] = round(cumulative_expenses*100/budget,2)
+            if budget != 0:
+                self.data.loc[name,"MARGE THEORIQUE (€)"] =  round(budget - pfdc,2)
+                self.data.loc[name,"MARGE THEORIQUE (%)"] = round(pfdc*100/budget,2)
+                self.data.loc[name,"MARGE BRUTE (€)"] =  round(budget-cumulative_expenses,2)
+                self.data.loc[name,"MARGE BRUTE (%)"] = round(cumulative_expenses*100/budget,2)
     
     def _calculate_total(self):
         self.cumulative_expenses_total = round(self.data['DEP CUMULEES'].sum(),2)

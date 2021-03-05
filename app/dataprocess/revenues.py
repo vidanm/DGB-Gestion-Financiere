@@ -40,6 +40,7 @@ class Revenues():
         return result
 
     def calculate_cumulative_revenues(self,year):
+        #N'est pas borné au mois demandée
         today = date.today()
         result = 0.0
         for _,row in self._expenses.data.iterrows():

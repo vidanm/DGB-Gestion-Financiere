@@ -22,7 +22,7 @@ class Expenses():
     def __add__(self,other):
         a = self.data
         b = other.data
-        return a.append(b,ignore_index=True)
+        return Expenses(a.append(b,ignore_index=True),self.accounting_plan)
     
     def __str__(self):
         return self.data.to_string()
@@ -40,7 +40,7 @@ class Expenses():
                     accounting_plan.add_code_to_plan(value,"Unknown category","Unknown sub-category")
                 else :
                     self.data = self.data.drop(index=index)
-                    
+                    print(str(value)+" : Ligne "+str(index)+" non prise en compte")
                     if value not in unknown_accounts:
                         print("Account number : "+str(value)+" not in the accounting plan")
                         unknown_accounts.append(value)
