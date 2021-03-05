@@ -1,78 +1,96 @@
 from .revenues import Revenues
 from .categories import Categories
+from .imports import get_csv_expenses
+from .expenses import Expenses
 import pandas as pd
+import datetime
+import os
 
 class Office(Categories):
 
-    def __init__(self,accounting_plan,year_expenses,csv_path="/var/csv"):
+    def __init__(self,accounting_plan,year_expenses,year,csv_path="var/csv/"):
         """Trie les expenses de la structure par postes."""
-        super(StructPoste,self).__init__(accounting_plan.get_pc_structure())
-        self.expenses = expenses.get_struct()
-        self.expensesglob = expenses.get_raw_expenses()
-        for name in self.namePostes:
+        super(Office,self).__init__(accounting_plan.get_office_plan())
+        self.csv_path = csv_path
+        self.row_names = [1]
+        self.year = year
+        self.expenses = self.__get_year_data_of_office(accounting_plan)
+        self.year_expenses = year_expenses
+        for name in self.category_names:
             self.categories[name]['%CA MOIS'] = 0
             self.categories[name]['%CA Cumul'] = 0
 
-    def calculate_office(self,mois,annee):
-        mois = int(mois)
-        annee = int(annee)
+    def __get_year_data_of_office(self,accounting_plan):
+        total = 0
+        for filename in os.listdir(self.csv_path):
+            if "STRUCT" in filename and str(self.year) in filename and filename.endswith(".csv") :
+                if total == 0:
+                    total = Expenses(get_csv_expenses(self.csv_path+filename),accounting_plan)
+                else:
+                    total += Expenses(get_csv_expenses(self.csv_path+filename),accounting_plan)
+        
+        return total
+
+
+    def calculate_office(self,month):
+        month = int(month)
+        year = int(self.year)
         for _,row in self.expenses.iterrows():
-            date = row['Date']
-            if (row['POSTE'] in self.namePostes):
-                if (date.year == annee):
-                    super(StructPoste,self)._depenses_annee(row)
-                    if (date.month == mois):
-                        super(StructPoste,self)._depenses_mois(row)
-        self._ajoute_chiffre_affaire(mois,annee)
+            date = datetime.datetime.strptime(row['Date'],"%Y-%m-%d")
+            if (row['POSTE'] in self.category_names):
+                if (date.year == self.year):
+                    super(Office,self)._add_cumulative_expense(row)
+                    if (date.month == month):
+                        super(Office,self)._add_month_expense(row)
+        self._add_revenues(month,self.year)
+        self.add_office_total()
 
     def format_for_pdf(self):
-        self.ajoute_total_poste()
         self.row_names = [1] #On garde les positions des names de poste pour pouvoir les colorier différemment
-        for name in self.namePostes:
-            if (self.namePostes.index(name) == 0):
+        for name in self.category_names:
+            if (self.category_names.index(name) == 0):
                 title = pd.DataFrame([[]],[name])
-                dfStruct = pd.DataFrame(self.categories[name])
-                dfStruct = title.append(dfStruct)
+                formatted_office = pd.DataFrame(self.categories[name])
+                formatted_office = title.append(formatted_office)
             else:
-                self.row_names.append(len(dfStruct)+1)
+                self.row_names.append(len(formatted_office)+1)
                 title = pd.DataFrame([[]],[name])
-                dfStruct = dfStruct.append(title)
-                dfStruct = dfStruct.append(self.categories[name])
+                formatted_office = formatted_office.append(title)
+                formatted_office = formatted_office.append(self.categories[name])
 
-        return dfStruct
+        return formatted_office
 
-    def _add_revenues(self,mois,annee):
-        revenues = Revenues(self.year_expense.data)
-        month_revenue = revenues.calculate_month_revenues(self.year_expense.data)
-        #year_revenue = revenues.calculate_year_revenues
-        ca_mois = ca.calcul_ca_mois(mois,annee)
-        ca_annee = ca.calcul_ca_annee(annee)
-        for name in self.namePostes:
+    def _add_revenues(self,month,year):
+        revenues = Revenues(self.year_expenses)
+        month_revenue = revenues.calculate_month_revenues(month,year)
+        year_revenue = revenues.calculate_year_revenues(year)
+        for name in self.category_names:
             for _,row in self.categories[name].iterrows():
-                depenses_mois = self.categories[name].loc[row.name,'Dépenses du mois']
-                depenses_cumul = self.categories[name].loc[row.name,"Dépenses de l'année"]
-                self.categories[name].loc[row.name,'%CA MOIS'] = depenses_mois*100 / ca_mois
-                self.categories[name].loc[row.name,'%CA Cumul'] = depenses_cumul*100 / ca_annee
+                month_expenses = self.categories[name].loc[row.name,'Dépenses du mois']
+                cumulative_expenses = self.categories[name].loc[row.name,"Dépenses de l'année"]
+                self.categories[name].loc[row.name,'%CA MOIS'] = month_expenses*100 / month_revenue
+                self.categories[name].loc[row.name,'%CA Cumul'] = cumulative_expenses*100 / year_revenue
 
-    def add_category_total(self,name):
-        totalmois = 0
-        totalannee = 0
-        camois = 0
-        caannee = 0
-        for index,row in self.categories[name].iterrows():
-            totalmois += self.categories[name].loc[row.name,"Dépenses du mois"]
-            totalannee += self.categories[name].loc[row.name,"Dépenses de l'année"]
-            camois += self.categories[name].loc[row.name,"%CA MOIS"]
-            caannee += self.categories[name].loc[row.name,"%CA Cumul"]
+    def add_category_total(self):
+        month_total = 0
+        year_total = 0
+        month_revenues = 0
+        year_revenues = 0
+        
+        for name in self.category_names:
+            for index,row in self.categories[name].iterrows():
+                month_total += self.categories[name].loc[row.name,"Dépenses du mois"]
+                year_total += self.categories[name].loc[row.name,"Dépenses de l'année"]
+                month_revenues += self.categories[name].loc[row.name,"%CA MOIS"]
+                year_revenues += self.categories[name].loc[row.name,"%CA Cumul"]
 
         total = pd.DataFrame(
-                {"Dépenses du mois":[totalmois],
-                    "Dépenses de l'année":[totalannee],
-                    "%CA MOIS":[camois],
-                    "%CA Cumul":[caannee]},["TOTAL"])
+                {"Dépenses du mois":[month_total],
+                    "Dépenses de l'année":[year_total],
+                    "%CA MOIS":[month_revenues],
+                    "%CA Cumul":[year_revenues]},["TOTAL"])
         
         self.categories[name] = self.categories[name].append(total)
 
     def add_office_total(self):
-        for name in self.category_names:
-            self.add_category_total(name)
+        self.add_category_total()

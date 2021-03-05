@@ -110,11 +110,11 @@ class PDF():
         budget = []
         dep = []
 
-        for key in postes.dicPostes.keys():
+        for key in postes.categories.keys():
             if key != "GESPREV" and key != "FACTURATION CLIENT":
-                pfdc.append(postes.dicPostes[key].iloc[-1]["PFDC"])
-                budget.append(postes.dicPostes[key].iloc[-1]["Budget"])
-                dep.append(postes.dicPostes[key].iloc[-1]["Dépenses de l'année"])
+                pfdc.append(postes.categories[key].iloc[-1]["PFDC"])
+                budget.append(postes.categories[key].iloc[-1]["Budget"])
+                dep.append(postes.categories[key].iloc[-1]["Dépenses de l'année"])
 
         d = Drawing(width,height)
         d.add(QuickChart(),name='chart')
@@ -133,7 +133,7 @@ class PDF():
         d.chart.xAxisLabelAngle      = 30
         d.chart.yAxisFontSize        = 10
         #d.chart.yAxisLabelAngle      = 30
-        d.chart.categoryNames        = list(postes.dicPostes.keys())
+        d.chart.categoryNames        = list(postes.categories.keys())
         d.chart.dataLabelsAlignment        = 'bottom'
         #d.chart.pointerLabelMode     = 'leftAndRight'
         d.chart.bgColor              = None

@@ -12,30 +12,30 @@ class Revenues():
 
     def _delete_ach_lines(self):
         """Elimine toutes les lignes d'achats pour ne garder que les ventes."""
-        for index,value in self._expenses['Journal'].data.iteritems():
+        for index,value in self._expenses.data['Journal'].iteritems():
             if value != 'VEN':
-                self._expenses = self._expenses.drop(index=index)
+                self._expenses.data = self._expenses.data.drop(index=index)
 
-    def calculate_month_revenues(self,mois,annee):
-        """Calcul le chiffre d'affaire du mois de l'année donné en argument."""
+    def calculate_month_revenues(self,month,year):
+        """Calcul le chiffre d'affaire du month de l'année donné en argument."""
         result = 0.0
         for _,row in self._expenses.data.iterrows():
             date = row['Date']
-            if (date.month == mois and date.year == annee):
+            if (date.month == month and date.year == year):
                 result += row['Crédit']
 
         return result
 
-    def calculate_year_revenues(self,annee):
+    def calculate_year_revenues(self,year):
         """Calcul le chiffre d'affaire de l'année donnée en argument."""
         today = date.today()
         result = 0.0
-        if (today.year == annee):
+        if (today.year == year):
             for i in range (1,today.month):
-                result += self.calcul_ca_mois(i,annee)
+                result += self.calculate_month_revenues(i,year)
         else:
             for i in range(1,12):
-                result += self.calcul_ca_mois(i,annee)
+                result += self.calculate_month_revenues(i,year)
 
         return result
 

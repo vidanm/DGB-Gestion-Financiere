@@ -1,6 +1,6 @@
 from .basic_operations import is_in_dic
 from .accounting_plan import AccountingPlan
-from .imports import get_accounting_file,get_worksite_expenses_csv
+from .imports import get_accounting_file,get_csv_expenses
 
 class Expenses():
     
@@ -55,14 +55,15 @@ class Expenses():
             self.data.loc[index,'POSTE'] = category
             self.data.loc[index,'SOUS POSTE'] = subcategory
 
+
 if __name__ == "__main__":
     a = Expenses(\
-            get_worksite_expenses_csv("~/DGB_Gesfin/var/csv/2020_20-DIV0000.csv"),\
+            get_csv_expenses("~/DGB_Gesfin/var/csv/2020_20-DIV0000.csv"),\
             AccountingPlan(get_accounting_file("~/DGB_Gesfin/var/PlanComptable2020.xls"))\
             )
     
     b = Expenses(\
-            get_worksite_expenses_csv("~/DGB_Gesfin/var/csv/2020_19-BD-LAIG.csv"),\
+            get_csv_expenses("~/DGB_Gesfin/var/csv/2020_19-BD-LAIG.csv"),\
             AccountingPlan(get_accounting_file("~/DGB_Gesfin/var/PlanComptable2020.xls"))\
             )
 

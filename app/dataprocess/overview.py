@@ -2,102 +2,101 @@ import pandas as pd
 import numpy as np
 import os
 
-class Synthese():
+class Overview():
 
-    def __init__(self,charges):
+    def __init__(self,expenses):
         """Calcule la synthese sur l'année de toutes les dépenses de tout les chantiers."""
         self.col = ['CHANTIER','BUDGET',"CA MOIS",'DEP DU MOIS',"MARGE MOIS","CA CUMUL",'DEP CUMULEES',"MARGE A FIN DE",'PFDC',"MARGE FDC"]
 
-        self.charges = charges
-        self.synthese_annee = pd.DataFrame(None,None,columns=self.col)
-        self.synthese_cumul = self.synthese_annee.copy(deep=True)
+        self.expenses = expenses
+        self.overview_data = pd.DataFrame(None,None,columns=self.col)
 
-        self.total_depenses_cumul = 0
-        self.total_depenses_mois = 0
+        self.cumulative_expenses_total = 0
+        self.month_expenses_total = 0
    
     
-    def precalc_pfdc(self,mois,annee):
-        """Rajout des csv des chantiers dont la synthese a deja ete calcules."""
-        chantier_csv = {}
-        date = str(annee) + "-" + (str(mois) if len(str(mois)) == 2 else "0"+str(mois))
+    def precalc_pfdc(self,month,year):
+        """Rajout des csv des chantiers dont la synthese a deja ete calculatees."""
+        csv_worksite = {}
+        date = str(year) + "-" + (str(month) if len(str(month)) == 2 else "0"+str(month))
         if (os.path.exists("bibl/"+date)):
             for filename in os.listdir('bibl/'+date):
-                code = filename[0:-7]
+                worksite_name = filename[0:-7]
                 with open("bibl/"+date+"/"+filename,'rb') as file:
-                    chantier_csv[code] = file.read()
+                    csv_worksite[worksite_name] = file.read()
 
-        return chantier_csv
+        return csv_worksite
 
-    def ajoute_synthese_annee(self,data):
-        self.synthese_annee = self.synthese_annee.append(data,ignore_index=True)
+    def ajoute_overview_data(self,data):
+        self.overview_data = self.overview_data.append(data,ignore_index=True)
 
-    def calcul_synthese_annee(self,mois,annee,budget):
+    def calculate_overview_data(self,month,year,budget):
         """Calcul de la synthese des dépenses d'une année en omettant la structure."""
-        chantier_names = self.charges.get_chantier_names()
-        chantier_csv = self.precalc_pfdc(mois,annee)
+        worksite_names = self.expenses.get_worksite_names()
+        csv_worksite = self.precalc_pfdc(month,year)
         
-        for name in chantier_names:
+        for name in worksite_names:
             
             if 'DIV' in name or 'STRUCT' in name:
                 continue
 
-            chantier_line = ["",0,0,0,0,0,0,0,0,0]
-            chantier_line[0] = name
-            if name in chantier_csv.keys():
-                chantier_line[4] = round(float(chantier_csv[name]),2)
+            worksite_line = ["",0,0,0,0,0,0,0,0,0]
+            worksite_line[0] = name
+            if name in csv_worksite.keys():
+                worksite_line[4] = round(float(csv_worksite[name]),2)
 
-            for _,row in self.charges.get_raw_chantier(name).iterrows():
+            for _,row in self.expenses.get_raw_chantier(name).iterrows():
                 #On itere sur toutes les actions d'un chantier particulier
                 date = row['Date']
-                if (row['Journal'] == 'ACH') and (date.month <= mois) and (date.year == annee):
+                if (row['Journal'] == 'ACH') and (date.month <= month) and (date.year == year):
                     #Une action est une dépense si son champ journal est 'ACH'
-                    chantier_line[3] += row['Débit'] - row['Crédit']
-                    if (date.month == mois):
-                        #Le calcul des dépenses prends en compte les avoirs
-                        chantier_line[2] += row['Débit'] - row['Crédit']
+                    worksite_line[3] += row['Débit'] - row['Crédit']
+                    if (date.month == month):
+                        #Le calculate des dépenses prends en compte les avoirs
+                        worksite_line[2] += row['Débit'] - row['Crédit']
 
-            out = pd.DataFrame([chantier_line],columns=self.col)
-            self.ajoute_synthese_annee(out)
+            out = pd.DataFrame([worksite_line],columns=self.col)
+            self.ajoute_overview_data(out)
         
-        self.synthese_annee = self.synthese_annee.set_index("CHANTIER")
-        self.ajoute_budget(budget)
-        self.calcul_marges()
-        self.synthese_annee = self.synthese_annee.round(2)
-        self._calcul_total()
+        self.overview_data = self.overview_data.set_index("CHANTIER")
+        self.add_budget(budget)
+        self.calculate_margin()
+        self.overview_data = self.overview_data.round(2)
+        self._calculate_total()
 
-    def ajoute_budget(self,budget):
+    def add_budget(self,budget):
         """Ajoute les données dans la colonne budget de la synthèse."""
-        chantier_names = self.charges.get_chantier_names()
-        for name in chantier_names:
+        worksite_names = self.expenses.get_worksite_names()
+        for name in worksite_names:
             if name in budget.columns :
                 for _,row in budget.iterrows():
-                    self.synthese_annee.loc[name,"BUDGET"] += row[name]
+                    self.overview_data.loc[name,"BUDGET"] += row[name]
     
-    def calcul_marges(self):
-        chantier_names = self.charges.get_chantier_names()
-        for name in chantier_names:
+    def calculate_margin(self):
+        worksite_names = self.expenses.get_worksite_names()
+        for name in worksite_names:
             if 'DIV' in name or 'STRUCT' in name:
                 continue
             
-            budget = self.synthese_annee.loc[name,"BUDGET"]
-            pfdc = self.synthese_annee.loc[name,"PFDC"]
-            depcum = self.synthese_annee.loc[name,"DEP CUMULEES"]
+            budget = self.overview_data.loc[name,"BUDGET"]
+            pfdc = self.overview_data.loc[name,"PFDC"]
+            cumulative_expenses = self.overview_data.loc[name,"DEP CUMULEES"]
             
             if budget != 0:
-                self.synthese_annee.loc[name,"MARGE THEORIQUE (€)"] =  round(budget - pfdc,2)
-                self.synthese_annee.loc[name,"MARGE THEORIQUE (%)"] = round(pfdc*100/budget,2)
-                self.synthese_annee.loc[name,"MARGE BRUTE (€)"] =  round(budget-depcum,2)
-                self.synthese_annee.loc[name,"MARGE BRUTE (%)"] = round(depcum*100/budget,2)
+                self.overview_data.loc[name,"MARGE THEORIQUE (€)"] =  round(budget - pfdc,2)
+                self.overview_data.loc[name,"MARGE THEORIQUE (%)"] = round(pfdc*100/budget,2)
+                self.overview_data.loc[name,"MARGE BRUTE (€)"] =  round(budget-cumulative_expenses,2)
+                self.overview_data.loc[name,"MARGE BRUTE (%)"] = round(cumulative_expenses*100/budget,2)
     
-    def _calcul_total(self):
-        self.total_depenses_cumul = round(self.synthese_annee['DEP CUMULEES'].sum(),2)
-        self.total_depenses_mois = round(self.synthese_annee['DEP DU MOIS'].sum(),2)
+    def _calculate_total(self):
+        self.cumulative_expenses_total = round(self.overview_data['DEP CUMULEES'].sum(),2)
+        self.month_expenses_total = round(self.overview_data['DEP DU MOIS'].sum(),2)
     
-    def calcul_tableau_ca(self,camois,cacumul):
-        """Doit etre appele apres le calcul de la synthese et le calcul du total. Se charge de mettre en forme le tableau du chiffre d'affaire."""
-        camois = round(camois,2)
-        cacumul = round(cacumul,2)
-        self.total_ca_marge = pd.DataFrame(np.array([[camois,self.total_depenses_mois,camois-self.total_depenses_mois,round(100*(self.total_depenses_mois/camois),2)],[cacumul,self.total_depenses_cumul,round(cacumul-self.total_depenses_cumul,2),round(100*(self.total_depenses_cumul/cacumul),2)]]),columns=["CA","Depenses","Marge brute","Marge brute %"])
+    def calculate_tableau_ca(self,month_revenues,cumulative_revenues):
+        """Doit etre appele apres le calculate de la synthese et le calculate du total. Se charge de mettre en forme le tableau du chiffre d'affaire."""
+        month_revenues = round(month_revenues,2)
+        cumulative_revenues = round(cumulative_revenues,2)
+        self.total_revenue_margin = pd.DataFrame(np.array([[month_revenues,self.month_expenses_total,month_revenues-self.month_expenses_total,round(100*(self.month_expenses_total/month_revenues),2)],[cumulative_revenues,self.cumulative_expenses_total,round(cumulative_revenues-self.cumulative_expenses_total,2),round(100*(self.cumulative_expenses_total/cumulative_revenues),2)]]),columns=["CA","Depenses","Marge brute","Marge brute %"])
         s = pd.Series(["Mois","Année"])
-        self.total_ca_marge = self.total_ca_marge.set_index(s)
-        print(self.total_ca_marge)
+        self.total_revenue_margin = self.total_revenue_margin.set_index(s)
+        print(self.total_revenue_margin)

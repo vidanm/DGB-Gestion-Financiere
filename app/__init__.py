@@ -9,7 +9,7 @@ from app.dataprocess.expenses import Expenses
 from app.dataprocess.revenues import Revenues
 from app.dataprocess.office import Office
 from app.dataprocess.dataframe_to_html import convert_single_dataframe_to_html_table
-from app.dataprocess.imports import get_expenses_file,split_expenses_file_as_worksite_csv,get_worksite_expenses_csv,get_accounting_file,get_budget_file
+from app.dataprocess.imports import get_expenses_file,split_expenses_file_as_worksite_csv,get_csv_expenses,get_accounting_file,get_budget_file
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 import os
@@ -25,7 +25,7 @@ app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
 worksite_names_missing = open("missing_numbers.txt","w")
 
-categories = None #Stockage des donnees sous pdf
+worksite = None #Stockage des donnees sous pdf
 month = "" #Mois du pdf genere
 worksite_name = "" #Code chantier STRUCT ou GLOB du pdf
 date = "" #Date complete du pdf genere
@@ -84,7 +84,7 @@ def chantpdf():
     """Generation de la synthese du chantier. Affichage en HTML pour permettre a l'utilisateur l'entree du Reste A Depenser."""
     global worksite_name
     global date
-    global categories
+    global worksite
 
     date = request.form['date']
     year = date[0:4]
@@ -121,7 +121,7 @@ def chantpdf():
 @app.route('/rad',methods=['POST'])
 def rad():
     """Suite de chantpdf(). Recupere les Reste A Depenser entree precedemment par l'utilisateur. Calcul les donnees manquantes, la gestion previsionnelle. Sauvegarde le tout en PDF."""
-    global categories #Défini dans chantpdf()
+    global worksite #Défini dans chantpdf()
     global worksite_name #Défini dans chantpdf()
     global date #Défini dans chantpdf()
     filename = "bibl/"+date+"/"+worksite_name+".pdf"
@@ -131,28 +131,28 @@ def rad():
 
     for value in request.form:
         category,subcategory = value.split('$')
-        categories.add_rad(poste,sousposte,request.form[value])
+        worksite.add_rad(category,subcategory,request.form[value])
 
-    categories.compose_pfdc_budget()
-    categories.add_worksite_total()
-    categories.calcul_ges_prev()
-    categories.remove_category("PRODUITS")
+    worksite.compose_pfdc_budget()
+    worksite.add_worksite_total()
+    worksite.calcul_ges_prev()
+    worksite.remove_category("PRODUITS")
     with open("bibl/"+date+"/"+worksite_name+"_tt.txt","w") as file:
-        file.write(str(categories.categories["GESPREV"].iloc[-1]["PFDC"]))
+        file.write(str(worksite.categories["GESPREV"].iloc[-1]["PFDC"]))
 
-    #categories.categories["GESPREV"].iloc[-1] = pd.read_csv("bibl/"+date+"/"+worksite_name+"_tt.csv")
-    #print(categories.categories["GESPREV"].iloc[-1])
-    categories.round_2dec_df()
+    #worksite.categories["GESPREV"].iloc[-1] = pd.read_csv("bibl/"+date+"/"+worksite_name+"_tt.csv")
+    #print(worksite.categories["GESPREV"].iloc[-1])
+    worksite.round_2dec_df()
     pdf = PDF(filename)
 
-    for nom in categories.categories.keys():
+    for nom in worksite.categories.keys():
         pdf.new_page(nom,worksite_name)
         pdf.add_sidetitle(str(date))
         if (nom == "GESPREV"):
-            pdf.add_table(categories.categories[nom],y=A4[0]-inch*4)
-            pdf.create_bar_gesprevgraph(600,250,categories)
+            pdf.add_table(worksite.categories[nom],y=A4[0]-inch*4)
+            pdf.create_bar_gesprevgraph(600,250,worksite)
         else :
-            pdf.add_table(categories.categories[nom])
+            pdf.add_table(worksite.categories[nom])
 
         pdf.save_page()
     
@@ -169,25 +169,20 @@ def structpdf():
         month = date[5:7]
         worksite_name = "STRUCT"
 
-        try:
-            files = get_files("var/",year)
-        except Exception as error:
-            return "Erreur de lecture de fichiers : "+ str(error)
-
-        plan = AccountingPlan(files.get_plan())
-        charges = Charges(files.get_charges(),plan,worksite_names_missing)
-        #budget = files.get_budget()
-      
-        filename = "bibl/"+date+"/"+worksite_name+".pdf"
+        filename = "bibl/Structure"+year+"-"+month+".pdf"
+        accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable2020.xls"))
+        year_expenses = Expenses(get_expenses_file("var/Charges2020.xls"),accounting_plan)
+        office = Office(accounting_plan,year_expenses,2020)
+        
         if not (os.path.exists("bibl/"+date)):
             os.makedirs("bibl/"+date)
 
-        categories = StructPoste(plan,charges)
-        categories.calcul_structure(month,year)
+        office.calculate_office(month)
+        
         pdf = PDF(filename)
         pdf.new_page("STRUCT","")
         pdf.add_sidetitle(str(date))
-        pdf.add_struct_table(categories.format_for_pdf(),categories.row_noms,size=0.6)
+        pdf.add_struct_table(office.format_for_pdf(),office.row_names,size=0.6)
         pdf.save_page()
         pdf.save_pdf()
 

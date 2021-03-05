@@ -40,7 +40,7 @@ def split_expenses_file_as_worksite_csv(filepath,outputpath):
         expenses.loc[expenses['Section analytique'] == name].to_csv(outputpath+year+"_"+name+".csv")
 
 
-def get_worksite_expenses_csv(filepath):
+def get_csv_expenses(filepath):
     return pd.read_csv(filepath)
 
 

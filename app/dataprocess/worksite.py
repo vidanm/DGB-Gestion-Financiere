@@ -1,5 +1,5 @@
 from .categories import Categories
-from .imports import get_worksite_expenses_csv
+from .imports import get_csv_expenses
 from .expenses import Expenses
 import datetime
 import pandas as pd
@@ -24,9 +24,9 @@ class Worksite(Categories):
         for filename in os.listdir(self.csv_path):
             if self.worksite_name in filename and filename.endswith(".csv") :
                 if total == None:
-                    total = Expenses(get_worksite_expenses_csv(self.csv_path+filename),accounting_plan)
+                    total = Expenses(get_csv_expenses(self.csv_path+filename),accounting_plan)
                 else:
-                    total += Expenses(get_worksite_expenses_csv(self.csv_path+filename),accounting_plan)
+                    total += Expenses(get_csv_expenses(self.csv_path+filename),accounting_plan)
         return total
     
     def calculate_worksite(self,month,year,budget):
