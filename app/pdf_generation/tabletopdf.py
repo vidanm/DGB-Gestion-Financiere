@@ -189,12 +189,13 @@ class PDF():
 
     def add_table(self,dataframe,x=-1,y=-1):
         """Ajoute un tableau a la feuille active. Le coin bas droite est représenté par (x,y)."""
-        #TODO Rajouter la colonne des sous postes
         dataframe = dataframe.reset_index()
         rowHeights = (len(dataframe)+1)*[12]
         rowHeights[0] = 20
         numTable = dataframe.to_numpy().tolist()
         numTable.insert(0,np.array(dataframe.columns.values).tolist())
+        if (numTable[0][0] == "index"):
+            numTable[0][0] = "Poste"
         #self.ajoute_total(numTable)
         #self.eliminate_zeros_add_euros(numTable)
 

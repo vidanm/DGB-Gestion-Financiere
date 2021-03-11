@@ -10,7 +10,7 @@ from app.dataprocess.expenses import Expenses
 from app.dataprocess.revenues import Revenues
 from app.dataprocess.office import Office
 from app.dataprocess.dataframe_to_html import convert_single_dataframe_to_html_table
-from app.dataprocess.imports import get_expenses_file,split_expenses_file_as_worksite_csv,get_csv_expenses,get_accounting_file,get_budget_file
+from app.dataprocess.imports import get_expenses_file,split_expenses_file_as_worksite_csv,get_csv_expenses,get_accounting_file,get_budget_file,get_salary_file,split_salary_file_as_salary_csv
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 import os
@@ -41,6 +41,10 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     """Page d'accueil."""
+    
+    split_expenses_file_as_worksite_csv(filepath="~/DGB_Gesfin/var/Charges2020.xls",\
+            outputpath="var/csv/")
+    split_salary_file_as_salary_csv("var/MasseSalariale2020.xls","var/csv/")
 
     return render_template("index.html") #+ '<p>' + 'Dernière mise à jour du fichier de charges : '+ str(charges_modif) + '</p><p>' + 'Dernière mise à jour du plan comptable : '+str(plan_modif) + '</p>'
 
@@ -48,6 +52,7 @@ def index():
 @app.route('/synthese_globale',methods=['POST'])
 def syntpdf():
     '''Generation de la synthese. Sauvegarde en pdf.'''
+
     global date
     date = request.form['date']
     year = date[0:4]
@@ -64,9 +69,10 @@ def syntpdf():
 
     overview.calculate_data(int(month),int(year),budget)
     #overview.calcul_tableau_ca(camois,cacumul)
+    formatted_overview = overview.get_formatted_data()
 
     pdf.new_page("Synthese",date)
-    pdf.add_table(overview.data,y=A4[0]-inch*4.5)
+    pdf.add_table(formatted_overview,y=A4[0]-inch*4.5)
     #pdf.add_table(syn.total_ca_marge,y=inch*3,x=A4[1]-inch*5)
     pdf.create_bar_syntgraph(600,250,overview.data)
     pdf.save_page()
@@ -75,6 +81,7 @@ def syntpdf():
 
 @app.route('/synthese_chantier',methods=['POST'])
 def chantpdf():
+
     """Generation de la synthese du chantier. Affichage en HTML pour permettre a l'utilisateur l'entree du Reste A Depenser."""
     global worksite_name
     global date
@@ -85,6 +92,7 @@ def chantpdf():
     month = date[5:7]
     worksite_name = request.form['code']
 
+    split_salary_file_as_salary_csv("var/MasseSalariale2020.xls","var/csv/")
     #try:
     accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable2020.xls"))
     #except Exception as error:
@@ -143,10 +151,10 @@ def rad():
         pdf.new_page(nom,worksite_name)
         pdf.add_sidetitle(str(date))
         if (nom == "GESPREV"):
-            pdf.add_table(worksite.categories[nom],y=A4[0]-inch*4)
+            pdf.add_table(worksite.get_formatted_data(nom),y=A4[0]-inch*4)
             pdf.create_bar_gesprevgraph(600,250,worksite)
         else :
-            pdf.add_table(worksite.categories[nom])
+            pdf.add_table(worksite.get_formatted_data(nom))
 
         pdf.save_page()
     
@@ -201,9 +209,13 @@ def upload_file():
             if file.filename == '':
                 flash('No selected file')
                 continue
+    
             if file and allowed_file(file.filename):
+
                 filename = fileit
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename+".xls"))
+                if "Charges" in filename : 
+                    split_expenses_file_as_worksite_csv(filepath=os.path.join(app.config['UPLOAD_FOLDER'],filename+'.xls'), outputpath="var/csv/")
         return redirect(url_for('upload_file',
                                     filename=filename))
     return render_template("upload.html")

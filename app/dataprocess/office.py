@@ -61,7 +61,7 @@ class Office(Categories):
         return formatted_office
 
     def _add_revenues(self,month,year):
-        revenues = Revenues(self.year_expenses)
+        revenues = Revenues(self.year_expenses.data)
         month_revenue = revenues.calculate_month_revenues(month,year)
         year_revenue = revenues.calculate_year_revenues(year)
         for name in self.category_names:

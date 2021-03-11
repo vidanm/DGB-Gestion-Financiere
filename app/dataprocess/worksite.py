@@ -104,3 +104,14 @@ class Worksite(Categories):
         self.categories["GESPREV"] = gesprev
         self.add_category_total("GESPREV")
 
+    def get_formatted_data(self,category_name):
+        formatted = self.categories[category_name].copy()
+        formatted["Dépenses du mois"] = formatted["Dépenses du mois"].apply("{:0,.2f}€".format)
+
+        formatted["Dépenses de l'année"] = formatted["Dépenses de l'année"].apply("{:0,.2f}€".format)
+
+        formatted["Budget"] = formatted["Budget"].apply("{:0,.2f}€".format)
+        formatted["RAD"] = formatted["RAD"].apply("{:0,.2f}€".format)
+        formatted["PFDC"] = formatted["PFDC"].apply("{:0,.2f}€".format)
+        formatted["Ecart PFDC/Budget"] = formatted["Ecart PFDC/Budget"].apply("{:0,.2f}€".format)
+        return formatted

@@ -10,7 +10,7 @@ class Overview():
 
     def __init__(self,accounting_plan,month,year,csv_path="var/csv/"):
         """Calcule la synthese sur l'année de toutes les dépenses de tout les chantiers."""
-        self.col = ['CHANTIER','BUDGET',"CA MOIS",'DEP DU MOIS',"MARGE MOIS","CA CUMUL",'DEP CUMULEES',"MARGE A FIN DE",'PFDC',"MARGE FDC"]
+        self.col = ['CHANTIER','BUDGET',"CA MOIS",'DEP DU MOIS',"MARGE MOIS","CA CUMUL",'DEP CUMULEES',"MARGE A FIN DE MOIS",'PFDC',"MARGE FDC"]
         self.worksite_names = []
         self.month = month
         self.year = year
@@ -22,6 +22,7 @@ class Overview():
 
     def __get_all_worksites_data(self,month,year,accounting_plan):
         first_file_processed = False
+        total = None
         for filename in os.listdir(self.csv_path):
             if year in filename and 'STRUCT' not in filename and 'DIV' not in filename:
                 if not first_file_processed:
@@ -76,21 +77,24 @@ class Overview():
                         #Le calculate des dépenses prends en compte les avoirs
                         worksite_line[3] += row['Débit'] - row['Crédit']
 
+            worksite_line[6] = round(worksite_line[6],2)
+            worksite_line[3] = round(worksite_line[3],2)
+
             out = pd.DataFrame([worksite_line],columns=self.col)
             self.ajoute_data(out)
         
         self.data = self.data.set_index("CHANTIER")
         self.add_budget(budget)
         self.add_revenues()
-        self.calculate_margin()
+        self.calculate_margin(budget)
         self.data = self.data.round(2)
         self._calculate_total()
 
     def add_revenues(self):
         for name in self.worksite_names:
             worksite_revenue = Revenues(self.expenses.data.loc[self.expenses.data["Section analytique"] == name])
-            self.data.loc[name,"CA MOIS"] = worksite_revenue.calculate_month_revenues(self.month,self.year)
-            self.data.loc[name,"CA CUMUL"] = worksite_revenue.calculate_cumulative_revenues(self.year)
+            self.data.loc[name,"CA MOIS"] = round(worksite_revenue.calculate_month_revenues(self.month,self.year),2)
+            self.data.loc[name,"CA CUMUL"] = round(worksite_revenue.calculate_cumulative_revenues(self.year),2)
             
 
     def add_budget(self,budget):
@@ -98,17 +102,27 @@ class Overview():
         for name in self.worksite_names:
             if name in budget.columns :
                 for _,row in budget.iterrows():
+                    print(name + " { "+str(row[name])+" } ")
                     self.data.loc[name,"BUDGET"] += row[name]
     
-    def calculate_margin(self):
+    def calculate_margin(self,budget):
         for name in self.worksite_names:
             if 'DIV' in name or 'STRUCT' in name:
                 continue
             
-            budget = self.data.loc[name,"BUDGET"]
+
+            #budget = self.data.loc[name,"BUDGET"]
             pfdc = self.data.loc[name,"PFDC"]
+            month_expenses = self.data.loc[name,"DEP DU MOIS"]
+            month_revenues = self.data.loc[name,"CA MOIS"]
             cumulative_expenses = self.data.loc[name,"DEP CUMULEES"]
-            
+            cumulative_revenues = self.data.loc[name,"CA CUMUL"]
+            sell_price = 0
+            #print(budget.loc[budget["POSTE"]=="PRIX DE VENTE",name])
+
+            self.data.loc[name,"MARGE MOIS"] = round(month_revenues - month_expenses,2)
+            self.data.loc[name,"MARGE A FIN DE MOIS"] = round(cumulative_expenses - cumulative_revenues,2)
+            self.data.loc[name,"MARGE FDC"] = round(sell_price-pfdc,2) #Le soustraire au prix de ente + avenants
             #if budget != 0:
             #    self.data.loc[name,"MARGE THEORIQUE (€)"] =  round(budget - pfdc,2)
             #    self.data.loc[name,"MARGE THEORIQUE (%)"] = round(pfdc*100/budget,2)
@@ -138,3 +152,17 @@ class Overview():
         s = pd.Series(["Mois","Année"])
         self.total_revenue_margin = self.total_revenue_margin.set_index(s)
         print(self.total_revenue_margin)
+
+    def get_formatted_data(self):
+        formatted = self.data.copy()
+        formatted["DEP CUMULEES"] = formatted["DEP CUMULEES"].apply("{:0,.2f}€".format)
+        formatted["CA MOIS"] = formatted["CA MOIS"].apply("{:0,.2f}€".format)
+        formatted["DEP DU MOIS"] = formatted["DEP DU MOIS"].apply("{:0,.2f}€".format)
+        formatted["CA CUMUL"] = formatted["CA CUMUL"].apply("{:0,.2f}€".format)
+        formatted["MARGE MOIS"] = formatted["MARGE MOIS"].apply("{:0,.2f}€".format)
+        formatted["MARGE A FIN DE MOIS"] = formatted["MARGE A FIN DE MOIS"].apply("{:0,.2f}€".format)
+        formatted["PFDC"] = formatted["PFDC"].apply("{:0,.2f}€".format)
+        formatted["MARGE FDC"] = formatted["MARGE FDC"].apply("{:0,.2f}€".format)
+        formatted["BUDGET"] = formatted["BUDGET"].apply("{:0,.2f}€".format)
+        
+        return formatted

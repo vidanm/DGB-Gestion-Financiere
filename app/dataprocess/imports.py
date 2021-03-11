@@ -1,5 +1,6 @@
 import pandas as pd
 from .basic_operations import is_in_dic
+import datetime
 
 def get_expenses_file(filepath):
     """
@@ -43,6 +44,53 @@ def split_expenses_file_as_worksite_csv(filepath,outputpath):
 def get_csv_expenses(filepath):
     return pd.read_csv(filepath)
 
+def split_salary_file_as_salary_csv(filepath,outputpath):
+    salary = get_salary_file(filepath,columns="B:D")
+    salary = salary.append(get_salary_file(filepath,columns="E:G"),ignore_index=True)
+    salary = salary.append(get_salary_file(filepath,columns="H:J"),ignore_index=True)
+    salary = salary.append(get_salary_file(filepath,columns="K:M"),ignore_index=True)
+    salary = salary.append(get_salary_file(filepath,columns="N:P"),ignore_index=True)
+    salary = salary.append(get_salary_file(filepath,columns="Q:S"),ignore_index=True)
+    salary = salary.append(get_salary_file(filepath,columns="T:V"),ignore_index=True)
+    salary = salary.append(get_salary_file(filepath,columns="W:Y"),ignore_index=True)
+    salary = salary.append(get_salary_file(filepath,columns="Z:AB"),ignore_index=True)
+    salary = salary.append(get_salary_file(filepath,columns="AC:AE"),ignore_index=True)
+    salary = salary.append(get_salary_file(filepath,columns="AF:AH"),ignore_index=True)
+    salary = salary.append(get_salary_file(filepath,columns="AI:AK"),ignore_index=True)
+
+    salary = salary.sort_values("Section analytique")
+    salary = salary.reset_index(drop=True)
+
+    csv = pd.DataFrame()
+    current_code = ""
+    for _,row in salary.iterrows():
+        if row["Section analytique"] != current_code:
+            if (current_code != ""):
+                csv.to_csv(str(outputpath)+"SALAIRES2020"+"_"+str(current_code)+".csv")
+            current_code = row["Section analytique"]
+            csv = pd.DataFrame([row])
+        else :
+            csv = csv.append(row)
+
+def get_salary_file(filepath,columns):
+    try:
+        salary = pd.read_excel(filepath,usecols=columns,header=2)
+        date = ""
+        for col in salary.columns:
+            if isinstance(col,datetime.datetime):
+                date = col
+            else:
+                if len(str(col).split('.')) == 2:
+                    salary = salary.rename(columns={col:(str(col).split('.')[0])})
+        
+        salary = salary.rename(columns={date:"Débit","Code compt":"Général","Code chantier":"Section analytique"})
+        salary.insert(0,column="Date",value=date)
+        salary.insert(0,column="Journal",value="ACH")
+        salary.insert(0,column="Libellé",value="")
+        salary.insert(0,column="Crédit",value=0)
+        return salary
+    except Exception as error:
+        raise error
 
 def get_accounting_file(filepath):
     """

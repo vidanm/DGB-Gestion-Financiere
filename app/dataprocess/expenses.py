@@ -33,7 +33,7 @@ class Expenses():
         for index,value in self.data["Général"].iteritems():
             
             if self.accounting_plan.get_poste_by_code(str(value)).empty:
-                if (int(value/100000) == 7):
+                if (str(value).isnumeric() and int(value/100000) == 7):
                     #All account beginning with a 7 is a sell, 
                     #contributing to revenues calculation,
                     #so it needs to be included
