@@ -93,27 +93,23 @@ def chantpdf():
     worksite_name = request.form['code']
 
     split_salary_file_as_salary_csv("var/MasseSalariale2020.xls","var/csv/")
-    #try:
-    accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable2020.xls"))
-    #except Exception as error:
-    #    return "Erreur de lecture de fichiers :"+ str(error)
+    try:
+        accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable2020.xls"))
+    except Exception as error:
+        return "Erreur de lecture de fichiers :"+ str(error)
 
-    #try:
-    worksite = Worksite(accounting_plan,worksite_name)
-    #except Exception as error:
-    #    return "Erreur de lecture de fichiers : "+ str(error)
+    try:
+        worksite = Worksite(accounting_plan,worksite_name)
+    except Exception as error:
+        return "Erreur de lecture de fichiers : "+ str(error)
 
-    #try:
-    budget = get_budget_file("var/Budget2020.xls")
-    #except Exception as error:
-    #    return "Erreur de lecture de fichiers :"+ str(error)
+    try:
+        budget = get_budget_file("var/Budget2020.xls")
+    except Exception as error:
+        return "Erreur de lecture de fichiers :"+ str(error)
 
 
-    #try :
     worksite.calculate_worksite(int(month),int(year),budget)
-    #except Exception as e :
-    #    print(e)
-    #    return str(e)
 
     worksite.round_2dec_df()
     convert_single_dataframe_to_html_table(worksite.categories,month,year,worksite_name)
