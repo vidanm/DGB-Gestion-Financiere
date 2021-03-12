@@ -26,13 +26,12 @@ class Overview():
         for filename in os.listdir(self.csv_path):
             if year in filename and 'STRUCT' not in filename and 'DIV' not in filename:
                 if not first_file_processed:
-                    print(filename)
                     total = get_csv_expenses(self.csv_path+filename)
                     first_file_processed = True
                 else:
-                    print(filename)
                     total = total.append(get_csv_expenses(self.csv_path+filename),ignore_index=True)
-
+                
+                print(filename)
                 worksite_name = filename.split('_')[1].split('.')[0]
                 if worksite_name not in self.worksite_names:
                     self.worksite_names.append(worksite_name)
@@ -62,7 +61,6 @@ class Overview():
         """Calcul de la synthese des dépenses d'une année en omettant la structure."""
         csv_worksite = self.precalc_pfdc(month,year)
         for name in self.worksite_names:
-            print(name)   
             worksite_line = ["",0,0,0,0,0,0,0,0,0]
             worksite_line[0] = name
             if name in csv_worksite.keys():
@@ -105,7 +103,6 @@ class Overview():
                 for _,row in budget.iterrows():
                     if row['POSTE'] == 'TOTAL':
                         break;
-                    print(name + " { "+str(row[name])+" } ")
                     self.data.loc[name,"BUDGET"] += row[name]
     
     def calculate_margin(self,budget):
@@ -120,12 +117,14 @@ class Overview():
             month_revenues = self.data.loc[name,"CA MOIS"]
             cumulative_expenses = self.data.loc[name,"DEP CUMULEES"]
             cumulative_revenues = self.data.loc[name,"CA CUMUL"]
-            print(budget)
+            
+            sell_price = 0
             if name in budget.columns :
-                sell_price = budget.at["PRIX DE VENTE",name]
-            else:
-                sell_price = 0
-            #print(budget.loc[budget["POSTE"]=="PRIX DE VENTE",name])
+                for _,row in budget.iterrows():
+                    if row["POSTE"] == "PRIX DE VENTE":
+                        sell_price += row[name]
+                    elif row["POSTE"] == "AVENANTS":
+                        sell_price += row[name]
 
             self.data.loc[name,"MARGE MOIS"] = round(month_revenues - month_expenses,2)
             self.data.loc[name,"MARGE A FIN DE MOIS"] = round(cumulative_expenses - cumulative_revenues,2)
@@ -158,7 +157,6 @@ class Overview():
             columns=["CA","Depenses","Marge brute","Marge brute %"])
         s = pd.Series(["Mois","Année"])
         self.total_revenue_margin = self.total_revenue_margin.set_index(s)
-        print(self.total_revenue_margin)
 
     def get_formatted_data(self):
         formatted = self.data.copy()

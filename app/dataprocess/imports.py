@@ -154,7 +154,6 @@ def get_budget_file(filepath):
     finances = finances[finances['SOUS-POSTE'].notna()]
     #finances = finances.set_index('SOUS-POSTE')
     finances = finances.fillna(0)
-    print(finances)
 
     return finances
 

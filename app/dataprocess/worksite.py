@@ -41,10 +41,11 @@ class Worksite(Categories):
         
     def __add_budget(self,budget):
         """Ajoute le budget dans les cases de postes correspondantes."""
-
+        not_used_rows = ["PRIX DE VENTE","TOTAL","ECART"]
         for _,row in budget.iterrows():
             try :
-                self.categories[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[self.worksite_name])
+                if row['POSTE'] not in not_used_rows:
+                    self.categories[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[self.worksite_name])
             except :
                 raise ValueError("Le couple " + row['POSTE'] + " : " + row['SOUS-POSTE'] + "n'est pas présent dans le plan comptable")
 

@@ -173,7 +173,10 @@ class PDF():
         numTable.insert(0,np.array(dataframe.columns.values).tolist())
         numTable = self.convert_struct_string(numTable)
         #self.eliminate_zeros_add_euros(numTable)
-        
+        if (numTable[0][0] == "index"):
+            numTable[0][0] = "Poste"
+
+
         t = Table(numTable,rowHeights=rowHeights)
         t.setStyle(self.struct_style(row_noms))
         w,h = t.wrapOn(self.c,0,0)
