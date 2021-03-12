@@ -42,7 +42,7 @@ def allowed_file(filename):
 def index():
     """Page d'accueil."""
     
-    split_expenses_file_as_worksite_csv(filepath="~/DGB_Gesfin/var/Charges2020.xls",\
+    split_expenses_file_as_worksite_csv(filepath="var/Charges2020.xls",\
             outputpath="var/csv/")
     split_salary_file_as_salary_csv("var/MasseSalariale2020.xls","var/csv/")
 
