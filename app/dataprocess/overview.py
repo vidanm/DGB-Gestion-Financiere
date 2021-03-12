@@ -103,6 +103,8 @@ class Overview():
         for name in self.worksite_names:
             if name in budget.columns :
                 for _,row in budget.iterrows():
+                    if row['POSTE'] == 'TOTAL':
+                        break;
                     print(name + " { "+str(row[name])+" } ")
                     self.data.loc[name,"BUDGET"] += row[name]
     
@@ -118,7 +120,11 @@ class Overview():
             month_revenues = self.data.loc[name,"CA MOIS"]
             cumulative_expenses = self.data.loc[name,"DEP CUMULEES"]
             cumulative_revenues = self.data.loc[name,"CA CUMUL"]
-            sell_price = 0
+            print(budget)
+            if name in budget.columns :
+                sell_price = budget.at["PRIX DE VENTE",name]
+            else:
+                sell_price = 0
             #print(budget.loc[budget["POSTE"]=="PRIX DE VENTE",name])
 
             self.data.loc[name,"MARGE MOIS"] = round(month_revenues - month_expenses,2)

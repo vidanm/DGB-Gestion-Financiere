@@ -52,3 +52,5 @@ class Revenues():
             result += row['Crédit']
 
         return result
+
+

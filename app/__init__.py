@@ -13,6 +13,8 @@ from app.dataprocess.dataframe_to_html import convert_single_dataframe_to_html_t
 from app.dataprocess.imports import get_expenses_file,split_expenses_file_as_worksite_csv,get_csv_expenses,get_accounting_file,get_budget_file,get_salary_file,split_salary_file_as_salary_csv
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
+from .models import db,login,UserModel
+from flask_login import current_user, login_user, login_required, logout_user
 import os
 
 UPLOAD_FOLDER= 'var'
@@ -20,10 +22,17 @@ DOWNLOAD_FOLDER = 'bibl'
 ALLOWED_EXTENSIONS = ['xls']
 
 app = Flask("DGB Gesfin")
+app.secret_key = 'xyz'
+
 app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dgbgesfin.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+db.init_app(app)
+login.init_app(app)
+login.login_view = 'login'
 worksite_names_missing = open("missing_numbers.txt","w")
 
 worksite = "" #Stockage des donnees sous pdf
@@ -31,17 +40,46 @@ month = "" #Mois du pdf genere
 worksite_name = "" #Code chantier STRUCT ou GLOB du pdf
 date = "" #Date complete du pdf genere
 
-
 def allowed_file(filename):
     """Verifie le bon format des fichiers prerequis fournis par l'utilisateur."""
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.before_first_request
+def create_table():
+    db.create_all()
+    user = UserModel(username="dgb")
+    user.set_password("dgbheroku")
+    db.session.add(user)
+    db.session.commit()
+
+
+@app.route('/login',methods=['POST','GET'])
+def login():
+    if current_user.is_authenticated:
+        return redirect('/')
+
+    if request.method == 'POST':
+        username = request.form['username']
+        user = UserModel.query.filter_by(username = username).first()
+        if user is not None and user.check_password(request.form['password']):
+            login_user(user)
+            return redirect('/')
+
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect('/login')
 
 @app.route('/')
 def index():
     """Page d'accueil."""
     
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
     split_expenses_file_as_worksite_csv(filepath="var/Charges2020.xls",\
             outputpath="var/csv/")
     split_salary_file_as_salary_csv("var/MasseSalariale2020.xls","var/csv/")
@@ -50,6 +88,7 @@ def index():
 
 
 @app.route('/synthese_globale',methods=['POST'])
+@login_required
 def syntpdf():
     '''Generation de la synthese. Sauvegarde en pdf.'''
 
@@ -80,6 +119,7 @@ def syntpdf():
     return send_file("bibl/Synthese.pdf",as_attachment=True)
 
 @app.route('/synthese_chantier',methods=['POST'])
+@login_required
 def chantpdf():
 
     """Generation de la synthese du chantier. Affichage en HTML pour permettre a l'utilisateur l'entree du Reste A Depenser."""
@@ -117,6 +157,7 @@ def chantpdf():
     return render_template("rad.html")
 
 @app.route('/rad',methods=['POST'])
+@login_required
 def rad():
     """Suite de chantpdf(). Recupere les Reste A Depenser entree precedemment par l'utilisateur. Calcul les donnees manquantes, la gestion previsionnelle. Sauvegarde le tout en PDF."""
     global worksite #Défini dans chantpdf()
@@ -159,6 +200,7 @@ def rad():
 
 
 @app.route('/synthese_structure',methods=['POST','GET'])
+@login_required
 def structpdf():
     """Generation du bilan de la structure."""
     if request.method == 'POST':
@@ -189,6 +231,7 @@ def structpdf():
 
 
 @app.route('/upload',methods=['GET','POST'])
+@login_required
 def upload_file():
     """Page permettant a l'utilisateur le telechargement sur le serveur, des fichiers prerequis pour le calcul des bilans."""
     if request.method == 'POST':

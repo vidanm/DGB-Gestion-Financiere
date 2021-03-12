@@ -146,12 +146,15 @@ def get_budget_file(filepath):
     """
     try :
         finances = pd.read_excel(filepath,header=3,usecols="A:J")
+        #A:J n'est pas generique
     except Exception as error:
         raise error
     
     finances['POSTE'] = finances['POSTE'].fillna(method='ffill')
     finances = finances[finances['SOUS-POSTE'].notna()]
+    #finances = finances.set_index('SOUS-POSTE')
     finances = finances.fillna(0)
+    print(finances)
 
     return finances
 
