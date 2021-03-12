@@ -26,7 +26,7 @@ app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
 worksite_names_missing = open("missing_numbers.txt","w")
 
-worksite = None #Stockage des donnees sous pdf
+worksite = "" #Stockage des donnees sous pdf
 month = "" #Mois du pdf genere
 worksite_name = "" #Code chantier STRUCT ou GLOB du pdf
 date = "" #Date complete du pdf genere
