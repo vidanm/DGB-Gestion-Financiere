@@ -155,6 +155,7 @@ def get_budget_file(filepath):
 
     return finances
 
+
 if __name__ == "__main__":
     split_expenses_file_as_worksite_csv(filepath="~/DGB_Gesfin/var/Charges2020.xls",\
             outputpath="~/DGB_Gesfin/var/csv/")

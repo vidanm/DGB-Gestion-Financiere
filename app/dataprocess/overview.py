@@ -27,11 +27,12 @@ class Overview():
             if year in filename and 'STRUCT' not in filename and 'DIV' not in filename:
                 if not first_file_processed:
                     print(filename)
-                    total = Expenses(get_csv_expenses(self.csv_path+filename),accounting_plan)
+                    total = get_csv_expenses(self.csv_path+filename)
                     first_file_processed = True
                 else:
                     print(filename)
-                    total += Expenses(get_csv_expenses(self.csv_path+filename),accounting_plan)
+                    total = total.append(get_csv_expenses(self.csv_path+filename),ignore_index=True)
+
                 worksite_name = filename.split('_')[1].split('.')[0]
                 if worksite_name not in self.worksite_names:
                     self.worksite_names.append(worksite_name)
@@ -39,8 +40,8 @@ class Overview():
             else :
                 for name in self.worksite_names:
                     if name in filename and int(filename[0:4]) < year:
-                        total += Expenses(get_csv_expenses(self.csv_path+filename),accounting_plan)
-        return total
+                        total = total.append(get_csv_expenses(self.csv_path+filename),ignore_index=True)
+        return Expenses(total,accounting_plan)
 
     def precalc_pfdc(self,month,year):
         """Rajout des csv des chantiers dont la synthese a deja ete calculatees."""
@@ -166,3 +167,5 @@ class Overview():
         formatted["BUDGET"] = formatted["BUDGET"].apply("{:0,.2f}€".format)
         
         return formatted
+
+
