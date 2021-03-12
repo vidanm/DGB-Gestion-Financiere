@@ -42,6 +42,7 @@ class Categories():
             None
 
         """
+        print(str(row['Débit'])+" : "+str(row['Date']))
         self.categories[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
 
     def round_2dec_df(self):

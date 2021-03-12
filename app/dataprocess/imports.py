@@ -88,6 +88,7 @@ def get_salary_file(filepath,columns):
         salary.insert(0,column="Journal",value="ACH")
         salary.insert(0,column="Libellé",value="")
         salary.insert(0,column="Crédit",value=0)
+        salary["Débit"] = salary["Débit"].fillna(0)
         return salary
     except Exception as error:
         raise error

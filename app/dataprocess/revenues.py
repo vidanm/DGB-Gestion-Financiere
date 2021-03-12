@@ -20,7 +20,12 @@ class Revenues():
         """Calcul le chiffre d'affaire du month de l'année donné en argument."""
         result = 0.0
         for _,row in self.data.iterrows():
-            date = row['Date']
+            """La lecture d'un csv ou d'un xls change le type de row date"""
+            if (isinstance(row['Date'],datetime.datetime)):
+                date = row['Date']
+            else :
+                date = datetime.datetime.strptime(row['Date'],"%Y-%m-%d")
+            
             if (int(date.month) == int(month) and int(date.year) == int(year)):
                 result += row['Crédit']
 
