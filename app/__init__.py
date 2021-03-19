@@ -80,7 +80,7 @@ def index():
     if not current_user.is_authenticated:
         return redirect('/login')
 
-    for filename in os.listdir("var/csv/"):
+    for filename in os.listdir("var/csv"):
         os.remove("var/csv/"+filename)
 
     split_expenses_file_as_worksite_csv(filepath="var/Charges.xls",\
