@@ -16,10 +16,13 @@ def get_expenses_file(filepath):
         expenses = pd.read_excel(filepath)
     except Exception as error:
         raise error
+    
+    column_to_drop = ['Type','Référence interne','Date réf. externe','Auxiliaire','N°','Pièce','Libellé','Solde','Monnaie']
 
-    expenses = expenses.drop(columns=['Type','Référence interne',\
-                    'Date réf. externe','Auxiliaire','N°'])
+    expenses = expenses.drop(columns=column_to_drop,errors='ignore')
+
     expenses = expenses.fillna(0)
+    #expenses = expenses['Section analytique'].str.strip()
     expenses['POSTE'] = ''
     expenses['SOUS POSTE'] = ''
     return expenses
@@ -38,8 +41,22 @@ def split_expenses_file_as_worksite_csv(filepath,outputpath):
             worksites_names.append(str(value))
 
     for name in worksites_names:
-        expenses.loc[expenses['Section analytique'] == name].to_csv(outputpath+year+"_"+name+".csv")
-
+        sep = expenses.loc[expenses['Section analytique'] == name]
+        sep = sep.sort_values(['Date'],ascending=True)
+        out = pd.DataFrame(columns=sep.columns)
+        for index,row in sep.iterrows():
+            if index == 0:
+                current_year = row['Date'].year
+                out = out.append(row)
+            else :
+                if current_year == row['Date'].year:
+                    out = out.append(row,ignore_index=True)
+                else :
+                    out.to_csv(outputpath+str(current_year)+"_"+name+".csv")
+                    current_year = row['Date'].year
+                    out = pd.DataFrame(columns=sep.columns)
+                    out = out.append(row)
+        out.to_csv(outputpath+str(current_year)+"_"+name+".csv")               
 
 def get_csv_expenses(filepath):
     return pd.read_csv(filepath)
@@ -65,8 +82,8 @@ def split_salary_file_as_salary_csv(filepath,outputpath):
     current_code = ""
     for _,row in salary.iterrows():
         if row["Section analytique"] != current_code:
-            if (current_code != ""):
-                csv.to_csv(str(outputpath)+"SALAIRES2020"+"_"+str(current_code)+".csv")
+            if (str(current_code) != "" and str(current_code) != "nan"):
+                csv.to_csv(str(outputpath)+"2020SALAIRES"+"_"+str(current_code)+".csv")
             current_code = row["Section analytique"]
             csv = pd.DataFrame([row])
         else :
@@ -89,6 +106,7 @@ def get_salary_file(filepath,columns):
         salary.insert(0,column="Libellé",value="")
         salary.insert(0,column="Crédit",value=0)
         salary["Débit"] = salary["Débit"].fillna(0)
+        #salary["Section analytique"] = salary["Section analytique"].str.strip()
         return salary
     except Exception as error:
         raise error
@@ -132,6 +150,11 @@ def get_accounting_file(filepath):
     account_worksite = account_worksite.fillna(value=values)
     account_office = account_office.fillna(value=values)
 
+    #account_worksite["POSTE"] = account_worksite["POSTE"].str.strip()
+    #account_worksite["SOUS POSTE"] = account_worksite["SOUS POSTE"].str.strip()
+    #account_office["POSTE"] = account_office["POSTE"].str.strip()
+    #account_office["SOUS POSTE"] = account_office["SOUS POSTE"].str.strip()
+
     return (account_worksite,account_office)
 
 def get_budget_file(filepath):
@@ -154,6 +177,8 @@ def get_budget_file(filepath):
     finances = finances[finances['SOUS-POSTE'].notna()]
     #finances = finances.set_index('SOUS-POSTE')
     finances = finances.fillna(0)
+    #finances['POSTE'] = finances["POSTE"].str.strip()
+    #finances['SOUS-POSTE'] = finances["SOUS-POSTE"].str.strip()
 
     return finances
 

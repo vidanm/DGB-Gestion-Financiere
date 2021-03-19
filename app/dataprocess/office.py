@@ -67,7 +67,7 @@ class Office(Categories):
         for name in self.category_names:
             for _,row in self.categories[name].iterrows():
                 month_expenses = self.categories[name].loc[row.name,'Dépenses du mois']
-                cumulative_expenses = self.categories[name].loc[row.name,"Dépenses de l'année"]
+                cumulative_expenses = self.categories[name].loc[row.name,"Dépenses cumulées"]
                 self.categories[name].loc[row.name,'%CA MOIS'] = month_expenses*100 / month_revenue
                 self.categories[name].loc[row.name,'%CA Cumul'] = cumulative_expenses*100 / year_revenue
 
@@ -80,13 +80,13 @@ class Office(Categories):
         for name in self.category_names:
             for index,row in self.categories[name].iterrows():
                 month_total += self.categories[name].loc[row.name,"Dépenses du mois"]
-                year_total += self.categories[name].loc[row.name,"Dépenses de l'année"]
+                year_total += self.categories[name].loc[row.name,"Dépenses cumulées"]
                 month_revenues += self.categories[name].loc[row.name,"%CA MOIS"]
                 year_revenues += self.categories[name].loc[row.name,"%CA Cumul"]
 
         total = pd.DataFrame(
                 {"Dépenses du mois":[month_total],
-                    "Dépenses de l'année":[year_total],
+                    "Dépenses cumulées":[year_total],
                     "%CA MOIS":[month_revenues],
                     "%CA Cumul":[year_revenues]},["TOTAL"])
         

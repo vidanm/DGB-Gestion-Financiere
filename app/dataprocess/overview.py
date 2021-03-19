@@ -24,7 +24,7 @@ class Overview():
         first_file_processed = False
         total = None
         for filename in os.listdir(self.csv_path):
-            if year in filename and 'STRUCT' not in filename and 'DIV' not in filename:
+            if str(year) in filename and 'STRUCT' not in filename and 'DIV' not in filename:
                 if not first_file_processed:
                     total = get_csv_expenses(self.csv_path+filename)
                     first_file_processed = True
@@ -33,13 +33,16 @@ class Overview():
                 
                 print(filename)
                 worksite_name = filename.split('_')[1].split('.')[0]
+                print(worksite_name)
                 if worksite_name not in self.worksite_names:
                     self.worksite_names.append(worksite_name)
                 
-            else :
+        for filename in os.listdir(self.csv_path):
                 for name in self.worksite_names:
                     if name in filename and int(filename[0:4]) < year:
+                        print(filename)
                         total = total.append(get_csv_expenses(self.csv_path+filename),ignore_index=True)
+
         return Expenses(total,accounting_plan)
 
     def precalc_pfdc(self,month,year):
@@ -69,9 +72,10 @@ class Overview():
             for _,row in self.expenses.data.loc[self.expenses.data["Section analytique"] == name].iterrows():
                 #On itere sur toutes les actions d'un chantier particulier
                 date = datetime.datetime.strptime(row['Date'],"%Y-%m-%d")
-                if (row['Journal'] == 'ACH') and (date.month <= month):
+                if (row['Journal'] == 'ACH'):
                     #Une action est une dépense si son champ journal est 'ACH'
-                    worksite_line[6] += row['Débit'] - row['Crédit']
+                    if  (date.year < year) or (date.month <= month and date.year == year):
+                        worksite_line[6] += row['Débit'] - row['Crédit']
                     if (date.month == month) and (date.year == year):
                         #Le calculate des dépenses prends en compte les avoirs
                         worksite_line[3] += row['Débit'] - row['Crédit']
@@ -105,6 +109,41 @@ class Overview():
                         break;
                     self.data.loc[name,"BUDGET"] += row[name]
     
+    def add_total(self):
+        totalbudget = 0
+        totalcamois = 0
+        totaldepmois = 0
+        totalmargmois = 0
+        totalcacumul = 0
+        totaldepcumul = 0
+        totalmargcumul = 0
+        totalpfdc = 0
+        totalmargefdc = 0
+        for index,row in self.data.iterrows():
+            totalbudget += self.data.loc[row.name,"BUDGET"]
+            totalcamois += self.data.loc[row.name,"CA MOIS"]
+            totaldepmois += self.data.loc[row.name,"DEP DU MOIS"]
+            totalmargmois += self.data.loc[row.name,"MARGE MOIS"]
+            totalcacumul += self.data.loc[row.name,"CA CUMUL"]
+            totaldepcumul += self.data.loc[row.name,"DEP CUMULEES"]
+            totalmargcumul += self.data.loc[row.name,"MARGE A FIN DE MOIS"]
+            totalpfdc += self.data.loc[row.name,"PFDC"]
+            totalmargefdc += self.data.loc[row.name,"MARGE FDC"]
+        
+        total = pd.DataFrame(
+                {"BUDGET":[totalbudget],
+                    "CA MOIS":[totalcamois],
+                    "DEP DU MOIS":[totaldepmois],
+                    "MARGE MOIS":[totalmargmois],
+                    "CA CUMUL":[totalcacumul],
+                    "DEP CUMULEES":[totaldepcumul],
+                    "MARGE A FIN DE MOIS":[totalmargcumul],
+                    "PFDC":[totalpfdc],
+                    "MARGE FDC":[totalmargefdc]},["TOTAL"])
+        
+        self.data = self.data.append(total)
+    
+
     def calculate_margin(self,budget):
         for name in self.worksite_names:
             if 'DIV' in name or 'STRUCT' in name:

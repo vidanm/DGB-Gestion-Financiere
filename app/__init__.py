@@ -11,6 +11,7 @@ from app.dataprocess.revenues import Revenues
 from app.dataprocess.office import Office
 from app.dataprocess.dataframe_to_html import convert_single_dataframe_to_html_table
 from app.dataprocess.imports import get_expenses_file,split_expenses_file_as_worksite_csv,get_csv_expenses,get_accounting_file,get_budget_file,get_salary_file,split_salary_file_as_salary_csv
+from app.dataprocess.date import get_month_name
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 from .models import db,login,UserModel
@@ -53,7 +54,6 @@ def create_table():
     db.session.add(user)
     db.session.commit()
 
-
 @app.route('/login',methods=['POST','GET'])
 def login():
     if current_user.is_authenticated:
@@ -80,9 +80,13 @@ def index():
     if not current_user.is_authenticated:
         return redirect('/login')
 
-    split_expenses_file_as_worksite_csv(filepath="var/Charges2020.xls",\
+    for filename in os.listdir("var/csv/"):
+        os.remove("var/csv/"+filename)
+
+    split_expenses_file_as_worksite_csv(filepath="var/Charges.xls",\
             outputpath="var/csv/")
-    split_salary_file_as_salary_csv("var/MasseSalariale2020.xls","var/csv/")
+
+    split_salary_file_as_salary_csv("var/MasseSalariale.xls","var/csv/")
 
     return render_template("index.html") #+ '<p>' + 'Dernière mise à jour du fichier de charges : '+ str(charges_modif) + '</p><p>' + 'Dernière mise à jour du plan comptable : '+str(plan_modif) + '</p>'
 
@@ -97,21 +101,22 @@ def syntpdf():
     year = date[0:4]
     month = date[5:7]
 
-    accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable2020.xls"))
-    budget = get_budget_file("var/Budget2020.xls")
+    accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable.xls"))
+    budget = get_budget_file("var/Budget.xls")
     #revenues = Revenues(charges.get_raw_charges())
     #camois = CA.calcul_ca_mois(int(month),int(year))
     #cacumul = CA.calcul_ca_annee(int(year))
 
-    overview = Overview(accounting_plan,month,year)
+    overview = Overview(accounting_plan,int(month),int(year))
     pdf = PDF("bibl/Synthese.pdf")
 
     overview.calculate_data(int(month),int(year),budget)
+    overview.add_total()
     #overview.calcul_tableau_ca(camois,cacumul)
     formatted_overview = overview.get_formatted_data()
 
-    pdf.new_page("Synthese",date)
-    pdf.add_table(formatted_overview,y=A4[0]-inch*4.5)
+    pdf.new_page("Synthese",get_month_name(int(date[5:7]))+' '+year)
+    pdf.add_table(formatted_overview,y=A4[0]-inch*4.8)
     #pdf.add_table(syn.total_ca_marge,y=inch*3,x=A4[1]-inch*5)
     pdf.create_bar_syntgraph(600,250,overview.data)
     pdf.save_page()
@@ -132,9 +137,9 @@ def chantpdf():
     month = date[5:7]
     worksite_name = request.form['code']
 
-    split_salary_file_as_salary_csv("var/MasseSalariale2020.xls","var/csv/")
+    split_salary_file_as_salary_csv("var/MasseSalariale.xls","var/csv/")
     try:
-        accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable2020.xls"))
+        accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable.xls"))
     except Exception as error:
         return "Erreur de lecture de fichiers :"+ str(error)
 
@@ -144,16 +149,14 @@ def chantpdf():
         return "Erreur de lecture de fichiers : "+ str(error)
 
     try:
-        budget = get_budget_file("var/Budget2020.xls")
+        budget = get_budget_file("var/Budget.xls")
     except Exception as error:
         return "Erreur de lecture de fichiers :"+ str(error)
 
 
     worksite.calculate_worksite(int(month),int(year),budget)
-
     worksite.round_2dec_df()
     convert_single_dataframe_to_html_table(worksite.categories,month,year,worksite_name)
-
     return render_template("rad.html")
 
 @app.route('/rad',methods=['POST'])
@@ -165,6 +168,8 @@ def rad():
     global date #Défini dans chantpdf()
     filename = "bibl/"+date+"/"+worksite_name+".pdf"
 
+    year = date[0:4]
+    month = date[5:7]
     if not (os.path.exists("bibl/"+date)):
         os.makedirs("bibl/"+date)
 
@@ -186,13 +191,13 @@ def rad():
 
     for nom in worksite.categories.keys():
         pdf.new_page(nom,worksite_name)
-        pdf.add_sidetitle(str(date))
+        pdf.add_sidetitle(get_month_name(int(month))+' '+year)
+
         if (nom == "GESPREV"):
             pdf.add_table(worksite.get_formatted_data(nom),y=A4[0]-inch*4)
             pdf.create_bar_gesprevgraph(600,250,worksite)
         else :
             pdf.add_table(worksite.get_formatted_data(nom))
-
         pdf.save_page()
     
     pdf.save_pdf()
@@ -210,8 +215,8 @@ def structpdf():
         worksite_name = "STRUCT"
 
         filename = "bibl/Structure"+year+"-"+month+".pdf"
-        accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable2020.xls"))
-        year_expenses = Expenses(get_expenses_file("var/Charges2020.xls"),accounting_plan)
+        accounting_plan = AccountingPlan(get_accounting_file("var/PlanComptable.xls"))
+        year_expenses = Expenses(get_expenses_file("var/Charges.xls"),accounting_plan)
         office = Office(accounting_plan,year_expenses,2020)
         
         if not (os.path.exists("bibl/"+date)):
@@ -220,8 +225,7 @@ def structpdf():
         office.calculate_office(month)
         
         pdf = PDF(filename)
-        pdf.new_page("STRUCT","")
-        pdf.add_sidetitle(str(date))
+        pdf.new_page("Structure",get_month_name(int(month))+' '+year)
         pdf.add_struct_table(office.format_for_pdf(),office.row_names,size=0.6)
         pdf.save_page()
         pdf.save_pdf()
@@ -237,25 +241,27 @@ def upload_file():
     if request.method == 'POST':
         #files = []
         # check if the post request has the file part
-        print(request.files)
-        for fileit in expected_files :
-            if fileit not in request.files:
-                print('No file part')
-                continue
-            file = request.files[fileit]
-            # if user does not select file, browser also
-            # submit an empty part without filename
-            if file.filename == '':
-                flash('No selected file')
-                continue
-    
-            if file and allowed_file(file.filename):
+        check_save_uploaded_file("PlanComptable")
+        check_save_uploaded_file("Charges")
+        check_save_uploaded_file("Budget")
+        check_save_uploaded_file("MasseSalariale")
 
-                filename = fileit
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename+".xls"))
-                if "Charges" in filename : 
-                    split_expenses_file_as_worksite_csv(filepath=os.path.join(app.config['UPLOAD_FOLDER'],filename+'.xls'), outputpath="var/csv/")
-        return redirect(url_for('upload_file',
-                                    filename=filename))
+        #return redirect(url_for('upload_file',filename=filename))
     return render_template("upload.html")
  
+def check_save_uploaded_file(tag):
+    if tag not in request.files: 
+        print("tag non")
+    else:
+        file = request.files[tag]
+        if file.filename == '':
+            flash("No selected files")
+        if file and allowed_file(file.filename):
+            filename = file.filename
+            file.save(os.path.join(app.config["UPLOAD_FOLDER"], tag+'.'+filename.split('.')[1]))
+
+        if tag == "Charges":
+            split_expenses_file_as_worksite_csv(filepath=os.path.join(app.config['UPLOAD_FOLDER'],tag+'.xls'), outputpath="var/csv/")
+        elif tag == "MasseSalariale":
+            split_salary_file_as_salary_csv(filepath=os.path.join(app.config['UPLOAD_FOLDER'],tag+'.xls'), outputpath="var/csv/")
+

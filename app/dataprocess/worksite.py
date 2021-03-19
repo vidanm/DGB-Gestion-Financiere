@@ -32,9 +32,9 @@ class Worksite(Categories):
     def calculate_worksite(self,month,year,budget):
         for _,row in self.expenses.data.iterrows():
             date = datetime.datetime.strptime(row['Date'],"%Y-%m-%d")
-            if (date.year <= year):
+            if (date.year <= year) or (date.month <= month and date.year == year):
                 super(Worksite,self)._add_cumulative_expense(row)
-                if (date.month == month):
+                if (date.month == month and date.year == year) :
                     super(Worksite,self)._add_month_expense(row)
         
         self.__add_budget(budget)
@@ -43,6 +43,12 @@ class Worksite(Categories):
         """Ajoute le budget dans les cases de postes correspondantes."""
         not_used_rows = ["PRIX DE VENTE","TOTAL","ECART"]
         for _,row in budget.iterrows():
+            try : 
+                row[self.worksite_name]
+            except :
+                print("Pas de budget associé a ce chantier")
+                return
+
             try :
                 if row['POSTE'] not in not_used_rows:
                     self.categories[row['POSTE']].loc[row['SOUS-POSTE'],"Budget"] += round(row[self.worksite_name])
@@ -57,7 +63,7 @@ class Worksite(Categories):
         """Calcul le pfdc et l'ecart pfdc budget."""
         for name in self.category_names:
             for _,row in self.categories[name].iterrows():
-                pfdc = row['RAD'] + row["Dépenses de l'année"]
+                pfdc = row['RAD'] + row["Dépenses cumulées"]
                 self.categories[name].loc[row.name,"PFDC"] = pfdc
                 self.categories[name].loc[row.name,"Ecart PFDC/Budget"] = row['Budget'] - pfdc
 
@@ -69,7 +75,7 @@ class Worksite(Categories):
         totalpfdc = 0
         totalecart = 0
         for index,row in self.categories[name].iterrows():
-            totalannee += self.categories[name].loc[row.name,"Dépenses de l'année"]
+            totalannee += self.categories[name].loc[row.name,"Dépenses cumulées"]
             totalmois += self.categories[name].loc[row.name,"Dépenses du mois"]
             totalbudget += self.categories[name].loc[row.name,"Budget"]
             totalrad += self.categories[name].loc[row.name,"RAD"]
@@ -77,7 +83,7 @@ class Worksite(Categories):
             totalecart += self.categories[name].loc[row.name,"Ecart PFDC/Budget"]
 
         total = pd.DataFrame(
-                {"Dépenses de l'année":[totalannee],
+                {"Dépenses cumulées":[totalannee],
                     "Dépenses du mois":[totalmois],
                     "Budget":[totalbudget],
                     "RAD":[totalrad],
@@ -109,7 +115,7 @@ class Worksite(Categories):
         formatted = self.categories[category_name].copy()
         formatted["Dépenses du mois"] = formatted["Dépenses du mois"].apply("{:0,.2f}€".format)
 
-        formatted["Dépenses de l'année"] = formatted["Dépenses de l'année"].apply("{:0,.2f}€".format)
+        formatted["Dépenses cumulées"] = formatted["Dépenses cumulées"].apply("{:0,.2f}€".format)
 
         formatted["Budget"] = formatted["Budget"].apply("{:0,.2f}€".format)
         formatted["RAD"] = formatted["RAD"].apply("{:0,.2f}€".format)

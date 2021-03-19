@@ -8,7 +8,6 @@ class Categories():
         self.categories = {}
         for _,row in accounting_plan.iterrows():
             value = row['POSTE']
-            print(value)
             if not is_in_dic(str(value),self.category_names):
                 self.category_names.append(str(value))
 
@@ -17,7 +16,7 @@ class Categories():
             self.categories[name] = accounting_plan.loc[accounting_plan['POSTE'] == name]
             self.categories[name] = self.categories[name].drop(columns=['POSTE','N° DE COMPTE','EX.'])
             self.categories[name]['Dépenses du mois'] = 0
-            self.categories[name]["Dépenses de l'année"] = 0
+            self.categories[name]["Dépenses cumulées"] = 0
             self.categories[name] = self.categories[name].set_index('SOUS POSTE')
 
     def _add_month_expense(self,row):
@@ -30,7 +29,10 @@ class Categories():
             None
 
         """
-        self.categories[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
+        try:
+            self.categories[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses du mois"] += round(row['Débit'] - row['Crédit'],2)
+        except:
+            print("La dépense associé au compte "+str(row['Général'])+" n'est pas une dépense de structure/chantier")
 
     def _add_cumulative_expense(self,row):
         """Ajoute une dépense de l'année au dictionnaire des postes.
@@ -42,8 +44,10 @@ class Categories():
             None
 
         """
-        print(str(row['Débit'])+" : "+str(row['Date']))
-        self.categories[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses de l'année"] += round(row['Débit'] - row['Crédit'],2)
+        try:
+            self.categories[row['POSTE']].loc[row['SOUS POSTE'],"Dépenses cumulées"] += round(row['Débit'] - row['Crédit'],2)
+        except:
+            print("La dépense associé au compte "+str(row['Général'])+" n'est pas une dépense de structure/chantier")
 
     def round_2dec_df(self):
         for name in self.categories.keys():

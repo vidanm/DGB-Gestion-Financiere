@@ -114,7 +114,7 @@ class PDF():
             if key != "GESPREV" and key != "FACTURATION CLIENT":
                 pfdc.append(postes.categories[key].iloc[-1]["PFDC"])
                 budget.append(postes.categories[key].iloc[-1]["Budget"])
-                dep.append(postes.categories[key].iloc[-1]["Dépenses de l'année"])
+                dep.append(postes.categories[key].iloc[-1]["Dépenses cumulées"])
 
         d = Drawing(width,height)
         d.add(QuickChart(),name='chart')
