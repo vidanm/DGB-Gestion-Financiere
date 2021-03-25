@@ -1,9 +1,10 @@
 """Config file for flask located in app/__init__.py."""
+import os
 # Statement for enabling the development environment
 DEBUG = True
 
 # Define the application directory
-import os
+
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Application threads. A common general assumption is

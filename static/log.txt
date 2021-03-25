@@ -1,0 +1,13 @@
+Numéro 2155510 pas dans le plan comptable
+- Ligne 5 non prise en compte
+- Ligne 17 non prise en compte
+- Ligne 24 non prise en compte
+
+Numéro 214540 pas dans le plan comptable
+Numéro 200140 pas dans le plan comptable
+- Ligne 58 non prise en compte
+- Ligne 59 non prise en compte
+- Ligne 68 non prise en compte
+- Ligne 69 non prise en compte
+- Ligne 78 non prise en compte
+- Ligne 88 non prise en compte
