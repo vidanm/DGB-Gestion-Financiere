@@ -262,7 +262,7 @@ def upload_file():
     """Page permettant a l'utilisateur le telechargement sur le serveur,
     des fichiers prerequis pour le calcul des bilans."""
     if request.method == 'POST':
-        if not (os.path.exists("var/"):
+        if not (os.path.exists("var/")):
             os.makedirs("var/")
 
 
