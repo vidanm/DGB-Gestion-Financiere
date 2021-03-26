@@ -36,7 +36,7 @@ class Worksite(Categories):
     def calculate_worksite(self, month, year, budget):
         for _, row in self.expenses.data.iterrows():
             date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
-            if (date.year <= year) or (date.month <= month
+            if (date.year < year) or (date.month <= month
                                        and date.year == year):
                 super(Worksite, self)._add_cumulative_expense(row)
                 if (date.month == month and date.year == year):

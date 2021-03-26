@@ -45,9 +45,9 @@ class Office(Categories):
         for _, row in self.expenses.data.iterrows():
             date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
             if (row['POSTE'] in self.category_names):
-                if (date.year == self.year):
+                if (date.year < self.year) or (date.month <= month and date.year == year):
                     super(Office, self)._add_cumulative_expense(row)
-                    if (date.month == month):
+                    if (date.month == month and date.year == year):
                         super(Office, self)._add_month_expense(row)
         self._add_revenues(month, self.year)
         self.add_office_total()
