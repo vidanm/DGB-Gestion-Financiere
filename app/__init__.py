@@ -291,11 +291,11 @@ def check_save_uploaded_file(tag):
                 os.path.join(app.config["UPLOAD_FOLDER"],
                              tag + '.' + filename.split('.')[1]))
 
-        if tag == "Charges":
-            split_expenses_file_as_worksite_csv(filepath=os.path.join(
-                app.config['UPLOAD_FOLDER'], tag + '.xls'),
+            if tag == "Charges":
+                split_expenses_file_as_worksite_csv(filepath=os.path.join(
+                    app.config['UPLOAD_FOLDER'], tag + filename.split('.')[1]),
+                                                    outputpath="var/csv/")
+            elif tag == "MasseSalariale":
+                split_salary_file_as_salary_csv(filepath=os.path.join(
+                    app.config['UPLOAD_FOLDER'], tag + filename.split('.')[1]),
                                                 outputpath="var/csv/")
-        elif tag == "MasseSalariale":
-            split_salary_file_as_salary_csv(filepath=os.path.join(
-                app.config['UPLOAD_FOLDER'], tag + '.xls'),
-                                            outputpath="var/csv/")
