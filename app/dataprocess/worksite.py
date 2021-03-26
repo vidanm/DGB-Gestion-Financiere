@@ -45,7 +45,10 @@ class Worksite(Categories):
         self.__add_budget(budget)
 
     def __add_budget(self, budget):
-        """Ajoute le budget dans les cases de postes correspondantes."""
+        """
+        Ajoute le budget dans les cases de postes correspondantes.
+        """
+        log = open("static/log.txt","a+")
         not_used_rows = ["PRIX DE VENTE", "TOTAL", "ECART"]
         for _, row in budget.iterrows():
             try:
@@ -60,16 +63,21 @@ class Worksite(Categories):
                                                       "Budget"] += round(row[
                                                           self.worksite_name])
             except Exception:
-                raise ValueError("Le couple " + row['POSTE'] + " : " +
-                                 row['SOUS-POSTE'] +
-                                 "n'est pas présent dans le plan comptable")
+                log.write("Le couple "+ row['POSTE'] 
+                        + " : " + row['SOUS-POSTE'] 
+                        + " spécifié dans le fichier budget 
+                        n'est pas un couple présent dans le plan comptable"
+
+            log.close()
 
     def add_rad(self, category, subcategory, rad):
         if rad.replace('.', '').isnumeric():
             self.categories[category].loc[subcategory, "RAD"] = float(rad)
 
     def compose_pfdc_budget(self):
-        """Calcul le pfdc et l'ecart pfdc budget."""
+        """
+        Calcul le pfdc et l'ecart pfdc budget.
+        """
         for name in self.category_names:
             for _, row in self.categories[name].iterrows():
                 pfdc = row['RAD'] + row["Dépenses cumulées"]
@@ -108,13 +116,17 @@ class Worksite(Categories):
         self.categories[name] = self.categories[name].append(total)
 
     def add_worksite_total(self):
-        """Calcul du total des dépenses."""
+        """
+        Calcul du total des dépenses.
+        """
         for name in self.category_names:
             self.add_category_total(name)
 
     def calcul_ges_prev(self):
-        """Calcul la gestion previsionnelle une fois que \
-                ttes les autres données ont été calculées."""
+        """
+        Calcul la gestion previsionnelle une fois que \
+                ttes les autres données ont été calculées.
+        """
         for name in self.category_names:
             if name != "PRODUITS":
                 if self.category_names.index(name) == 0:

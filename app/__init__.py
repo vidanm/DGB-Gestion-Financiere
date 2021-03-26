@@ -48,7 +48,8 @@ date = ""  # Date complete du pdf genere
 
 
 def allowed_file(filename):
-    """Verifie le bon format des fichiers prerequis
+    """
+    Verifie le bon format des fichiers prerequis
     fournis par l'utilisateur."""
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -91,8 +92,9 @@ def error_page():
 
 @app.route('/')
 def index():
-    """Page d'accueil."""
-
+    """
+    Page d'accueil.
+    """
     if not current_user.is_authenticated:
         return redirect('/login')
 
@@ -107,18 +109,14 @@ def index():
     return render_template(
         "index.html"
     )
-    # + '<p>' +
-    # 'Dernière mise à jour du fichier de charges : '+
-    # str(charges_modif) + '</p><p>' +
-    # 'Dernière mise à jour du plan comptable :
-    # '+str(plan_modif) + '</p>'
 
 
 @app.route('/synthese_globale', methods=['POST'])
 @login_required
 def syntpdf():
-    '''Generation de la synthese. Sauvegarde en pdf.'''
-
+    """
+    Generation de la synthese. Sauvegarde en pdf.
+    """
     global date
     date = request.form['date']
     year = date[0:4]
