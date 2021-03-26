@@ -39,7 +39,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 login.init_app(app)
 login.login_view = 'login'
-worksite_names_missing = open("missing_numbers.txt", "w")
 
 worksite = ""  # Stockage des donnees sous pdf
 month = ""  # Mois du pdf genere

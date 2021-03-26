@@ -63,12 +63,11 @@ class Worksite(Categories):
                                                       "Budget"] += round(row[
                                                           self.worksite_name])
             except Exception:
-                log.write("Le couple "+ row['POSTE'] 
-                        + " : " + row['SOUS-POSTE'] 
-                        + " spécifié dans le fichier budget 
-                        n'est pas un couple présent dans le plan comptable"
-
-            log.close()
+                log.write("Le couple "+ row['POSTE']\
+                        + " : " + row['SOUS-POSTE']\
+                        + " spécifié dans le fichier budget\
+                        n'est pas un couple présent dans le plan comptable")
+        log.close()
 
     def add_rad(self, category, subcategory, rad):
         if rad.replace('.', '').isnumeric():
