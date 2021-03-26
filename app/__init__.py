@@ -98,6 +98,8 @@ def index():
     if not current_user.is_authenticated:
         return redirect('/login')
 
+    if not (os.path.exists("var/csv/")):
+        os.makedirs("var/csv/")
     
     return render_template(
         "index.html"
