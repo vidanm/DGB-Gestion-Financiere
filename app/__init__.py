@@ -265,6 +265,8 @@ def upload_file():
         if not (os.path.exists("var/")):
             os.makedirs("var/")
 
+        if not (os.path.exists("var/csv/")):
+            os.makedirs("var/csv/")
 
         # files = []
         #  check if the post request has the file part
