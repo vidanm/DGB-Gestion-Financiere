@@ -262,6 +262,10 @@ def upload_file():
     """Page permettant a l'utilisateur le telechargement sur le serveur,
     des fichiers prerequis pour le calcul des bilans."""
     if request.method == 'POST':
+        if not (os.path.exists("var/"):
+            os.makedirs("var/")
+
+
         # files = []
         #  check if the post request has the file part
         check_save_uploaded_file("PlanComptable")
@@ -293,9 +297,9 @@ def check_save_uploaded_file(tag):
 
             if tag == "Charges":
                 split_expenses_file_as_worksite_csv(filepath=os.path.join(
-                    app.config['UPLOAD_FOLDER'], tag + filename.split('.')[1]),
+                    app.config['UPLOAD_FOLDER'], tag + '.'+ filename.split('.')[1]),
                                                     outputpath="var/csv/")
             elif tag == "MasseSalariale":
                 split_salary_file_as_salary_csv(filepath=os.path.join(
-                    app.config['UPLOAD_FOLDER'], tag + filename.split('.')[1]),
+                    app.config['UPLOAD_FOLDER'], tag + '.'+ filename.split('.')[1]),
                                                 outputpath="var/csv/")
