@@ -80,6 +80,7 @@ def login():
 
 @app.route('/logout')
 def logout():
+    clear()
     logout_user()
     return redirect('/login')
 
@@ -97,14 +98,7 @@ def index():
     if not current_user.is_authenticated:
         return redirect('/login')
 
-    for filename in os.listdir("var/csv"):
-        os.remove("var/csv/"+filename)
-
-    split_expenses_file_as_worksite_csv(filepath="var/Charges.xls",
-                                        outputpath="var/csv/")
-
-    split_salary_file_as_salary_csv("var/MasseSalariale.xls", "var/csv/")
-
+    
     return render_template(
         "index.html"
     )
@@ -278,8 +272,13 @@ def upload_file():
         # return redirect(url_for('upload_file',filename=filename))
     return render_template("upload.html")
 
+def clear():
+    for filename in os.listdir("var/csv"):
+        os.remove("var/csv/"+filename)
+
 
 def check_save_uploaded_file(tag):
+    
     if tag not in request.files:
         print("tag non")
     else:
