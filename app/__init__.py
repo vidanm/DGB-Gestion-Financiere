@@ -40,7 +40,7 @@ db.init_app(app)
 login.init_app(app)
 login.login_view = 'login'
 
-worksite = ""  # Stockage des donnees sous pdf
+worksite = None  # Stockage des donnees sous pdf
 month = ""  # Mois du pdf genere
 worksite_name = ""  # Code chantier STRUCT ou GLOB du pdf
 date = ""  # Date complete du pdf genere
@@ -91,9 +91,7 @@ def error_page():
 
 @app.route('/')
 def index():
-    """
-    Page d'accueil.
-    """
+    """Page d'accueil."""
     if not current_user.is_authenticated:
         return redirect('/login')
 

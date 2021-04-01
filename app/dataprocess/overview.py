@@ -27,6 +27,8 @@ class Overview():
         self.month_expenses_total = 0
 
     def __get_all_worksites_data(self, month, year, accounting_plan):
+        """Permets la récupération de toutes les données nécessaires
+           à la synthèse."""
         first_file_processed = False
         total = None
         for filename in os.listdir(self.csv_path):
@@ -112,6 +114,7 @@ class Overview():
         self._calculate_total()
 
     def add_revenues(self):
+        """Ajout des chiffres d'affaires"""
         for name in self.worksite_names:
             worksite_revenue = Revenues(self.expenses.data.loc[
                 self.expenses.data["Section analytique"] == name])
@@ -131,6 +134,7 @@ class Overview():
                     self.data.loc[name, "BUDGET"] += row[name]
 
     def add_total(self):
+        """Ajout du total de la synthèse."""
         totalbudget = 0
         totalcamois = 0
         totaldepmois = 0
@@ -167,6 +171,7 @@ class Overview():
         self.data = self.data.append(total)
 
     def calculate_margin(self, budget):
+        """Calcul des marges."""
         for name in self.worksite_names:
             if 'DIV' in name or 'STRUCT' in name:
                 continue
