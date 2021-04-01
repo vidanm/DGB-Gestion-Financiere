@@ -1,50 +1,46 @@
-# Logiciel de gestion financière DGB
+# DGB Construction | Gestion Financière
+
 ![DGB LOGO](https://github.com/vidanm/DGB-Gestion/blob/master/images/DGB.jpeg)
-
-https://dgb-gestionfinanciere.herokuapp.com/
-
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0d9c8b09c33b40bb8db12b0d60a397c9)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vidanm/DGB_Gesfin&amp;utm_campaign=Badge_Grade)
 
-## Dépendances
-[Pandas](https://github.com/pandas-dev/pandas)
-[Flask](https://github.com/pallets/flask)
-[Reportlab](https://github.com/MrBitBucket/reportlab-mirror)
+## Installation
 
-## Fonctionnalités
+Aucune installation requise, le programme est disponible [ici](https://dgb-gestionfinanciere.herokuapp.com/)
 
-- Synthèse Chantier
-  > Récapitulatif des dépenses par postes et sous postes
 
-- Bilan Structure
-  > Récapitulatif des dépenses de la structure par postes et sous postes
+## Utilisation
 
-- Synthèse Globale
-  > Récapitulatif des dépenses par chantier sur le mois et l'année 
-  > La synthèse globale ne prendra en compte que les chantiers dont la propre synthèse de chantier a déjà été générée.
+Le programme nécessite plusieurs fichiers pour générer les synthèses, qu'il faudra importer via l'outil import.   
+Ils sont :
+1. Le plan comptable [ *Champ PlanComptable de l'outil d'imports.* ]
+2. Une extraction de un ou plusieurs chantiers [ *Champ Charges* ]
+3. **Optionnel** Le budget des différents chantiers [ *Champ Budget* ]
+4. **Optionnel** La masse salariale [ *Champ MasseSalariale* ]
 
-## Imports des fichiers excel
+La structure attendue des différents fichiers est définie dans [Structure](##Structure).
 
-Les fichiers Excel doivent être importés sous le format .xls et non .xlsx .
+## Structure
 
-Ils doivent respecter le format de nommage suivant : IntituleANNEE.xls
-( Exemple : Charges2020.xls )
+Les fichiers excel doivent être importés sous le format .xls et non .xlsx .
 
-### Le Plan Comptable
-1.  Les intitulés de lignes doivent se trouver sur la 1ère colonne pour le section chantier et la 5ème colonne pour la section structure.
-
-2.  Les intitulés de colonnes doivent se trouver sur la 2ème ligne.
-
-3.  UNE SEULE LIGNE PAR SOUS POSTE ! Pour avoir plusieurs compte pour un sous poste, respecter le format suivant :
+### Plan comptable
+![Example Plan](https://i.ibb.co/MsZhghm/screenshot.png)
+1.  Les intitulés de postes doivent se trouver sur la 1ère colonne pour le section chantier et la 5ème colonne pour la section structure.
+2.  Les noms de colonnes doivent se trouver sur la 2e ligne.
+3.  **Une seule ligne par sous poste !** Pour avoir plusieurs compte pour un sous poste, respecter le format suivant :
 `NOM DU SOUS POSTE | NUMERO 1 / NUMERO 2 / NUMERO 3`
 
-### Chantiers / Comptes de charges / Structure
+### Extractions chantiers
+![Example extraction](https://i.ibb.co/1Jm39y7/screenshot.png)
 1.  Vérifier la présence des champs ‘Journal’ / ‘Général’ / ‘Date’ / ‘Débit’ / ‘Crédit’ / ‘Section analytique’.
-
-2.  La section analytique des lignes de charges de la structure doivent comporter 'STRUCT'.
+2.  Le nom ( *La section analytique* ) des charges qui concernent les dépenses de la structure doivent comporter 'STRUCT'.
 
 ### Budget
-1.  Les noms des postes et des sous postes doivent impérativement correspondre aux noms donnés dans le plan
+Les noms des postes et des sous postes doivent **obligatoirement** correspondre aux noms donnés dans le plan
 comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'oeuvre"
+
+### Masse salariale
+![Example Masse Salariale](https://i.ibb.co/6Y1ZDtx/screenshot.png)
 
 ## Présentation
 
