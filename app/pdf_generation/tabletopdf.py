@@ -17,7 +17,7 @@ class PDF():
 
     def __init__(self, nom):
         """Permets la generation des différents pdf
-        ( synthese / structure etc. )"""
+        ( synthese / structure etc )."""
         self.nom = nom
         self.c = canvas.Canvas(nom, pagesize=(A4[1], A4[0]))
         self.logo = os.path.join('images/DGB.jpeg')
@@ -158,7 +158,7 @@ class PDF():
     def convert_struct_string(self, numTable):
         for i in range(0, len(numTable)):
             for j in range(0, len(numTable[i])):
-                if (type(numTable[i][j]) is float):
+                if (isinstance(numTable[i][j], float)):
                     if (j > 2):
                         numTable[i][j] = "{:.2f}"\
                                 .format(numTable[i][j]) +\
@@ -196,8 +196,8 @@ class PDF():
 
     def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1):
         """Ajoute un tableau a la feuille active.
+        
         Le coin bas droite est représenté par (x,y)."""
-
         dataframe = dataframe.reset_index()
         numTable = dataframe.to_numpy().tolist()
         numTable.insert(0, np.array(dataframe.columns.values).tolist())
@@ -253,6 +253,7 @@ class PDF():
 
     def save_page(self):
         """Sauvegarde la feuille active,
+
         une nouvelle feuille blanche est sélectionnée."""
         self.c.showPage()
 

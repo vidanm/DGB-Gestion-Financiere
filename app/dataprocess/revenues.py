@@ -16,10 +16,10 @@ class Revenues():
                 self.data = self.data.drop(index=index)
 
     def calculate_month_revenues(self, month, year):
-        """Calcul le chiffre d'affaire du month de l'année donné en argument"""
+        """Calcul le chiffre d'affaire du month de l'année donné en argument."""
         result = 0.0
         for _, row in self.data.iterrows():
-            """La lecture d'un csv ou d'un xls change le type de row date"""
+            # La lecture d'un csv ou d'un xls change le type de row date
             if (isinstance(row['Date'], datetime.datetime)):
                 date = row['Date']
             else:

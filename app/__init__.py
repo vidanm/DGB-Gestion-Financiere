@@ -47,8 +47,7 @@ date = ""  # Date complete du pdf genere
 
 
 def allowed_file(filename):
-    """
-    Verifie le bon format des fichiers prerequis
+    """Verifie le bon format des fichiers prerequis
     fournis par l'utilisateur."""
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -64,7 +63,7 @@ def create_table():
 
 
 @app.route('/login', methods=['POST', 'GET'])
-def login():
+def user_login():
     if current_user.is_authenticated:
         return redirect('/')
 
@@ -147,6 +146,7 @@ def syntpdf():
 @login_required
 def chantpdf():
     """Generation de la synthese du chantier.
+
     Affichage en HTML pour permettre a l'utilisateur
     l'entree du Reste A Depenser."""
     global worksite_name
@@ -184,7 +184,9 @@ def chantpdf():
 @app.route('/rad', methods=['POST'])
 @login_required
 def rad():
-    """Suite de chantpdf(). Recupere les Reste A Depenser entree precedemment
+    """Suite de chantpdf(). 
+
+    Recupere les Reste A Depenser entree precedemment
     par l'utilisateur.
     Calcul les donnees manquantes, la gestion previsionnelle.
     Sauvegarde le tout en PDF."""
