@@ -100,7 +100,7 @@ def index():
 
     if not (os.path.exists("var/csv/")):
         os.makedirs("var/csv/")
-    
+
     if not (os.path.exists('bibl/')):
         os.makedirs("bibl/")
 
@@ -136,8 +136,7 @@ def syntpdf():
     formatted_overview = overview.get_formatted_data()
 
     pdf.new_page("Synthese", get_month_name(int(date[5:7])) + ' ' + year)
-    pdf.add_table(formatted_overview, y=A4[0] - inch * 4.8)
-    # pdf.add_table(syn.total_ca_marge,y=inch*3,x=A4[1]-inch*5)
+    pdf.add_table(formatted_overview, y=A4[0] - inch * 3.2, tableHeight=inch*3)
     pdf.create_bar_syntgraph(600, 250, overview.data)
     pdf.save_page()
     pdf.save_pdf()
@@ -218,10 +217,12 @@ def rad():
         pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
 
         if (nom == "GESPREV"):
-            pdf.add_table(worksite.get_formatted_data(nom), y=A4[0] - inch * 4)
+            pdf.add_table(worksite.get_formatted_data(nom),
+                          y=A4[0] - inch * 3.2, tableHeight=inch*3)
             pdf.create_bar_gesprevgraph(600, 250, worksite)
         else:
-            pdf.add_table(worksite.get_formatted_data(nom))
+            pdf.add_table(worksite.get_formatted_data(nom),
+                          y=(A4[0]/2)-inch/2, tableHeight=inch*5)
         pdf.save_page()
 
     pdf.save_pdf()
@@ -283,13 +284,14 @@ def upload_file():
         # return redirect(url_for('upload_file',filename=filename))
     return render_template("upload.html")
 
+
 def clear():
     for filename in os.listdir("var/csv"):
         os.remove("var/csv/"+filename)
 
 
 def check_save_uploaded_file(tag):
-    
+
     if tag not in request.files:
         print("tag non")
     else:
@@ -304,9 +306,12 @@ def check_save_uploaded_file(tag):
 
             if tag == "Charges":
                 split_expenses_file_as_worksite_csv(filepath=os.path.join(
-                    app.config['UPLOAD_FOLDER'], tag + '.'+ filename.split('.')[1]),
+                    app.config['UPLOAD_FOLDER'],
+                    tag + '.' + filename.split('.')[1]),
                                                     outputpath="var/csv/")
-            #elif tag == "MasseSalariale":
-            #    split_salary_file_as_salary_csv(filepath=os.path.join(
-            #        app.config['UPLOAD_FOLDER'], tag + '.'+ filename.split('.')[1]),
-            #                                    outputpath="var/csv/")
+            elif tag == "MasseSalariale":
+                split_salary_file_as_salary_csv(
+                        filepath=os.path.join(
+                            app.config['UPLOAD_FOLDER'],
+                            tag + '.' + filename.split('.')[1]),
+                        outputpath="var/csv/")

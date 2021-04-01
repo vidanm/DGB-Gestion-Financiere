@@ -12,14 +12,14 @@ class AccountingPlan():
             self.general_plan['N° DE COMPTE'].str.contains(code, na=False)]
 
     def get_worksite_plan(self):
-        # Verifier l'utilité
         return self.working_site_plan
 
     def get_office_plan(self):
-        # Verifier l'utilité
         return self.office_plan
 
     def add_code_to_plan(self, code, poste, sous_poste):
+        """Permets l'ajout de code comptable\
+                non spécifié dans le fichier plan comptable xls"""
         row = pd.DataFrame(np.array([[code, poste, sous_poste]]),
                            columns=['N° DE COMPTE', 'POSTE', 'SOUS POSTE'])
         self.general_plan = self.general_plan.append(row, ignore_index=True)

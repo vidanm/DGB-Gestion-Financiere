@@ -37,7 +37,7 @@ class Worksite(Categories):
         for _, row in self.expenses.data.iterrows():
             date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
             if (date.year < year) or (date.month <= month
-                                       and date.year == year):
+                                      and date.year == year):
                 super(Worksite, self)._add_cumulative_expense(row)
                 if (date.month == month and date.year == year):
                     super(Worksite, self)._add_month_expense(row)
@@ -48,7 +48,7 @@ class Worksite(Categories):
         """
         Ajoute le budget dans les cases de postes correspondantes.
         """
-        log = open("static/log.txt","a+")
+        log = open("static/log.txt", "a+")
         not_used_rows = ["PRIX DE VENTE", "TOTAL", "ECART"]
         for _, row in budget.iterrows():
             try:
@@ -63,10 +63,10 @@ class Worksite(Categories):
                                                       "Budget"] += round(row[
                                                           self.worksite_name])
             except Exception:
-                log.write("Le couple "+ row['POSTE']\
-                        + " : " + row['SOUS-POSTE']\
-                        + " spécifié dans le fichier budget\
-                        n'est pas un couple présent dans le plan comptable")
+                log.write("Le couple " + row['POSTE']
+                          + " : " + row['SOUS-POSTE']
+                          + " spécifié dans le fichier budget\
+                          n'est pas un couple présent dans le plan comptable")
         log.close()
 
     def add_rad(self, category, subcategory, rad):

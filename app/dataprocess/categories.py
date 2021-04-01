@@ -12,7 +12,6 @@ class Categories():
                 self.category_names.append(str(value))
 
         for name in self.category_names:
-            # C'EST ICI CE QU'IL FAUT CORRIGER
             self.categories[name] = accounting_plan.loc[
                 accounting_plan['POSTE'] == name]
             self.categories[name] = self.categories[name].drop(

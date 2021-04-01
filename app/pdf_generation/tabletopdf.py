@@ -194,17 +194,23 @@ class PDF():
 
         t.drawOn(self.c, x, y)
 
-    def add_table(self, dataframe, x=-1, y=-1):
+    def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1):
         """Ajoute un tableau a la feuille active.
         Le coin bas droite est représenté par (x,y)."""
 
         dataframe = dataframe.reset_index()
-        rowHeights = (len(dataframe)+1)*[12]
-        rowHeights[0] = 20
         numTable = dataframe.to_numpy().tolist()
         numTable.insert(0, np.array(dataframe.columns.values).tolist())
         if (numTable[0][0] == "index"):
             numTable[0][0] = "Poste"
+
+        if tableHeight != -1:
+            rowHeights = (len(dataframe) + 1) *\
+                    [min([int(tableHeight/(len(dataframe) + 1)), 30])]
+        else:
+            rowHeights = (len(dataframe)+1) * [12]
+
+        rowHeights[0] = rowHeights[0] * 1.4
         # self.ajoute_total(numTable)
         # self.eliminate_zeros_add_euros(numTable)
 
@@ -217,8 +223,13 @@ class PDF():
 
         if (x == -1 or x == 'center'):
             x = (A4[1]/2)-(w/2)
+        else:
+            x = (x) - (w/2)
+
         if (y == -1 or y == 'center'):
             y = (A4[0]/2)-(h/2)
+        else:
+            y = y-(h/2)
 
         t.drawOn(self.c, x, y)
 
