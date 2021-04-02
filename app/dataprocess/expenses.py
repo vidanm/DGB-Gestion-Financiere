@@ -4,12 +4,11 @@ from .imports import get_accounting_file, get_csv_expenses
 
 class Expenses():
 
-    def __init__(self, data=None, accounting_plan=None):
+    def __init__(self, data, accounting_plan):
         self.data = data
         self.accounting_plan = accounting_plan
-        if (self.data and self.accounting_plan):
-            self.__remove_unknown_accounts()
-            self.__compose_accounts_with_category_name()
+        self.__remove_unknown_accounts()
+        self.__compose_accounts_with_category_name()
 
     def __add__(self, other):
         a = self.data
