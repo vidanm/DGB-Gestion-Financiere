@@ -269,6 +269,16 @@ def structpdf():
 def upload_file():
     """Page permettant a l'utilisateur le telechargement sur le serveur,
     des fichiers prerequis pour le calcul des bilans."""
+    if not current_user.is_authenticated:
+        return redirect('/login')
+
+    if not (os.path.exists("var/csv/")):
+        os.makedirs("var/csv/")
+
+    if not (os.path.exists('bibl/')):
+        os.makedirs("bibl/")
+
+
     if request.method == 'POST':
         if not (os.path.exists("var/")):
             os.makedirs("var/")
