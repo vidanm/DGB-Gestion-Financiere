@@ -213,16 +213,18 @@ def rad():
     pdf = PDF(filename)
 
     for nom in worksite.categories.keys():
-        pdf.new_page(nom, worksite_name)
-        pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
 
         if (nom == "GESPREV"):
+            pdf.new_page("Gestion prévisionnelle", worksite_name)
             pdf.add_table(worksite.get_formatted_data(nom),
                           y=A4[0] - inch * 3.2, tableHeight=inch*3)
             pdf.create_bar_gesprevgraph(600, 250, worksite)
         else:
+            pdf.new_page(nom, worksite_name)
             pdf.add_table(worksite.get_formatted_data(nom),
                           y=(A4[0]/2)-inch/2, tableHeight=inch*5)
+        
+        pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
         pdf.save_page()
 
     pdf.save_pdf()

@@ -14,7 +14,7 @@
 		<h1>Gestion Financière</h1>
 		<div id="buttons">
 			
-			<button onclick="showChantier('syntheseform')"> Synthèse Globale </button>
+			<button id="buttonSynthese" onclick="showChantier('syntheseform')"> Synthèse Globale </button>
 		   	<form id="syntheseform" method=post action='/synthese_globale'>
 				<br>
 				<input type="month" name="date"></input>
@@ -23,7 +23,7 @@
 			</form>
 
 			
-			<button onclick="showChantier('chantierform')"> Synthèse d'un chantier </button>
+			<button id="buttonChantier" onclick="showChantier('chantierform')"> Synthèse d'un chantier </button>
 			<form id="chantierform" method=post action='synthese_chantier'>
 				<br>
 				<input type="month" name="date"></input>
@@ -33,7 +33,7 @@
 				<input type="submit" value="Générer"></input>
 			</form>
 
-			<button onclick="showChantier('structureform')"> Bilan de la structure </button>
+			<button id="buttonStructure" onclick="showChantier('structureform')"> Bilan de la structure </button>
 			<form id="structureform" method=post action='/synthese_structure'>
 				<br>
 				<input type="month" name="date"></input>
