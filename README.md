@@ -55,5 +55,3 @@ Vérifiez les points suivants :
 1. Vous avez bien importé les fichiers préalables ( Au moins le plan comptable et une extraction )
 2. La structure des fichiers fournis corresponds bien à celle décrite ci-dessus ( Pas de colonnes supplémentaires ou manquantes )
 
-Si cette erreur survient après l'import d'une extraction et de la masse salariale en même temps, réessayer en important l'un puis l'autre.
-
