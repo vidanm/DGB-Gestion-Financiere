@@ -33,33 +33,45 @@ def get_expenses_file(filepath):
 
 
 def split_expenses_file_as_worksite_csv(filepath, outputpath):
-    worksites_names = []
+    # worksites_names = []
+    
     expenses = get_expenses_file(filepath)
+    worksite_names = expenses["Section analytique"].unique() 
+    
+    # for _, row in expenses.iterrows():
+    #    value = row['Section analytique']
+    #
+    #    if not is_in_dic(str(value), worksites_names):
+    #        worksites_names.append(str(value))
 
-    for _, row in expenses.iterrows():
-        value = row['Section analytique']
-
-        if not is_in_dic(str(value), worksites_names):
-            worksites_names.append(str(value))
-
-    for name in worksites_names:
+    for name in worksite_names:
         sep = expenses.loc[expenses['Section analytique'] == name]
         sep = sep.sort_values(['Date'], ascending=True)
-        out = pd.DataFrame(columns=sep.columns)
-        for index, row in sep.iterrows():
-            if index == 0:
-                current_year = row['Date'].year
-                out = out.append(row)
-            else:
-                if current_year == row['Date'].year:
-                    out = out.append(row, ignore_index=True)
-                else:
-                    out.to_csv(outputpath + str(current_year) + "_" + name +
-                               ".csv")
-                    current_year = row['Date'].year
-                    out = pd.DataFrame(columns=sep.columns)
-                    out = out.append(row)
-        out.to_csv(outputpath + str(current_year) + "_" + name + ".csv")
+        sep['Year'] = pd.DatetimeIndex(sep['Date']).year
+
+        # out = pd.DataFrame(columns=sep.columns)
+        
+        years = sep['Year'].unique()
+
+        for year in years:
+            sep.loc[sep['Year'] == year]\
+            .drop(columns='Year')\
+            .to_csv(outputpath + str(year) + "_" + name + ".csv")
+
+        #for index, row in sep.iterrows():
+        #    if index == 0:
+        #        current_year = row['Date'].year
+        #        out = out.append(row)
+        #    else:
+        #        if current_year == row['Date'].year:
+        #            out = out.append(row, ignore_index=True)
+        #        else:
+        #            out.to_csv(outputpath + str(current_year) + "_" + name +
+        #                       ".csv")
+        #            current_year = row['Date'].year
+        #            out = pd.DataFrame(columns=sep.columns)
+        #            out = out.append(row)
+        # out.to_csv(outputpath + str(current_year) + "_" + name + ".csv")
 
 
 def get_csv_expenses(filepath):
@@ -97,19 +109,27 @@ def split_salary_file_as_salary_csv(filepath, outputpath):
             salary = salary.sort_values("Section analytique")
             salary = salary.reset_index(drop=True)
 
-            csv = pd.DataFrame()
-            current_code = ""
-            for _, row in salary.iterrows():
-                if row["Section analytique"] != current_code:
-                    if (str(current_code) != ""
-                            and str(current_code) != "nan"):
-                        csv.to_csv(
-                            str(outputpath) + sheet[-4::] + "SALAIRES" + "_" +
-                            str(current_code) + ".csv")
-                    current_code = row["Section analytique"]
-                    csv = pd.DataFrame([row])
-                else:
-                    csv = csv.append(row)
+            worksite_names = salary["Section analytique"].unique()
+            for name in worksite_names:
+                if name == "nan":
+                    continue
+
+                salary.loc[salary["Section analytique"] == name].to_csv(
+                        str(outputpath) + sheet[-4::] + "SALAIRES" + "_" +
+                        str(name) + ".csv")
+            
+            # current_code = ""
+            # for _, row in salary.iterrows():
+            #    if row["Section analytique"] != current_code:
+            #        if (str(current_code) != ""
+            #                and str(current_code) != "nan"):
+            #            csv.to_csv(
+            #                str(outputpath) + sheet[-4::] + "SALAIRES" + "_" +
+            #                str(current_code) + ".csv")
+            #        current_code = row["Section analytique"]
+            #        csv = pd.DataFrame([row])
+            #    else:
+            #        csv = csv.append(row)
 
 
 def get_salary_file(filepath, columns, sheet):

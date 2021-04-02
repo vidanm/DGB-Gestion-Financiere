@@ -34,6 +34,27 @@ class Worksite(Categories):
         return total
 
     def calculate_worksite(self, month, year, budget):
+        """ df = self.expenses.data
+        df['Year'] = pd.DatetimeIndex(df['Date']).year
+        df['Month'] = pd.DatetimeIndex(df['Date']).month
+        
+        cumulativeExpenses = df.loc[ (year > df['Year']) |
+                ((df['Month'] <= month) & (df['Year'] == year))]
+
+        monthExpenses = df.loc[ (year == df['Year']) & (month == df['Month']) ]
+
+        cumulativeDebit = cumulativeExpenses['Débit'].sum()
+        cumulativeCredit = cumulativeExpenses['Crédit'].sum()
+        monthDebit = monthExpenses['Débit'].sum()
+        monthCredit = monthExpenses['Crédit'].sum()
+
+
+        self.categories[cumulativeExpenses['POSTE']].loc[cumulativeExpenses['SOUS POSTE'],
+                "Dépenses cumulées"] += round (cumulativeDebit - cumulativeCredit, 2)
+
+        self.categories[monthExpenses['POSTE']].loc[monthExpenses['SOUS POSTE'],
+                "Dépenses du mois"] += round(monthDebit - monthCredit,2)
+        """
         for _, row in self.expenses.data.iterrows():
             date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
             if (date.year < year) or (date.month <= month
