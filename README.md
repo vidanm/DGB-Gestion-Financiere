@@ -31,6 +31,7 @@ Les fichiers excel doivent être importés sous le format .xls et non .xlsx .
 1.  Les intitulés de postes doivent se trouver sur la 1ère colonne pour le section chantier et la 5ème colonne pour la section structure.
 2.  Les noms de colonnes doivent se trouver sur la 2e ligne.
 3.  **Une seule ligne par sous poste !** Pour avoir plusieurs compte pour un sous poste, respecter le format suivant :
+
 `NOM DU SOUS POSTE | NUMERO 1 / NUMERO 2 / NUMERO 3`
 
 ### Extractions chantiers
@@ -44,6 +45,17 @@ comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'
 
 ### Masse salariale
 ![Example Masse Salariale](https://i.ibb.co/6Y1ZDtx/screenshot.png)
+
+## Bogues
+Si après une requête, la page suivante s'affiche :
+![Heroku bug](https://i.ibb.co/TK2Bpz0/screenshot.png)
+
+Vérifiez les points suivants :
+1. Vous avez bien importé les fichiers préalables ( Au moins le plan comptable et une extraction )
+2. La structure des fichiers fournis corresponds bien à celle décrite ci-dessus ( Pas de colonnes supplémentaires ou manquantes )
+
+Si cette erreur survient après l'import d'une extraction et de la masse salariale en même temps, réessayer en important l'un puis l'autre.
+
 
 ## Présentation
 
