@@ -282,7 +282,7 @@ def upload_file():
         check_save_uploaded_file("Charges")
         check_save_uploaded_file("Budget")
         check_save_uploaded_file("MasseSalariale")
-        return redirect('/index')
+        return redirect('/')
         # return redirect(url_for('upload_file',filename=filename))
     return render_template("upload.html")
 
