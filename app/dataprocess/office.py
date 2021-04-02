@@ -25,7 +25,7 @@ class Office(Categories):
             self.categories[name]['%CA Cumul'] = 0
 
     def __get_year_data_of_office(self, accounting_plan):
-        total = 0
+        total = Expenses()
         for filename in os.listdir(self.csv_path):
             if "STRUCT" in filename and str(
                     self.year) in filename and filename.endswith(".csv"):
@@ -37,7 +37,6 @@ class Office(Categories):
                     total += Expenses(
                         get_csv_expenses(self.csv_path + filename),
                         accounting_plan)
-
         return total
 
     def calculate_office(self, month):
