@@ -48,6 +48,7 @@ comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'
 
 ## Bogues
 Si après une requête, la page suivante s'affiche :
+
 ![Heroku bug](https://i.ibb.co/TK2Bpz0/screenshot.png)
 
 Vérifiez les points suivants :
@@ -56,8 +57,3 @@ Vérifiez les points suivants :
 
 Si cette erreur survient après l'import d'une extraction et de la masse salariale en même temps, réessayer en important l'un puis l'autre.
 
-
-## Présentation
-
-![HTML Example](https://github.com/vidanm/DGB_Gesfin/blob/master/images/Capture%20d%E2%80%99%C3%A9cran%20de%202021-01-29%2015-53-25.png)
-![HTML Example 2](https://github.com/vidanm/DGB_Gesfin/blob/master/images/Capture%20d%E2%80%99%C3%A9cran%20de%202021-01-29%2015-52-55.png)
