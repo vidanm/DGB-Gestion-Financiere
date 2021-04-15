@@ -11,9 +11,10 @@ class Revenues():
 
     def _delete_ach_lines(self):
         """Elimine toutes les lignes d'achats pour ne garder que les ventes."""
-        for index, value in self.data['Journal'].iteritems():
-            if value != 'VEN':
-                self.data = self.data.drop(index=index)
+        self.data = self.data.loc[self.data['Journal'] == 'VEN']
+        #for index, value in self.data['Journal'].iteritems():
+        #    if value != 'VEN':
+        #        self.data = self.data.drop(index=index)
 
     def calculate_month_revenues(self, month, year):
         """Calcul le chiffre d'affaire du month de l'année donné en argument."""
@@ -45,8 +46,8 @@ class Revenues():
 
     def calculate_cumulative_revenues(self, year):
         # N'est pas borné au mois demandée
-        result = 0.0
-        for _, row in self.data.iterrows():
-            result += row['Crédit']
+        result = self.data['Crédit'].sum()
+        #for _, row in self.data.iternotrows():
+        #    result += row['Crédit']
 
         return result

@@ -4,7 +4,8 @@ from .basic_operations import is_in_dic
 class Categories():
     def __init__(self, accounting_plan):
         """Classe abstraite. Objet hérité par ChantierPoste et StructPoste."""
-        self.category_names = accounting_plan['POSTE'].unique()
+        self.category_names = accounting_plan['POSTE'].unique().tolist()
+        print(self.category_names)
         self.categories = {}
         #for _, row in accounting_plan.iterrows():
         #    value = row['POSTE']

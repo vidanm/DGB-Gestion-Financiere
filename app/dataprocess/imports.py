@@ -38,7 +38,7 @@ def split_expenses_file_as_worksite_csv(filepath, outputpath):
     expenses = get_expenses_file(filepath)
     worksite_names = expenses["Section analytique"].unique() 
     
-    # for _, row in expenses.iterrows():
+    # for _, row in expenses.iternotrows():
     #    value = row['Section analytique']
     #
     #    if not is_in_dic(str(value), worksites_names):
@@ -58,7 +58,7 @@ def split_expenses_file_as_worksite_csv(filepath, outputpath):
             .drop(columns='Year')\
             .to_csv(outputpath + str(year) + "_" + name + ".csv")
 
-        #for index, row in sep.iterrows():
+        #for index, row in sep.iternotrows():
         #    if index == 0:
         #        current_year = row['Date'].year
         #        out = out.append(row)
@@ -119,7 +119,7 @@ def split_salary_file_as_salary_csv(filepath, outputpath):
                         str(name) + ".csv")
             
             # current_code = ""
-            # for _, row in salary.iterrows():
+            # for _, row in salary.iternotrows():
             #    if row["Section analytique"] != current_code:
             #        if (str(current_code) != ""
             #                and str(current_code) != "nan"):
