@@ -25,7 +25,7 @@ class Office(Categories):
             self.categories[name]['%CA Cumul'] = 0
 
     def __get_year_data_of_office(self, accounting_plan):
-        total = Expenses()
+        total = 0
         for filename in os.listdir(self.csv_path):
             if "STRUCT" in filename and str(
                     self.year) in filename and filename.endswith(".csv"):
@@ -77,6 +77,7 @@ class Office(Categories):
         year_revenue = revenues.calculate_year_revenues(year)
         for name in self.category_names:
             for _, row in self.categories[name].iterrows():
+                print(name + " : " + row.name)
                 month_expenses = self.categories[name].loc[row.name,
                                                            'Dépenses du mois']
                 cumulative_expenses = self.categories[name].loc[

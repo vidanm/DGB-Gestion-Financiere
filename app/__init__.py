@@ -28,7 +28,7 @@ DOWNLOAD_FOLDER = 'bibl'
 ALLOWED_EXTENSIONS = ['xls']
 
 app = Flask("DGB Gesfin")
-app.secret_key = 'xyz'
+app.secret_key = os.environ.get('SECRET_KEY','NULL')
 
 app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -56,8 +56,8 @@ def allowed_file(filename):
 @app.before_first_request
 def create_table():
     db.create_all()
-    user = UserModel(username="dgb")
-    user.set_password("dgbheroku")
+    user = UserModel(username = os.environ.get('USERNAME','Anonymous'))
+    user.set_password(os.environ.get('PASSWORD','Password'))
     db.session.add(user)
     db.session.commit()
 
