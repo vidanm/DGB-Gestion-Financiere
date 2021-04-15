@@ -5,12 +5,14 @@ import pandas as pd
 import datetime as dt
 import numpy as np
 import os
+import time
 
 
 class Overview():
     def __init__(self, accounting_plan, month, year, csv_path="var/csv/"):
         """Calcule la synthese sur l'année \
                 de toutes les dépenses de tout les chantiers."""
+        tic = time.perf_counter()
         self.col = [
             'CHANTIER', 'BUDGET', "CA MOIS", 'DEP DU MOIS', "MARGE MOIS",
             "CA CUMUL", 'DEP CUMULEES', "MARGE A FIN DE MOIS", 'PFDC',
@@ -25,6 +27,8 @@ class Overview():
         self.data = pd.DataFrame(None, None, columns=self.col)
         self.cumulative_expenses_total = 0
         self.month_expenses_total = 0
+        toc = time.perf_counter()
+        print(f"__init__ : {toc - tic:0.4f} seconds")
 
     def __get_all_worksites_data(self, month, year, accounting_plan):
         """Permets la récupération de toutes les données nécessaires
