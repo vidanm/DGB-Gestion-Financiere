@@ -19,8 +19,6 @@ Ils sont :
 
 La structure attendue des différents fichiers est définie dans [Structure](##Structure).
 
-**Dû a la structure complexe du fichier de masse salariale, le temps d'éxécution de l'importation peut être long.
-Éviter d'importer Charges et Masse Salariale en même temps**
 
 ## Structure
 
