@@ -13,6 +13,14 @@
 		<h1>Gestion Financière</h1>
 		<div id="buttons">
 			<embed src="{{ url_for('static',filename='log.txt') }}">
+			<br>
+			<form id="dl" method=get action='/download_last_file'>
+				<input type="submit" value="Télécharger quand même"></input>
+			</form>
+			<br>
+			<form id="menu" method=get action='/'>
+				<input type="submit" value="Retour au menu"></input>
+			</form>
 		</div>
 	</body>
 </html>

@@ -3,10 +3,13 @@ from .expenses import Expenses
 from .imports import get_csv_expenses
 import pandas as pd
 import datetime as dt
+import warnings
 import numpy as np
 import os
 import time
 
+from pandas.core.common import SettingWithCopyWarning
+warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
 
 class Overview():
     def __init__(self, accounting_plan, month, year, csv_path="var/csv/"):
@@ -61,7 +64,7 @@ class Overview():
                                                           filename),
                                          ignore_index=True)
 
-        return Expenses(total, accounting_plan)
+        return Expenses(total, accounting_plan,with_category=False)
 
     def precalc_pfdc(self, month, year):
         """Rajout des csv des chantiers\

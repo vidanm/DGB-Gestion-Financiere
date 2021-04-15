@@ -5,11 +5,12 @@ import time
 
 class Expenses():
 
-    def __init__(self, data, accounting_plan):
+    def __init__(self, data, accounting_plan,with_category=True):
         self.data = data
         self.accounting_plan = accounting_plan
-        self.__remove_unknown_accounts()
-        self.__compose_accounts_with_category_name()
+        if with_category:
+            self.__remove_unknown_accounts()
+            self.__compose_accounts_with_category_name()
 
     def __add__(self, other):
         a = self.data
@@ -20,29 +21,39 @@ class Expenses():
         return self.data.to_string()
 
     def __remove_unknown_accounts(self):
-        unknown_accounts = []
+        have_unkown_account = False
         log = open("static/log.txt", "a+")
-        for index, value in self.data["Général"].iteritems():
-
-            if self.accounting_plan.get_poste_by_code(str(value)).empty:
-                if (str(value).isnumeric() and int(value / 100000) == 7):
-                    # All account beginning with a 7 is a sell,
-                    # contributing to revenues calculation,
-                    # so it needs to be included
+        accounts = self.data["Général"].unique()
+        for account in accounts:
+            if self.accounting_plan.get_poste_by_code(str(account)).empty:
+                if(str(account).isnumeric() and int(account/100000) == 7):
                     self.accounting_plan.add_code_to_plan(
-                            value, "Unknown category", "Unknown sub-category")
+                            account,"Unknown category","Unknown sub-category")
                 else:
-                    self.data = self.data.drop(index=index)
-                    log.write(str(value) +
-                              " : Ligne " + str(index) +
-                              " non prise en compte")
-                    if value not in unknown_accounts:
-                        log.write("Compte " + str(value) +
-                                  " pas dans le plan comptable")
-                        unknown_accounts.append(value)
+                    have_unknown_account = True
+                    self.data = self.data.loc[self.data["Général"] != account]
+                    log.write("Compte " + str(account) + " pas dans le plan comptable\n")
+        #for index, value in self.data["Général"].iteritems():
+
+         #   if self.accounting_plan.get_poste_by_code(str(value)).empty:
+         #       if (str(value).isnumeric() and int(value / 100000) == 7):
+         #           # All account beginning with a 7 is a sell,
+         #           # contributing to revenues calculation,
+         #           # so it needs to be included
+         #           self.accounting_plan.add_code_to_plan(
+         #                   value, "Unknown category", "Unknown sub-category")
+         #       else:
+         #           self.data = self.data.drop(index=index)
+         #           log.write(str(value) +
+         #                     " : Ligne " + str(index) +
+         #                     " non prise en compte\n")
+         #           if value not in unknown_accounts:
+         #               log.write("Compte " + str(value) +
+         #                         " pas dans le plan comptable\n")
+         #               unknown_accounts.append(value)
 
         log.close()
-        return unknown_accounts
+        return
 
     def __compose_accounts_with_category_name(self):
         tic = time.perf_counter()

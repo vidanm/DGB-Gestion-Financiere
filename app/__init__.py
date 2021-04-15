@@ -37,6 +37,7 @@ app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dgbgesfin.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+
 db.init_app(app)
 login.init_app(app)
 login.login_view = 'login'
@@ -45,7 +46,7 @@ worksite = None  # Stockage des donnees sous pdf
 month = ""  # Mois du pdf genere
 worksite_name = ""  # Code chantier STRUCT ou GLOB du pdf
 date = ""  # Date complete du pdf genere
-
+filename = ""
 
 def allowed_file(filename):
     """Verifie le bon format des fichiers prerequis
@@ -115,10 +116,12 @@ def syntpdf():
     """
     tic = time.perf_counter()
     global date
+    global filename
     date = request.form['date']
     year = date[0:4]
     month = date[5:7]
 
+    filename = "bibl/Synthese.pdf"
     accounting_plan = AccountingPlan(
         get_accounting_file("var/PlanComptable.xls"))
     budget = get_budget_file("var/Budget.xls")
@@ -127,7 +130,7 @@ def syntpdf():
     # cacumul = CA.calcul_ca_annee(int(year))
 
     overview = Overview(accounting_plan, int(month), int(year))
-    pdf = PDF("bibl/Synthese.pdf")
+    pdf = PDF(filename)
 
     overview.calculate_data(int(month), int(year), budget)
     overview.add_total()
@@ -141,7 +144,7 @@ def syntpdf():
     pdf.save_pdf()
     toc = time.perf_counter()
     print(f"SYN : {toc-tic:4f} seconds")
-    return send_file("bibl/Synthese.pdf", as_attachment=True)
+    return send_file(filename, as_attachment=True)
 
 
 @app.route('/synthese_chantier', methods=['POST'])
@@ -195,6 +198,7 @@ def rad():
     par l'utilisateur.
     Calcul les donnees manquantes, la gestion previsionnelle.
     Sauvegarde le tout en PDF."""
+    global filename
     global worksite  # Défini dans chantpdf()
     global worksite_name  # Défini dans chantpdf()
     global date  # Défini dans chantpdf()
@@ -242,6 +246,7 @@ def rad():
 @login_required
 def structpdf():
     """Generation du bilan de la structure."""
+    global filename
     tic = time.perf_counter()
     if request.method == 'POST':
         date = request.form['date']
@@ -273,6 +278,12 @@ def structpdf():
         return send_file(filename, as_attachment=True)
     return "B"
 
+@app.route('/download_last_file', methods=['GET','POST'])
+@login_required
+def download_last_file():
+    global filename
+    print(filename)
+    return send_file(filename, as_attachment=True)
 
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required

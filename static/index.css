@@ -67,10 +67,11 @@ button {
   background-color: rgba(255, 255, 255, 1);
   box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
   padding: 2%;
-  border-radius: 30px;
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height:200%;
 }
 
 button:hover {
