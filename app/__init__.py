@@ -22,6 +22,7 @@ from reportlab.lib.units import inch
 from .models import db, login, UserModel
 from flask_login import current_user, login_user, login_required, logout_user
 import os
+import time
 
 UPLOAD_FOLDER = 'var'
 DOWNLOAD_FOLDER = 'bibl'
@@ -112,6 +113,7 @@ def syntpdf():
     """
     Generation de la synthese. Sauvegarde en pdf.
     """
+    tic = time.perf_counter()
     global date
     date = request.form['date']
     year = date[0:4]
@@ -137,6 +139,8 @@ def syntpdf():
     pdf.create_bar_syntgraph(600, 250, overview.data)
     pdf.save_page()
     pdf.save_pdf()
+    toc = time.perf_counter()
+    print(f"SYN : {toc-tic:4f} seconds")
     return send_file("bibl/Synthese.pdf", as_attachment=True)
 
 
@@ -147,6 +151,7 @@ def chantpdf():
 
     Affichage en HTML pour permettre a l'utilisateur
     l'entree du Reste A Depenser."""
+    tic = time.perf_counter()
     global worksite_name
     global date
     global worksite
@@ -176,6 +181,8 @@ def chantpdf():
     worksite.round_2dec_df()
     convert_single_dataframe_to_html_table(worksite.categories, month, year,
                                            worksite_name)
+    toc = time.perf_counter()
+    print(f"CHA : {toc-tic:4f} seconds")
     return render_template("rad.html")
 
 
@@ -235,6 +242,7 @@ def rad():
 @login_required
 def structpdf():
     """Generation du bilan de la structure."""
+    tic = time.perf_counter()
     if request.method == 'POST':
         date = request.form['date']
         year = date[0:4]
@@ -260,6 +268,8 @@ def structpdf():
         pdf.save_page()
         pdf.save_pdf()
 
+        toc = time.perf_counter()
+        print(f"STRU : {toc-tic:4f} seconds")
         return send_file(filename, as_attachment=True)
     return "B"
 
@@ -269,6 +279,7 @@ def structpdf():
 def upload_file():
     """Page permettant a l'utilisateur le telechargement sur le serveur,
     des fichiers prerequis pour le calcul des bilans."""
+    tic = time.perf_counter()
     if not current_user.is_authenticated:
         return redirect('/login')
 
@@ -292,6 +303,9 @@ def upload_file():
         check_save_uploaded_file("Charges")
         check_save_uploaded_file("Budget")
         check_save_uploaded_file("MasseSalariale")
+        toc = time.perf_counter()
+        print(f"IMP : {toc-tic:4f} seconds")
+
         return redirect('/')
         # return redirect(url_for('upload_file',filename=filename))
     return render_template("upload.html")
