@@ -2,7 +2,6 @@ from .revenues import Revenues
 from .expenses import Expenses
 from .imports import get_csv_expenses
 import pandas as pd
-import datetime as dt
 import warnings
 import numpy as np
 import os
@@ -10,6 +9,7 @@ import time
 
 from pandas.core.common import SettingWithCopyWarning
 warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
+
 
 class Overview():
     def __init__(self, accounting_plan, month, year, csv_path="var/csv/"):
@@ -61,7 +61,7 @@ class Overview():
                                                           filename),
                                          ignore_index=True)
 
-        return Expenses(total, accounting_plan,with_category=False)
+        return Expenses(total, accounting_plan, with_category=False)
 
     def precalc_pfdc(self, month, year):
         """Rajout des csv des chantiers\
@@ -96,8 +96,10 @@ class Overview():
             tmp['Date'] = pd.to_datetime(tmp['Date'])
             tmp = tmp.loc[tmp["Journal"] == "ACH"]
 
-            month_tmp = tmp[((tmp['Date'].dt.month == month) & (tmp['Date'].dt.year == year))]
-            cumul_tmp = tmp[((tmp['Date'].dt.month <= month) | (tmp['Date'].dt.year < year))]
+            month_tmp = tmp[((tmp['Date'].dt.month == month) &
+                            (tmp['Date'].dt.year == year))]
+            cumul_tmp = tmp[((tmp['Date'].dt.month <= month) |
+                            (tmp['Date'].dt.year < year))]
             cumul_debit = cumul_tmp['Débit'].sum()
             cumul_credit = cumul_tmp['Crédit'].sum()
             month_debit = month_tmp['Débit'].sum()
@@ -105,21 +107,6 @@ class Overview():
 
             worksite_line[6] = cumul_debit - cumul_credit
             worksite_line[3] = month_debit - month_credit
-            #for _, row in self.expenses.data.loc[
-            #        self.expenses.data["Section analytique"] ==
-            #        name].iternotrows():
-                # On itere sur toutes les actions d'un chantier particulier
-            #    date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
-            #    if (row['Journal'] == 'ACH'):
-            #        # Une action est une dépense si son champ journal est 'ACH'
-            #        if (date.year < year) or (date.month <= month
-            #                                  and date.year == year):
-            #            worksite_line[6] += row['Débit'] - row['Crédit']
-            #        if (date.month == month) and (date.year == year):
-            #            # Le calculate des dépenses prends en compte les avoirs
-            #            worksite_line[3] += row['Débit'] - row['Crédit']
-            
-            
 
             worksite_line[6] = round(worksite_line[6], 2)
             worksite_line[3] = round(worksite_line[3], 2)
@@ -150,12 +137,7 @@ class Overview():
         for name in self.worksite_names:
             tmp = budget.loc[budget['POSTE'] != 'TOTAL']
             if name in budget.columns:
-                self.data.loc[name,"BUDGET"] = tmp[name].sum()
-                
-                #for _, row in budget.iternotrows():
-                #    if row['POSTE'] == 'TOTAL':
-                #        break
-                #    self.data.loc[name, "BUDGET"] += row[name]
+                self.data.loc[name, "BUDGET"] = tmp[name].sum()
 
     def add_total(self):
         """Ajout du total de la synthèse."""
@@ -168,16 +150,6 @@ class Overview():
         totalmargcumul = self.data["MARGE A FIN DE MOIS"].sum()
         totalpfdc = self.data["PFDC"].sum()
         totalmargefdc = self.data["MARGE FDC"].sum()
-        #for index, row in self.data.iternotrows():
-        #    totalbudget += self.data.loc[row.name, "BUDGET"]
-        #    totalcamois += self.data.loc[row.name, "CA MOIS"]
-        #    totaldepmois += self.data.loc[row.name, "DEP DU MOIS"]
-        #    totalmargmois += self.data.loc[row.name, "MARGE MOIS"]
-        #    totalcacumul += self.data.loc[row.name, "CA CUMUL"]
-        #    totaldepcumul += self.data.loc[row.name, "DEP CUMULEES"]
-        #    totalmargcumul += self.data.loc[row.name, "MARGE A FIN DE MOIS"]
-        #    totalpfdc += self.data.loc[row.name, "PFDC"]
-        #    totalmargefdc += self.data.loc[row.name, "MARGE FDC"]
 
         total = pd.DataFrame(
             {
@@ -209,14 +181,9 @@ class Overview():
 
             sell_price = 0
             if name in budget.columns:
-                tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE') | 
-                        (budget['POSTE'] == 'AVENANTS')]
+                tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE') |
+                                 (budget['POSTE'] == 'AVENANTS')]
                 sell_price = tmp[name].sum()
-                #for _, row in budget.iternotrows():
-                #    if row["POSTE"] == "PRIX DE VENTE":
-                #        sell_price += row[name]
-                #    elif row["POSTE"] == "AVENANTS":
-                #        sell_price += row[name]
 
             self.data.loc[name, "MARGE MOIS"] = round(
                 month_revenues - month_expenses, 2)

@@ -35,9 +35,10 @@ def convert_single_dataframe_to_html_table(dicPostes, mois, annee, chantier):
     file = open("templates/rad.html", "w")
 
     file.write(HTML_HEAD)
-    #file.write(HTML_TITLE_HEAD)
-    file.write("<body><h1>Bilan " + str(chantier) + " | " + get_month_name(mois) + " " + str(annee)+"</h1>")
-    #file.write(HTML_TITLE_BOT)
+    # file.write(HTML_TITLE_HEAD)
+    file.write("<body><h1>Bilan " + str(chantier) +
+               " | " + get_month_name(mois) + " " + str(annee)+"</h1>")
+    # file.write(HTML_TITLE_BOT)
 
     file.write("<form action='/rad' method=post id='rad'>")
     file.write(HTML_TABLE_HEAD)

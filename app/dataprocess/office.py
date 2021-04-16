@@ -38,8 +38,9 @@ class Office(Categories):
                         get_csv_expenses(self.csv_path + filename),
                         accounting_plan)
         if total == 0:
-            raise ValueError("Aucune dépense liée à la structure dans les charges")
-        else: 
+            raise ValueError("Aucune dépense\
+                    liée à la structure dans les charges")
+        else:
             return total
 
     def calculate_office(self, month):

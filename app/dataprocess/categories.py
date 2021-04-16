@@ -1,15 +1,8 @@
-from .basic_operations import is_in_dic
-
-
 class Categories():
     def __init__(self, accounting_plan):
         """Classe abstraite. Objet hérité par ChantierPoste et StructPoste."""
         self.category_names = accounting_plan['POSTE'].unique().tolist()
         self.categories = {}
-        #for _, row in accounting_plan.iterrows():
-        #    value = row['POSTE']
-        #    if not is_in_dic(str(value), self.category_names):
-        #        self.category_names.append(str(value))
 
         for name in self.category_names:
             self.categories[name] = accounting_plan.loc[

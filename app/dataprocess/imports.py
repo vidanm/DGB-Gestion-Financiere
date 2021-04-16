@@ -1,5 +1,4 @@
 import pandas as pd
-from .basic_operations import is_in_dic
 import datetime
 
 
@@ -34,10 +33,10 @@ def get_expenses_file(filepath):
 
 def split_expenses_file_as_worksite_csv(filepath, outputpath):
     # worksites_names = []
-    
+
     expenses = get_expenses_file(filepath)
-    worksite_names = expenses["Section analytique"].unique() 
-    
+    worksite_names = expenses["Section analytique"].unique()
+
     # for _, row in expenses.iternotrows():
     #    value = row['Section analytique']
     #
@@ -50,15 +49,15 @@ def split_expenses_file_as_worksite_csv(filepath, outputpath):
         sep['Year'] = pd.DatetimeIndex(sep['Date']).year
 
         # out = pd.DataFrame(columns=sep.columns)
-        
+
         years = sep['Year'].unique()
 
         for year in years:
             sep.loc[sep['Year'] == year]\
-            .drop(columns='Year')\
-            .to_csv(outputpath + str(year) + "_" + name + ".csv")
+             .drop(columns='Year')\
+             .to_csv(outputpath + str(year) + "_" + name + ".csv")
 
-        #for index, row in sep.iternotrows():
+        # for index, row in sep.iternotrows():
         #    if index == 0:
         #        current_year = row['Date'].year
         #        out = out.append(row)
@@ -117,7 +116,7 @@ def split_salary_file_as_salary_csv(filepath, outputpath):
                 salary.loc[salary["Section analytique"] == name].to_csv(
                         str(outputpath) + sheet[-4::] + "SALAIRES" + "_" +
                         str(name) + ".csv")
-            
+
             # current_code = ""
             # for _, row in salary.iternotrows():
             #    if row["Section analytique"] != current_code:
