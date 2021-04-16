@@ -1,6 +1,6 @@
 """FLASK APPLICATION."""
 
-from flask import Flask, send_file, request, flash, redirect, render_template
+from flask import Flask, send_file, request, flash, redirect, render_template, session
 from app.dataprocess.accounting_plan import AccountingPlan
 # from app.dataprocess.synthese import Synthese
 from app.dataprocess.overview import Overview
@@ -23,7 +23,6 @@ from .models import db, login, UserModel
 from flask_login import current_user, login_user, login_required, logout_user
 import os
 import time
-
 UPLOAD_FOLDER = 'var'
 DOWNLOAD_FOLDER = 'bibl'
 ALLOWED_EXTENSIONS = ['xls']
@@ -36,17 +35,28 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dgbgesfin.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+#SESSION_TYPE = 'redis'
+#Session(app)
 
 db.init_app(app)
 login.init_app(app)
 login.login_view = 'login'
+
 
 worksite = None  # Stockage des donnees sous pdf
 month = ""  # Mois du pdf genere
 worksite_name = ""  # Code chantier STRUCT ou GLOB du pdf
 date = ""  # Date complete du pdf genere
 filename = ""
+
+if not (os.path.exists("var")):
+    os.makedirs("var/csv/")
+
+if not (os.path.exists("var/csv/")):
+    os.makedirs("var/csv/")
+
+if not (os.path.exists('bibl/')):
+    os.makedirs("bibl/")
 
 def allowed_file(filename):
     """Verifie le bon format des fichiers prerequis
@@ -97,12 +107,6 @@ def index():
     if not current_user.is_authenticated:
         return redirect('/login')
 
-    if not (os.path.exists("var/csv/")):
-        os.makedirs("var/csv/")
-
-    if not (os.path.exists('bibl/')):
-        os.makedirs("bibl/")
-
     return render_template(
         "index.html"
     )
@@ -115,8 +119,6 @@ def syntpdf():
     Generation de la synthese. Sauvegarde en pdf.
     """
     tic = time.perf_counter()
-    global date
-    global filename
     date = request.form['date']
     year = date[0:4]
     month = date[5:7]
@@ -155,9 +157,6 @@ def chantpdf():
     Affichage en HTML pour permettre a l'utilisateur
     l'entree du Reste A Depenser."""
     tic = time.perf_counter()
-    global worksite_name
-    global date
-    global worksite
 
     date = request.form['date']
     year = date[0:4]
@@ -184,6 +183,11 @@ def chantpdf():
     worksite.round_2dec_df()
     convert_single_dataframe_to_html_table(worksite.categories, month, year,
                                            worksite_name)
+
+    session['worksite_name'] = worksite_name
+    session['worksite'] = worksite
+    session['date'] = date
+
     toc = time.perf_counter()
     print(f"CHA : {toc-tic:4f} seconds")
     return render_template("rad.html")
@@ -198,12 +202,11 @@ def rad():
     par l'utilisateur.
     Calcul les donnees manquantes, la gestion previsionnelle.
     Sauvegarde le tout en PDF."""
-    global filename
-    global worksite  # Défini dans chantpdf()
-    global worksite_name  # Défini dans chantpdf()
-    global date  # Défini dans chantpdf()
+    worksite = session.get('worksite','not_set')  # Défini dans chantpdf()
+    worksite_name = session.get('worksite_name','not set') # Défini dans chantpdf()
+    date = session.get('date','not set')  # Défini dans chantpdf()
+    
     filename = "bibl/" + date + "/" + worksite_name + ".pdf"
-
     year = date[0:4]
     month = date[5:7]
     if not (os.path.exists("bibl/" + date)):
@@ -246,7 +249,6 @@ def rad():
 @login_required
 def structpdf():
     """Generation du bilan de la structure."""
-    global filename
     tic = time.perf_counter()
     if request.method == 'POST':
         date = request.form['date']
@@ -281,8 +283,7 @@ def structpdf():
 @app.route('/download_last_file', methods=['GET','POST'])
 @login_required
 def download_last_file():
-    global filename
-    print(filename)
+    filename = session.get('filename','not set')
     return send_file(filename, as_attachment=True)
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -294,21 +295,8 @@ def upload_file():
     if not current_user.is_authenticated:
         return redirect('/login')
 
-    if not (os.path.exists("var/csv/")):
-        os.makedirs("var/csv/")
-
-    if not (os.path.exists('bibl/')):
-        os.makedirs("bibl/")
-
-
     if request.method == 'POST':
-        if not (os.path.exists("var/")):
-            os.makedirs("var/")
-
-        if not (os.path.exists("var/csv/")):
-            os.makedirs("var/csv/")
-
-        # files = []
+        
         #  check if the post request has the file part
         check_save_uploaded_file("PlanComptable")
         check_save_uploaded_file("Charges")
@@ -323,14 +311,14 @@ def upload_file():
 
 
 def clear():
-    for filename in os.listdir("var/csv"):
-        os.remove("var/csv/"+filename)
-
+    if (os.path.exists("var/csv/")):
+        for filename in os.listdir("var/csv"):
+            os.remove("var/csv/"+filename)
 
 def check_save_uploaded_file(tag):
 
     if tag not in request.files:
-        print("tag non")
+        print("tag not in request")
     else:
         file = request.files[tag]
         if file.filename == '':

@@ -50,16 +50,13 @@ class Overview():
                                                           filename),
                                          ignore_index=True)
 
-                print(filename)
                 worksite_name = filename.split('_')[1].split('.')[0]
-                print(worksite_name)
                 if worksite_name not in self.worksite_names:
                     self.worksite_names.append(worksite_name)
 
         for filename in os.listdir(self.csv_path):
             for name in self.worksite_names:
                 if name in filename and int(filename[0:4]) < year:
-                    print(filename)
                     total = total.append(get_csv_expenses(self.csv_path +
                                                           filename),
                                          ignore_index=True)
@@ -105,9 +102,6 @@ class Overview():
             cumul_credit = cumul_tmp['Crédit'].sum()
             month_debit = month_tmp['Débit'].sum()
             month_credit = month_tmp['Crédit'].sum()
-
-            print(str(month_debit) + " : Debit du mois")
-            print(str(month_credit) + " : Credit du mois")
 
             worksite_line[6] = cumul_debit - cumul_credit
             worksite_line[3] = month_debit - month_credit

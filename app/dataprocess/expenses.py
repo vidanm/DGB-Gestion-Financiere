@@ -95,4 +95,3 @@ if __name__ == "__main__":
             )
 
     c = a + b
-    print(c)

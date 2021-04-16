@@ -77,7 +77,6 @@ class Office(Categories):
         year_revenue = revenues.calculate_year_revenues(year)
         for name in self.category_names:
             for _, row in self.categories[name].iterrows():
-                print(name + " : " + row.name)
                 month_expenses = self.categories[name].loc[row.name,
                                                            'Dépenses du mois']
                 cumulative_expenses = self.categories[name].loc[
