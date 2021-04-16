@@ -3,10 +3,8 @@
 
 h1 {
   font-family: "Montserrat", sans-serif;
-  font-size: 35px;
+  font-size: 50px;
   font-weight: 700;
-  margin: -50px;
-  padding-bottom: 100px;
   text-align: center;
   color: #fff;
 }
@@ -18,8 +16,7 @@ th.tab-title {
 body {
   background-image: url("backgroundbw.jpeg");
   background-size: 100%;
-  background-blend-mode: soft-light;
-  background-color: rgba(233, 78, 27, 1);
+  background-color: #3d3d3d;
   background-repeat: no-repeat;
   background-position: center;
   background-attachment: fixed;
@@ -70,7 +67,7 @@ div.table-title {
   border-collapse: collapse;
   height: 320px;
   margin: auto;
-  margin-top: 0;
+  margin-top: -100px;
   max-width: 1000px;
   padding: 5px;
   padding-top: 0;
@@ -199,11 +196,11 @@ td.text-right {
   margin-bottom: 50px;
   width: 20%;
   padding: 10px;
-  color: #666b85;
+  color: #ffffff;
   text-align: center;
-  background: rgba(180, 199, 231, 255);
+  background:rgba(233, 78, 27, 1);
   border-radius: 20px;
-  border-color: rgba(190, 210, 240, 255);
+  border-color: rgba(215, 60, 15, 1);
   outline: none;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
   transition: all 0.1s;

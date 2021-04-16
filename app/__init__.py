@@ -157,6 +157,9 @@ def chantpdf():
     Affichage en HTML pour permettre a l'utilisateur
     l'entree du Reste A Depenser."""
     tic = time.perf_counter()
+    global worksite_name
+    global worksite
+    global date
 
     date = request.form['date']
     year = date[0:4]
@@ -181,12 +184,12 @@ def chantpdf():
 
     worksite.calculate_worksite(int(month), int(year), budget)
     worksite.round_2dec_df()
-    convert_single_dataframe_to_html_table(worksite.categories, month, year,
+    convert_single_dataframe_to_html_table(worksite.categories, int(month), year,
                                            worksite_name)
 
-    session['worksite_name'] = worksite_name
-    session['worksite'] = worksite
-    session['date'] = date
+    #session['worksite_name'] = worksite_name
+    #session['worksite'] = worksite
+    #session['date'] = date
 
     toc = time.perf_counter()
     print(f"CHA : {toc-tic:4f} seconds")
@@ -202,9 +205,13 @@ def rad():
     par l'utilisateur.
     Calcul les donnees manquantes, la gestion previsionnelle.
     Sauvegarde le tout en PDF."""
-    worksite = session.get('worksite','not_set')  # Défini dans chantpdf()
-    worksite_name = session.get('worksite_name','not set') # Défini dans chantpdf()
-    date = session.get('date','not set')  # Défini dans chantpdf()
+    global worksite
+    global worksite_name
+    global date
+
+    #worksite = session.get('worksite','not_set')  # Défini dans chantpdf()
+    #worksite_name = session.get('worksite_name','not set') # Défini dans chantpdf()
+    #date = session.get('date','not set')  # Défini dans chantpdf()
     
     filename = "bibl/" + date + "/" + worksite_name + ".pdf"
     year = date[0:4]

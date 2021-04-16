@@ -4,6 +4,7 @@
 
 # from .postes_chantier import *
 # from pandas import Index
+from .date import get_month_name
 
 HTML_HEAD = "<head><meta charset='UTF-8'>\
         <title>Rentrer Reste à dépenser</title>\
@@ -25,7 +26,7 @@ HTML_TABLE_BODY_HEAD = "</thead><tbody class='table-hover'>"
 HTML_TABLE_ROW_HEAD = "<td class='text-left'>"
 HTML_TABLE_ROW_BOT = "</td>"
 HTML_TABLE_BODY_BOT = "</tbody></table>"
-HTML_BOT = "<input type='submit' id='confirm'\
+HTML_BOT = "<input type='submit' id='confirm' value='Confirmer'\
         form='rad'></input></form></body>"
 
 
@@ -34,9 +35,9 @@ def convert_single_dataframe_to_html_table(dicPostes, mois, annee, chantier):
     file = open("templates/rad.html", "w")
 
     file.write(HTML_HEAD)
-    file.write(HTML_TITLE_HEAD)
-    file.write("Bilan " + str(chantier) + " | " + str(mois) + " " + str(annee))
-    file.write(HTML_TITLE_BOT)
+    #file.write(HTML_TITLE_HEAD)
+    file.write("<body><h1>Bilan " + str(chantier) + " | " + get_month_name(mois) + " " + str(annee)+"</h1>")
+    #file.write(HTML_TITLE_BOT)
 
     file.write("<form action='/rad' method=post id='rad'>")
     file.write(HTML_TABLE_HEAD)
