@@ -196,9 +196,9 @@ td.text-right {
   margin-bottom: 50px;
   width: 20%;
   padding: 10px;
-  color: #ffffff;
+  color: #fff;
   text-align: center;
-  background:rgba(233, 78, 27, 1);
+  background: rgba(233, 78, 27, 1);
   border-radius: 20px;
   border-color: rgba(215, 60, 15, 1);
   outline: none;
