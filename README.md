@@ -1,6 +1,7 @@
 # DGB Construction | Gestion Financière
 
 ![DGB LOGO](https://github.com/vidanm/DGB-Gestion/blob/master/images/DGB.jpeg)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4966e9121e7646ac97a66967fbb922ce)](https://app.codacy.com/gh/vidanm/DGB_Gesfin?utm_source=github.com&utm_medium=referral&utm_content=vidanm/DGB_Gesfin&utm_campaign=Badge_Grade_Settings)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0d9c8b09c33b40bb8db12b0d60a397c9)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=vidanm/DGB_Gesfin&amp;utm_campaign=Badge_Grade)
 
 ## Installation
