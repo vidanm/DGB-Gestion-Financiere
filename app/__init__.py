@@ -8,6 +8,7 @@ from app.pdf_generation.tabletopdf import PDF
 from app.dataprocess.worksite import Worksite
 from app.dataprocess.expenses import Expenses
 from app.dataprocess.office import Office
+import jsonpickle
 
 from app.dataprocess.dataframe_to_html \
         import convert_single_dataframe_to_html_table
@@ -42,12 +43,6 @@ db.init_app(app)
 login.init_app(app)
 login.login_view = 'login'
 
-
-worksite = None  # Stockage des donnees sous pdf
-month = ""  # Mois du pdf genere
-worksite_name = ""  # Code chantier STRUCT ou GLOB du pdf
-date = ""  # Date complete du pdf genere
-filename = ""
 
 if not (os.path.exists("var")):
     os.makedirs("var/csv/")
@@ -157,14 +152,12 @@ def chantpdf():
     Affichage en HTML pour permettre a l'utilisateur
     l'entree du Reste A Depenser."""
     tic = time.perf_counter()
-    global worksite_name
-    global worksite
-    global date
 
     date = request.form['date']
     year = date[0:4]
     month = date[5:7]
     worksite_name = request.form['code']
+
 
     try:
         accounting_plan = AccountingPlan(
@@ -180,17 +173,16 @@ def chantpdf():
     try:
         budget = get_budget_file("var/Budget.xls")
     except Exception as error:
-        return "Erreur de lecture de fichiers :" + str(error)
+        print("No Budget")
 
     worksite.calculate_worksite(int(month), int(year), budget)
-    worksite.round_2dec_df()
+    worksite.round_2dec_df() # Verifier l'utilité
     convert_single_dataframe_to_html_table(worksite.categories, int(month), year,
                                            worksite_name)
 
-    #session['worksite_name'] = worksite_name
-    #session['worksite'] = worksite
-    #session['date'] = date
-
+    session['worksite_name'] = worksite_name
+    session['date'] = date
+    
     toc = time.perf_counter()
     print(f"CHA : {toc-tic:4f} seconds")
     return render_template("rad.html")
@@ -205,19 +197,26 @@ def rad():
     par l'utilisateur.
     Calcul les donnees manquantes, la gestion previsionnelle.
     Sauvegarde le tout en PDF."""
-    global worksite
-    global worksite_name
-    global date
-
-    #worksite = session.get('worksite','not_set')  # Défini dans chantpdf()
-    #worksite_name = session.get('worksite_name','not set') # Défini dans chantpdf()
-    #date = session.get('date','not set')  # Défini dans chantpdf()
     
-    filename = "bibl/" + date + "/" + worksite_name + ".pdf"
+    worksite_name = session.get('worksite_name','not set') # Défini dans chantpdf()
+    accounting_plan = AccountingPlan(
+        get_accounting_file("var/PlanComptable.xls"))
+
+    worksite = Worksite(accounting_plan, worksite_name)
+
+    try:
+        budget = get_budget_file("var/Budget.xls")
+    except Exception as error:
+        print("No Budget")
+
+    
+    date = session.get('date','not set')  # Défini dans chantpdf()
     year = date[0:4]
     month = date[5:7]
-    if not (os.path.exists("bibl/" + date)):
-        os.makedirs("bibl/" + date)
+    filename = "bibl/"+date+"/"+ worksite_name+ ".pdf"
+
+    worksite.calculate_worksite(int(month), int(year), budget)
+    worksite.round_2dec_df() # Verifier l'utilité
 
     for value in request.form:
         category, subcategory = value.split('$')
