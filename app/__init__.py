@@ -221,7 +221,10 @@ def rad():
         get_accounting_file("var/PlanComptable.xls"))
 
     worksite = Worksite(accounting_plan, worksite_name)
-    budget = get_budget_file("var/Budget.xls")
+    try:
+        budget = get_budget_file("var/Budget.xls")
+    except:
+        print("Pas de budget")
 
     
     date = session.get('date','not set')  # Défini dans chantpdf()
