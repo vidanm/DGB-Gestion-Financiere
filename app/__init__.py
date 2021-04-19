@@ -8,7 +8,6 @@ from app.pdf_generation.tabletopdf import PDF
 from app.dataprocess.worksite import Worksite
 from app.dataprocess.expenses import Expenses
 from app.dataprocess.office import Office
-import jsonpickle
 
 from app.dataprocess.dataframe_to_html \
         import convert_single_dataframe_to_html_table
