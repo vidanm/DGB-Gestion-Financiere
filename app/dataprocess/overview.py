@@ -80,7 +80,7 @@ class Overview():
     def ajoute_data(self, data):
         self.data = self.data.append(data, ignore_index=True)
 
-    def calculate_data(self, month, year, budget):
+    def calculate_data(self, month, year, budget=None):
         """Calcul de la synthese des dépenses d'une année\
                 en omettant la structure."""
         csv_worksite = self.precalc_pfdc(month, year)
@@ -115,7 +115,9 @@ class Overview():
             self.ajoute_data(out)
 
         self.data = self.data.set_index("CHANTIER")
-        self.add_budget(budget)
+        if (budget is not None):
+            self.add_budget(budget)
+
         self.add_revenues()
         self.calculate_margin(budget)
         self.data = self.data.round(2)
@@ -166,7 +168,7 @@ class Overview():
 
         self.data = self.data.append(total)
 
-    def calculate_margin(self, budget):
+    def calculate_margin(self, budget=None):
         """Calcul des marges."""
         for name in self.worksite_names:
             if 'DIV' in name or 'STRUCT' in name:
@@ -180,7 +182,7 @@ class Overview():
             cumulative_revenues = self.data.loc[name, "CA CUMUL"]
 
             sell_price = 0
-            if name in budget.columns:
+            if budget is not None and name in budget.columns:
                 tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE') |
                                  (budget['POSTE'] == 'AVENANTS')]
                 sell_price = tmp[name].sum()

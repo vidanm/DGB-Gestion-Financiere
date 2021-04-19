@@ -119,6 +119,7 @@ def syntpdf():
     date = request.form['date']
     year = date[0:4]
     month = date[5:7]
+    budget = None
 
     filename = "bibl/Synthese.pdf"
     try :
@@ -127,7 +128,10 @@ def syntpdf():
     except Exception as e:
         return "Erreur de lecture du plan comptable "+str(e) 
 
-    budget = get_budget_file("var/Budget.xls")
+    try :
+        budget = get_budget_file("var/Budget.xls")
+    except :
+        print ("Pas de fichier budget") 
     # revenues = Revenues(charges.get_raw_charges())
     # camois = CA.calcul_ca_mois(int(month),int(year))
     # cacumul = CA.calcul_ca_annee(int(year))
