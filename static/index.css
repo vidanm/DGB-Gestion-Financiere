@@ -10,6 +10,7 @@ p {
   font-family: "Montserrat", sans-serif;
   font-weight: 200;
   text-align: center;
+  color: white;
 }
 
 #sidetitle {
@@ -125,12 +126,13 @@ input[type="month"],
 input[type="submit"],
 input[type="username"],
 input[type="password"] {
-  border: 0;
-  border-radius: 5px;
+  border:0px;
+  border-radius: 3px;
   border-color: rgba(0, 0, 0, 0.80000000000000004);
   padding: 7px;
-  background-color: rgba(225, 225, 225, 1);
+  background-color: rgba(225, 225, 225, 0.9);
+  color:black;
   text-align: center;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 100;
+  font-family: "Raleway", sans-serif;
+  font-weight: 500;
 }

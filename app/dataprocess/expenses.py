@@ -1,6 +1,7 @@
 from .accounting_plan import AccountingPlan
 from .imports import get_accounting_file, get_csv_expenses
 import time
+import logging
 
 
 class Expenses():
@@ -21,7 +22,11 @@ class Expenses():
         return self.data.to_string()
 
     def __remove_unknown_accounts(self):
-        log = open("static/log.txt", "a+")
+        logging.basicConfig(filename="log.txt",format='%(message)s',filemode='a+')
+        logger =logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        error = 0
+
         accounts = self.data["Général"].unique()
         for account in accounts:
             if self.accounting_plan.get_poste_by_code(str(account)).empty:
@@ -30,11 +35,12 @@ class Expenses():
                             account, "Unknown category",
                             "Unknown sub-category")
                 else:
+                    error = 1
                     self.data = self.data.loc[self.data["Général"] != account]
-                    log.write("Compte " + str(account) +
+                    logger.warning("Compte " + str(account) +
                               " pas dans le plan comptable\n")
-        log.close()
-        return
+        logging.shutdown()
+        return 1
 
     def __compose_accounts_with_category_name(self):
         tic = time.perf_counter()

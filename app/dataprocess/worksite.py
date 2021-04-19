@@ -5,7 +5,7 @@ import datetime
 import pandas as pd
 import os
 import time
-
+import logging
 
 class Worksite(Categories):
     def __init__(self, accounting_plan, worksite_name, csv_path="var/csv/"):
@@ -76,14 +76,16 @@ class Worksite(Categories):
         """
         Ajoute le budget dans les cases de postes correspondantes.
         """
-        log = open("static/log.txt", "a+")
+        logging.basicConfig(filename="log.txt",format='%(message)s',filemode='a+')
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
         not_used_rows = ["PRIX DE VENTE", "TOTAL", "ECART"]
         for _, row in budget.iterrows():
             try:
                 row[self.worksite_name]
             except Exception:
-                print("Pas de budget associé a ce chantier")
-                return
+                logger.warning("Pas de budget associé a ce chantier")
+                return 0
 
             try:
                 if row['POSTE'] not in not_used_rows:
@@ -91,11 +93,12 @@ class Worksite(Categories):
                                                       "Budget"] += round(row[
                                                           self.worksite_name])
             except Exception:
-                log.write("Le couple " + row['POSTE']
+                logger.error("Le couple " + row['POSTE']
                           + " : " + row['SOUS-POSTE']
                           + " spécifié dans le fichier budget\
                           n'est pas un couple présent dans le plan comptable")
-        log.close()
+        logging.shutdown()
+        return 1
 
     def add_rad(self, category, subcategory, rad):
         if rad.replace('.', '').isnumeric():

@@ -8,21 +8,20 @@ from app.pdf_generation.tabletopdf import PDF
 from app.dataprocess.worksite import Worksite
 from app.dataprocess.expenses import Expenses
 from app.dataprocess.office import Office
-
 from app.dataprocess.dataframe_to_html \
         import convert_single_dataframe_to_html_table
-
 from app.dataprocess.imports import get_expenses_file,\
         split_expenses_file_as_worksite_csv, get_accounting_file,\
         get_budget_file, split_salary_file_as_salary_csv
-
 from app.dataprocess.date import get_month_name
+from app.dataprocess.errors_to_html import errors_to_html
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 from .models import db, login, UserModel
 from flask_login import current_user, login_user, login_required, logout_user
 import os
 import time
+
 UPLOAD_FOLDER = 'var'
 DOWNLOAD_FOLDER = 'bibl'
 ALLOWED_EXTENSIONS = ['xls']
@@ -100,6 +99,10 @@ def index():
     """Page d'accueil."""
     if not current_user.is_authenticated:
         return redirect('/login')
+    
+    if (os.path.exists("log.txt")):
+        os.remove("log.txt")
+    
 
     return render_template(
         "index.html"
@@ -151,7 +154,7 @@ def chantpdf():
     Affichage en HTML pour permettre a l'utilisateur
     l'entree du Reste A Depenser."""
     tic = time.perf_counter()
-
+    
     date = request.form['date']
     year = date[0:4]
     month = date[5:7]
@@ -184,10 +187,15 @@ def chantpdf():
     
     toc = time.perf_counter()
     print(f"CHA : {toc-tic:4f} seconds")
-    return render_template("rad.html")
+    
+    if (os.path.exists("log.txt")):
+        errors_to_html()
+        return render_template("errors.html")
+    else :
+        return render_template("rad.html")
 
 
-@app.route('/rad', methods=['POST'])
+@app.route('/rad', methods=['GET','POST'])
 @login_required
 def rad():
     """Suite de chantpdf(). 
@@ -196,6 +204,8 @@ def rad():
     par l'utilisateur.
     Calcul les donnees manquantes, la gestion previsionnelle.
     Sauvegarde le tout en PDF."""
+    if request.method == "GET":
+        return render_template("rad.html")
     
     worksite_name = session.get('worksite_name','not set') # Défini dans chantpdf()
     accounting_plan = AccountingPlan(
@@ -213,6 +223,9 @@ def rad():
     year = date[0:4]
     month = date[5:7]
     filename = "bibl/"+date+"/"+ worksite_name+ ".pdf"
+
+    if not (os.path.exists('bibl/'+date)):
+        os.makedirs("bibl/"+date)
 
     worksite.calculate_worksite(int(month), int(year), budget)
     worksite.round_2dec_df() # Verifier l'utilité
@@ -319,6 +332,8 @@ def clear():
     if (os.path.exists("var/csv/")):
         for filename in os.listdir("var/csv"):
             os.remove("var/csv/"+filename)
+    if (os.path.exists("log.txt")):
+        os.remove("log.txt")
 
 def check_save_uploaded_file(tag):
 
