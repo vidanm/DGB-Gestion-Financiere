@@ -19,6 +19,9 @@ class Office(Categories):
         self.row_names = [1]
         self.year = year
         self.expenses = self.__get_year_data_of_office(accounting_plan)
+        if self.expenses is None:
+            raise ValueError("Pas de dépenses pour la structure pour ce mois")
+
         self.year_expenses = year_expenses
         for name in self.category_names:
             self.categories[name]['%CA MOIS'] = 0

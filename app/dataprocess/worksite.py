@@ -10,22 +10,23 @@ import logging
 class Worksite(Categories):
     def __init__(self, accounting_plan, worksite_name, csv_path="var/csv/"):
         """Trie les expenses d'un chantier par postes."""
-        tic = time.perf_counter()
         super(Worksite, self).__init__(accounting_plan.get_worksite_plan())
         self.csv_path = csv_path
         self.worksite_name = worksite_name
         self.expenses = self.__get_all_data_of_worksite(accounting_plan)
+        if self.expenses is None:
+            raise ValueError("Pas de dépenses pour ce chantier pour ce mois")
+
         for name in self.category_names:
             self.categories[name]['Budget'] = 0
             self.categories[name]['RAD'] = 0
             self.categories[name]['PFDC'] = 0
             self.categories[name]['Ecart PFDC/Budget'] = 0
-        toc = time.perf_counter()
-        print(f"__init__ : {toc-tic:0.4f} seconds")
 
     def __get_all_data_of_worksite(self, accounting_plan):
         total = None
         for filename in os.listdir(self.csv_path):
+            print(filename)
             if self.worksite_name in filename and filename.endswith(".csv"):
                 if total is None:
                     total = Expenses(
@@ -85,8 +86,8 @@ class Worksite(Categories):
                 row[self.worksite_name]
             except Exception:
                 logger.warning("Pas de budget associé a ce chantier")
-                return 0
-
+                logging.shutdown()
+                return
             try:
                 if row['POSTE'] not in not_used_rows:
                     self.categories[row['POSTE']].loc[row['SOUS-POSTE'],

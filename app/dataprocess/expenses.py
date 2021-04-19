@@ -25,7 +25,6 @@ class Expenses():
         logging.basicConfig(filename="log.txt",format='%(message)s',filemode='a+')
         logger =logging.getLogger()
         logger.setLevel(logging.DEBUG)
-        error = 0
 
         accounts = self.data["Général"].unique()
         for account in accounts:
@@ -35,7 +34,6 @@ class Expenses():
                             account, "Unknown category",
                             "Unknown sub-category")
                 else:
-                    error = 1
                     self.data = self.data.loc[self.data["Général"] != account]
                     logger.warning("Compte " + str(account) +
                               " pas dans le plan comptable\n")
