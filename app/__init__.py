@@ -121,8 +121,12 @@ def syntpdf():
     month = date[5:7]
 
     filename = "bibl/Synthese.pdf"
-    accounting_plan = AccountingPlan(
-        get_accounting_file("var/PlanComptable.xls"))
+    try :
+        accounting_plan = AccountingPlan(
+            get_accounting_file("var/PlanComptable.xls"))
+    except Exception as e:
+        return "Erreur de lecture du plan comptable "+str(e) 
+
     budget = get_budget_file("var/Budget.xls")
     # revenues = Revenues(charges.get_raw_charges())
     # camois = CA.calcul_ca_mois(int(month),int(year))
@@ -212,11 +216,7 @@ def rad():
         get_accounting_file("var/PlanComptable.xls"))
 
     worksite = Worksite(accounting_plan, worksite_name)
-
-    try:
-        budget = get_budget_file("var/Budget.xls")
-    except Exception as error:
-        print("No Budget")
+    budget = get_budget_file("var/Budget.xls")
 
     
     date = session.get('date','not set')  # Défini dans chantpdf()
@@ -274,11 +274,19 @@ def structpdf():
         month = date[5:7]
 
         filename = "bibl/Structure" + year + "-" + month + ".pdf"
-        accounting_plan = AccountingPlan(
-            get_accounting_file("var/PlanComptable.xls"))
+        try:
+            accounting_plan = AccountingPlan(
+                get_accounting_file("var/PlanComptable.xls"))
+        except Exception as e:
+            return "Erreur de lecture du plan comptable : "+str(e)
+
         year_expenses = Expenses(get_expenses_file("var/Charges.xls"),
                                  accounting_plan)
-        office = Office(accounting_plan, year_expenses, 2020)
+
+        try:
+            office = Office(accounting_plan, year_expenses, 2020)
+        except Exception as e:
+            return : "Erreur de lecture des charges de la structure : "+str(e)
 
         if not (os.path.exists("bibl/" + date)):
             os.makedirs("bibl/" + date)
