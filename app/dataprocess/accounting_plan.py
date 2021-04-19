@@ -1,15 +1,15 @@
 import pandas as pd
 import numpy as np
 
-
 class AccountingPlan():
     """On sépare le plan en structure/chantier car c'est le seul moyen \
             qu'on a de savoir si un poste est un poste appartenant a la\
             structure ou appartenant au chantier."""
     def get_poste_by_code(self, code):
         """Renvoie le poste en fonction du code donné."""
-        return self.general_plan.loc[
+        out = self.general_plan.loc[
             self.general_plan['N° DE COMPTE'].str.contains(code, na=False)]
+        return out
 
     def get_worksite_plan(self):
         return self.working_site_plan
