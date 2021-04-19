@@ -70,8 +70,8 @@ class Worksite(Categories):
                 super(Worksite, self)._add_cumulative_expense(row)
                 if (date.month == month and date.year == year):
                     super(Worksite, self)._add_month_expense(row)
-
-        self.__add_budget(budget)
+        if (budget is not None):
+            self.__add_budget(budget)
 
     def __add_budget(self, budget):
         """

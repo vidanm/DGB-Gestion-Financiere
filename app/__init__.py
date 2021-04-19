@@ -167,7 +167,7 @@ def chantpdf():
     year = date[0:4]
     month = date[5:7]
     worksite_name = request.form['code']
-
+    budget = None
 
     try:
         accounting_plan = AccountingPlan(
@@ -215,6 +215,7 @@ def rad():
     if request.method == "GET":
         return render_template("rad.html")
     
+    budget = None
     worksite_name = session.get('worksite_name','not set') # Défini dans chantpdf()
     accounting_plan = AccountingPlan(
         get_accounting_file("var/PlanComptable.xls"))
