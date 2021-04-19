@@ -286,7 +286,7 @@ def structpdf():
         try:
             office = Office(accounting_plan, year_expenses, 2020)
         except Exception as e:
-            return : "Erreur de lecture des charges de la structure : "+str(e)
+            return "Erreur de lecture des charges de la structure : "+str(e)
 
         if not (os.path.exists("bibl/" + date)):
             os.makedirs("bibl/" + date)
