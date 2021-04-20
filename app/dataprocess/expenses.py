@@ -16,14 +16,16 @@ class Expenses():
     def __add__(self, other):
         a = self.data
         b = other.data
-        return Expenses(a.append(b, ignore_index=True), self.accounting_plan,with_category=False)
+        return Expenses(a.append(b, ignore_index=True),
+                        self.accounting_plan, with_category=False)
 
     def __str__(self):
         return self.data.to_string()
 
     def __remove_unknown_accounts(self):
-        logging.basicConfig(filename="log.txt",format='%(message)s',filemode='a+')
-        logger =logging.getLogger()
+        logging.basicConfig(filename="log.txt", format='%(message)s',
+                            filemode='a+')
+        logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
 
         accounts = self.data["Général"].unique()
@@ -36,7 +38,7 @@ class Expenses():
                 else:
                     self.data = self.data.loc[self.data["Général"] != account]
                     logger.warning("Compte " + str(account) +
-                              " pas dans le plan comptable\n")
+                                   " pas dans le plan comptable\n")
         logging.shutdown()
         return 1
 

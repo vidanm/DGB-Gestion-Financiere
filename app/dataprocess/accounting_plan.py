@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 class AccountingPlan():
     """On sépare le plan en structure/chantier car c'est le seul moyen \
             qu'on a de savoir si un poste est un poste appartenant a la\

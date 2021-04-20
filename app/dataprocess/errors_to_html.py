@@ -6,7 +6,7 @@ HTML_HEAD = "\
             <title>Erreurs</title>\
             <link rel='stylesheet' \
             type='text/css' \
-            href="+'"{{ url_for("static",filename="index.css")}}">'+\
+            href=" + '"{{ url_for("static",filename="index.css")}}">' +\
         "</head>\
         <body>\
             <h1> Erreurs </h1>\
@@ -25,12 +25,12 @@ FOOTER = "</div></body></html>"
 
 
 def errors_to_html(critic=False):
-    output = open("templates/errors.html","w")
-    input_file = open("log.txt","r")
+    output = open("templates/errors.html", "w")
+    input_file = open("log.txt", "r")
     output.write(HTML_HEAD)
     for line in input_file.readlines():
         output.write("<p>"+line+"</p>")
     output.write(HTML_FOOT)
-    if not critic :
+    if not critic:
         output.write(NON_CRITIC)
     output.write(FOOTER)

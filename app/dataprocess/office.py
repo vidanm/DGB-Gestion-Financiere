@@ -51,25 +51,24 @@ class Office(Categories):
         else:
             return total
 
-    def __get_year_expenses(self,accounting_plan):
+    def __get_year_expenses(self, accounting_plan):
         total = None
         for filename in os.listdir(self.csv_path):
-            print(str(self.year) +" : "+filename)
+            print(str(self.year) + " : " + filename)
             if str(self.year) in filename and filename.endswith(".csv"):
                 if total is None:
                     total = Expenses(
                             get_csv_expenses(self.csv_path + filename),
-                            accounting_plan,with_category=False)
+                            accounting_plan, with_category=False)
                 else:
                     total += Expenses(
                             get_csv_expenses(self.csv_path + filename),
-                            accounting_plan,with_category=False)
+                            accounting_plan, with_category=False)
 
         if total is None:
             raise ValueError("Aucune charges importées")
         else:
             return total
-
 
     def calculate_office(self):
         month = int(self.month)

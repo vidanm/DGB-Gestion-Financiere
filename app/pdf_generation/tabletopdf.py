@@ -196,7 +196,7 @@ class PDF():
 
     def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1):
         """Ajoute un tableau a la feuille active.
-        
+
         Le coin bas droite est représenté par (x,y)."""
         dataframe = dataframe.reset_index()
         numTable = dataframe.to_numpy().tolist()

@@ -1,16 +1,16 @@
 """FLASK APPLICATION."""
 
-from flask import Flask, send_file, request, flash, redirect, render_template, session
+from flask import Flask, send_file, request, flash, redirect,\
+        render_template, session
 from app.dataprocess.accounting_plan import AccountingPlan
 # from app.dataprocess.synthese import Synthese
 from app.dataprocess.overview import Overview
 from app.pdf_generation.tabletopdf import PDF
 from app.dataprocess.worksite import Worksite
-from app.dataprocess.expenses import Expenses
 from app.dataprocess.office import Office
 from app.dataprocess.dataframe_to_html \
         import convert_single_dataframe_to_html_table
-from app.dataprocess.imports import get_expenses_file,\
+from app.dataprocess.imports import \
         split_expenses_file_as_worksite_csv, get_accounting_file,\
         get_budget_file, split_salary_file_as_salary_csv
 from app.dataprocess.date import get_month_name
@@ -27,15 +27,15 @@ DOWNLOAD_FOLDER = 'bibl'
 ALLOWED_EXTENSIONS = ['xls']
 
 app = Flask("DGB Gesfin")
-app.secret_key = os.environ.get('SECRET_KEY','NULL')
+app.secret_key = os.environ.get('SECRET_KEY', 'NULL')
 
 app.config.from_object('config')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dgbgesfin.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#SESSION_TYPE = 'redis'
-#Session(app)
+# SESSION_TYPE = 'redis'
+# Session(app)
 
 db.init_app(app)
 login.init_app(app)
@@ -51,6 +51,7 @@ if not (os.path.exists("var/csv/")):
 if not (os.path.exists('bibl/')):
     os.makedirs("bibl/")
 
+
 def allowed_file(filename):
     """Verifie le bon format des fichiers prerequis
     fournis par l'utilisateur."""
@@ -61,8 +62,8 @@ def allowed_file(filename):
 @app.before_first_request
 def create_table():
     db.create_all()
-    user = UserModel(username = os.environ.get('USERNAME','Anonymous'))
-    user.set_password(os.environ.get('PASSWORD','Password'))
+    user = UserModel(username=os.environ.get('USERNAME', 'Anonymous'))
+    user.set_password(os.environ.get('PASSWORD', 'Password'))
     db.session.add(user)
     db.session.commit()
 
@@ -99,10 +100,10 @@ def index():
     """Page d'accueil."""
     if not current_user.is_authenticated:
         return redirect('/login')
-    
+
     if (os.path.exists("log.txt")):
         os.remove("log.txt")
-    
+
     return render_template(
         "index.html"
     )
@@ -121,16 +122,16 @@ def syntpdf():
     budget = None
 
     filename = "bibl/Synthese.pdf"
-    try :
+    try:
         accounting_plan = AccountingPlan(
             get_accounting_file("var/PlanComptable.xls"))
     except Exception as e:
-        return "Erreur de lecture du plan comptable "+str(e) 
+        return "Erreur de lecture du plan comptable "+str(e)
 
-    try :
+    try:
         budget = get_budget_file("var/Budget.xls")
-    except :
-        print ("Pas de fichier budget") 
+    except Exception:
+        print("Pas de fichier budget")
     # revenues = Revenues(charges.get_raw_charges())
     # camois = CA.calcul_ca_mois(int(month),int(year))
     # cacumul = CA.calcul_ca_annee(int(year))
@@ -161,7 +162,7 @@ def chantpdf():
     Affichage en HTML pour permettre a l'utilisateur
     l'entree du Reste A Depenser."""
     tic = time.perf_counter()
-    
+
     date = request.form['date']
     year = date[0:4]
     month = date[5:7]
@@ -181,31 +182,32 @@ def chantpdf():
 
     try:
         budget = get_budget_file("var/Budget.xls")
-    except Exception as error:
+    except Exception:
         print("No Budget")
 
     worksite.calculate_worksite(int(month), int(year), budget)
-    worksite.round_2dec_df() # Verifier l'utilité
-    convert_single_dataframe_to_html_table(worksite.categories, int(month), year,
-                                           worksite_name)
+    worksite.round_2dec_df()  # Verifier l'utilité
+    convert_single_dataframe_to_html_table(worksite.categories,
+                                           int(month), year, worksite_name)
 
     session['worksite_name'] = worksite_name
     session['date'] = date
-    
+
     toc = time.perf_counter()
     print(f"CHA : {toc-tic:4f} seconds")
-    
-    if (os.path.exists("log.txt") and len(open("log.txt","r").readlines()) != 0):
+
+    if (os.path.exists("log.txt") and
+            len(open("log.txt", "r").readlines()) != 0):
         errors_to_html()
         return render_template("errors.html")
-    else :
+    else:
         return render_template("rad.html")
 
 
-@app.route('/rad', methods=['GET','POST'])
+@app.route('/rad', methods=['GET', 'POST'])
 @login_required
 def rad():
-    """Suite de chantpdf(). 
+    """Suite de chantpdf().
 
     Recupere les Reste A Depenser entree precedemment
     par l'utilisateur.
@@ -213,29 +215,29 @@ def rad():
     Sauvegarde le tout en PDF."""
     if request.method == "GET":
         return render_template("rad.html")
-    
+
     budget = None
-    worksite_name = session.get('worksite_name','not set') # Défini dans chantpdf()
+    worksite_name = session.get('worksite_name',
+                                'not set')  # Défini dans chantpdf()
     accounting_plan = AccountingPlan(
         get_accounting_file("var/PlanComptable.xls"))
 
     worksite = Worksite(accounting_plan, worksite_name)
     try:
         budget = get_budget_file("var/Budget.xls")
-    except:
+    except Exception:
         print("Pas de budget")
 
-    
-    date = session.get('date','not set')  # Défini dans chantpdf()
+    date = session.get('date', 'not set')  # Défini dans chantpdf()
     year = date[0:4]
     month = date[5:7]
-    filename = "bibl/"+date+"/"+ worksite_name+ ".pdf"
+    filename = "bibl/" + date + "/" + worksite_name + ".pdf"
 
     if not (os.path.exists('bibl/'+date)):
         os.makedirs("bibl/"+date)
 
     worksite.calculate_worksite(int(month), int(year), budget)
-    worksite.round_2dec_df() # Verifier l'utilité
+    worksite.round_2dec_df()  # Verifier l'utilité
 
     for value in request.form:
         category, subcategory = value.split('$')
@@ -262,7 +264,7 @@ def rad():
             pdf.new_page(nom, worksite_name)
             pdf.add_table(worksite.get_formatted_data(nom),
                           y=(A4[0]/2)-inch/2, tableHeight=inch*5)
-        
+
         pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
         pdf.save_page()
 
@@ -310,11 +312,13 @@ def structpdf():
         return send_file(filename, as_attachment=True)
     return "B"
 
-@app.route('/download_last_file', methods=['GET','POST'])
+
+@app.route('/download_last_file', methods=['GET', 'POST'])
 @login_required
 def download_last_file():
-    filename = session.get('filename','not set')
+    filename = session.get('filename', 'not set')
     return send_file(filename, as_attachment=True)
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
@@ -326,7 +330,7 @@ def upload_file():
         return redirect('/login')
 
     if request.method == 'POST':
-        
+
         #  check if the post request has the file part
         check_save_uploaded_file("PlanComptable")
         check_save_uploaded_file("Charges")
@@ -352,6 +356,7 @@ def clear():
         os.remove("var/Charges.xls")
     if (os.path.exists("var/Budget.xls")):
         os.remove("var/Budget.xls")
+
 
 def check_save_uploaded_file(tag):
 

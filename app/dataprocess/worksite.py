@@ -4,10 +4,11 @@ from .expenses import Expenses
 import datetime
 import pandas as pd
 import os
-import time
 import logging
 
+
 class Worksite(Categories):
+
     def __init__(self, accounting_plan, worksite_name, csv_path="var/csv/"):
         """Trie les expenses d'un chantier par postes."""
         super(Worksite, self).__init__(accounting_plan.get_worksite_plan())
@@ -77,7 +78,8 @@ class Worksite(Categories):
         """
         Ajoute le budget dans les cases de postes correspondantes.
         """
-        logging.basicConfig(filename="log.txt",format='%(message)s',filemode='a+')
+        logging.basicConfig(filename="log.txt",
+                            format='%(message)s', filemode='a+')
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
         not_used_rows = ["PRIX DE VENTE", "TOTAL", "ECART"]
@@ -95,9 +97,10 @@ class Worksite(Categories):
                                                           self.worksite_name])
             except Exception:
                 logger.error("Le couple " + row['POSTE']
-                          + " : " + row['SOUS-POSTE']
-                          + " spécifié dans le fichier budget\
-                          n'est pas un couple présent dans le plan comptable")
+                             + " : " + row['SOUS-POSTE']
+                             + " spécifié dans le fichier budget\
+                             n'est pas un couple\
+                             présent dans le plan comptable")
         logging.shutdown()
         return 1
 
