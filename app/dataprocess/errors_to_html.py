@@ -10,9 +10,9 @@ HTML_HEAD = "\
         "</head>\
         <body>\
             <h1> Erreurs </h1>\
-            <div id='buttons'>"
+            <div id='errors'>"
 
-HTML_FOOT = "\
+HTML_FOOT = "</div><div id='passer'>\
                 <form id='continuer' method=get action='/rad'>\
                     <input type='submit' value='Continuer quand même'></input>\
                 </form><br>"
