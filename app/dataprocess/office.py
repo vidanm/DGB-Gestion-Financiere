@@ -10,7 +10,7 @@ import os
 class Office(Categories):
     def __init__(self,
                  accounting_plan,
-                 year_expenses,
+                 month,
                  year,
                  csv_path="var/csv/"):
         """Trie les expenses de la structure par postes."""
@@ -18,21 +18,26 @@ class Office(Categories):
         self.csv_path = csv_path
         self.row_names = [1]
         self.year = year
+        self.month = month
+        print("ALLO\n")
         self.expenses = self.__get_year_data_of_office(accounting_plan)
+        print("OLLA\n\n\n")
+        print("ALLO\n")
+        self.year_expenses = self.__get_year_expenses(accounting_plan)
+        print("OLLA\n\n\n")
         if self.expenses is None:
             raise ValueError("Pas de dépenses pour la structure pour ce mois")
 
-        self.year_expenses = year_expenses
         for name in self.category_names:
             self.categories[name]['%CA MOIS'] = 0
             self.categories[name]['%CA Cumul'] = 0
 
     def __get_year_data_of_office(self, accounting_plan):
-        total = 0
+        total = None
         for filename in os.listdir(self.csv_path):
             if "STRUCT" in filename and str(
                     self.year) in filename and filename.endswith(".csv"):
-                if total == 0:
+                if total is None:
                     total = Expenses(
                         get_csv_expenses(self.csv_path + filename),
                         accounting_plan)
@@ -40,21 +45,40 @@ class Office(Categories):
                     total += Expenses(
                         get_csv_expenses(self.csv_path + filename),
                         accounting_plan)
-        if total == 0:
+        if total is None:
             raise ValueError("Aucune dépense\
-                    liée à la structure dans les charges")
+                    liée à la structure dans le fichier de charges")
         else:
             return total
 
-    def calculate_office(self, month):
-        month = int(month)
+    def __get_year_expenses(self,accounting_plan):
+        total = None
+        for filename in os.listdir(self.csv_path):
+            print(str(self.year) +" : "+filename)
+            if str(self.year) in filename and filename.endswith(".csv"):
+                if total is None:
+                    total = Expenses(
+                            get_csv_expenses(self.csv_path + filename),
+                            accounting_plan,with_category=False)
+                else:
+                    total += Expenses(
+                            get_csv_expenses(self.csv_path + filename),
+                            accounting_plan,with_category=False)
+
+        if total is None:
+            raise ValueError("Aucune charges importées")
+        else:
+            return total
+
+
+    def calculate_office(self):
+        month = int(self.month)
         for _, row in self.expenses.data.iterrows():
             date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
             if (row['POSTE'] in self.category_names):
-                if (date.year < self.year) or \
-                        (date.month <= month and date.year == self.year):
+                if (date.month <= month and date.year == self.year):
                     super(Office, self)._add_cumulative_expense(row)
-                    if (date.month == month and date.year == self.year):
+                    if (date.month == month):
                         super(Office, self)._add_month_expense(row)
         self._add_revenues(month, self.year)
         self.add_office_total()

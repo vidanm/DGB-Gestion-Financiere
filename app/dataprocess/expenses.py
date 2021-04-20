@@ -16,7 +16,7 @@ class Expenses():
     def __add__(self, other):
         a = self.data
         b = other.data
-        return Expenses(a.append(b, ignore_index=True), self.accounting_plan)
+        return Expenses(a.append(b, ignore_index=True), self.accounting_plan,with_category=False)
 
     def __str__(self):
         return self.data.to_string()

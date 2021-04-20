@@ -103,7 +103,6 @@ def index():
     if (os.path.exists("log.txt")):
         os.remove("log.txt")
     
-
     return render_template(
         "index.html"
     )
@@ -196,7 +195,7 @@ def chantpdf():
     toc = time.perf_counter()
     print(f"CHA : {toc-tic:4f} seconds")
     
-    if (os.path.exists("log.txt")):
+    if (os.path.exists("log.txt") and len(open("log.txt","r").readlines()) != 0):
         errors_to_html()
         return render_template("errors.html")
     else :
@@ -288,18 +287,15 @@ def structpdf():
         except Exception as e:
             return "Erreur de lecture du plan comptable : "+str(e)
 
-        year_expenses = Expenses(get_expenses_file("var/Charges.xls"),
-                                 accounting_plan)
-
         try:
-            office = Office(accounting_plan, year_expenses, 2020)
+            office = Office(accounting_plan, int(month), int(year))
         except Exception as e:
             return "Erreur de lecture des charges de la structure : "+str(e)
 
         if not (os.path.exists("bibl/" + date)):
             os.makedirs("bibl/" + date)
 
-        office.calculate_office(month)
+        office.calculate_office()
 
         pdf = PDF(filename)
         pdf.new_page("Structure", get_month_name(int(month)) + ' ' + year)
