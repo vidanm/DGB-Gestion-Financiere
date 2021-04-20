@@ -53,3 +53,8 @@ Vérifiez les points suivants :
 1. Vous avez bien importé les fichiers préalables ( Au moins le plan comptable et une extraction )
 2. La structure des fichiers fournis corresponds bien à celle décrite ci-dessus ( Pas de colonnes supplémentaires ou manquantes )
 
+Si malgré les vérifications le programme ne fonctionne toujours pas : Déconnectez vous et recommencez du départ.
+
+## À savoir
+Tout les fichiers importés sont supprimés a la déconnexion.
+Il faut donc bien les réimporter a chaque nouvelle connexion.
