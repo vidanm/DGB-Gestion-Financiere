@@ -38,7 +38,7 @@ Les fichiers excel doivent être importés sous le format .xls et non .xlsx .
 2.  Le nom ( *La section analytique* ) des charges qui concernent les dépenses de la structure doivent comporter 'STRUCT'.
 
 ### Budget
-Les noms des postes et des sous postes doivent **obligatoirement** correspondre aux noms donnés dans le plan
+Le nom des postes et des sous postes doivent **obligatoirement** correspondre aux noms donnés dans le plan
 comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'oeuvre"
 
 ### Masse salariale
