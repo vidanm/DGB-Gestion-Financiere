@@ -346,6 +346,12 @@ def clear():
             os.remove("var/csv/"+filename)
     if (os.path.exists("log.txt")):
         os.remove("log.txt")
+    if (os.path.exists("var/PlanComptable.xls")):
+        os.remove("var/PlanComptable.xls")
+    if (os.path.exists("var/Charges.xls")):
+        os.remove("var/Charges.xls")
+    if (os.path.exists("var/Budget.xls")):
+        os.remove("var/Budget.xls")
 
 def check_save_uploaded_file(tag):
 

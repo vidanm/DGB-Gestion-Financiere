@@ -17,6 +17,16 @@ p {
   color: white;
 }
 
+#logo {
+	position:absolute;
+	margin-top:50px;
+	margin-left:10px;
+}
+
+#deco {
+	color: rgba(233, 78, 27, 1);
+}
+
 h1 {
   font-family: "Raleway", sans-serif;
   margin-left: 20px;
