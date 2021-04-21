@@ -80,6 +80,28 @@ button {
   box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.20000000000000001);
 }
 
+#errors {
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 15px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+  width: 600px;
+  height: 50%;
+  overflow:scroll;
+  display: block;
+}
+
+#passer {
+ position: absolute;
+ top:80%;
+ left:0;
+ right:0;
+}
+
 #buttons {
   background-color: rgba(255, 255, 255, 0);
   border-radius: 15px;
