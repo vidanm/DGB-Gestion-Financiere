@@ -18,13 +18,13 @@ p {
 }
 
 #logo {
-	position:absolute;
-	margin-top:50px;
-	margin-left:10px;
+  position: absolute;
+  margin-top: 50px;
+  margin-left: 10px;
 }
 
 #deco {
-	color: rgba(233, 78, 27, 1);
+  color: rgba(233, 78, 27, 1);
 }
 
 h1 {
@@ -91,15 +91,15 @@ button {
   transform: translateX(-50%) translateY(-50%);
   width: 600px;
   height: 50%;
-  overflow:scroll;
+  overflow: scroll;
   display: block;
 }
 
 #passer {
- position: absolute;
- top:80%;
- left:0;
- right:0;
+  position: absolute;
+  top: 80%;
+  left: 0;
+  right: 0;
 }
 
 #buttons {
@@ -158,12 +158,12 @@ input[type="month"],
 input[type="submit"],
 input[type="username"],
 input[type="password"] {
-  border:0px;
+  border: 0;
   border-radius: 3px;
   border-color: rgba(0, 0, 0, 0.80000000000000004);
   padding: 7px;
   background-color: rgba(225, 225, 225, 0.9);
-  color:black;
+  color: black;
   text-align: center;
   font-family: "Raleway", sans-serif;
   font-weight: 500;
