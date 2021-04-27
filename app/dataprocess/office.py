@@ -19,12 +19,8 @@ class Office(Categories):
         self.row_names = [1]
         self.year = year
         self.month = month
-        print("ALLO\n")
         self.expenses = self.__get_year_data_of_office(accounting_plan)
-        print("OLLA\n\n\n")
-        print("ALLO\n")
         self.year_expenses = self.__get_year_expenses(accounting_plan)
-        print("OLLA\n\n\n")
         if self.expenses is None:
             raise ValueError("Pas de dépenses pour la structure pour ce mois")
 
@@ -54,7 +50,6 @@ class Office(Categories):
     def __get_year_expenses(self, accounting_plan):
         total = None
         for filename in os.listdir(self.csv_path):
-            print(str(self.year) + " : " + filename)
             if str(self.year) in filename and filename.endswith(".csv"):
                 if total is None:
                     total = Expenses(

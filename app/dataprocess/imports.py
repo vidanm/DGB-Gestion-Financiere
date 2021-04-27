@@ -180,6 +180,7 @@ def get_accounting_file(filepath):
     try:
         account_worksite = pd.read_excel(filepath, header=1, usecols="A:D")
         account_office = pd.read_excel(filepath, header=1, usecols="E:H")
+        account_divers = pd.read_excel(filepath,header=1,usecols="I:K")
     except Exception as error:
         raise error
 
@@ -187,34 +188,46 @@ def get_accounting_file(filepath):
                                                     ]].fillna(method='ffill')
     account_office[['POSTE.1']] = account_office[['POSTE.1'
                                                   ]].fillna(method='ffill')
+    account_divers[['POSTE.2']] = account_divers[['POSTE.2'
+                                                  ]].fillna(method='ffill')
 
     # Delete all NA "SOUS POSTE" rows
     account_worksite = account_worksite[pd.notnull(
         account_worksite['N° DE COMPTE'])]
     account_office = account_office[pd.notnull(
         account_office['N° DE COMPTE.1'])]
+    account_divers = account_divers[pd.notnull(
+        account_divers['N° DE COMPTE.2'])]
 
     # Remove '.1' from all columns index in account_office Dataframe
     account_office = account_office.rename(
         columns={'N° DE COMPTE.1': 'N° DE COMPTE', 'POSTE.1': 'POSTE',
                  'SOUS POSTE.1': 'SOUS POSTE', 'EX..1': 'EX.'})
 
+    account_divers = account_divers.rename(
+            columns={'N° DE COMPTE.2': 'N° DE COMPTE', 'POSTE.2': 'POSTE',
+                 'SOUS POSTE.2': 'SOUS POSTE'})
+
     # Accounting numbers conversion to string
     account_worksite['N° DE COMPTE'] = account_worksite['N° DE COMPTE'].apply(
         str)
     account_office['N° DE COMPTE'] = account_office['N° DE COMPTE'].apply(str)
+    account_divers['N° DE COMPTE'] = account_divers['N° DE COMPTE'].apply(str)
 
     # Fill remaining NA in dataframes with '/'
     values = {'SOUS POSTE': '/'}
     account_worksite = account_worksite.fillna(value=values)
+    account_divers = account_divers.fillna(value=values)
     account_office = account_office.fillna(value=values)
 
+    account_worksite = pd.merge(account_worksite,account_divers,how='outer')
+    account_worksite.append(account_divers)
     # account_worksite["POSTE"] = account_worksite["POSTE"].str.strip()
     # account_worksite["SOUS POSTE"] =\
     # account_worksite["SOUS POSTE"].str.strip()
     # account_office["POSTE"] = account_office["POSTE"].str.strip()
     # account_office["SOUS POSTE"] = account_office["SOUS POSTE"].str.strip()
-
+    print(account_worksite)
     return (account_worksite, account_office)
 
 

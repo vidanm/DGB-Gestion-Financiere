@@ -43,7 +43,6 @@ class Expenses():
         return 1
 
     def __compose_accounts_with_category_name(self):
-        tic = time.perf_counter()
         # for index, value in self.data["Général"].iteritems():
         #    category = self.accounting_plan.get_poste_by_code(
         #        str(value))['POSTE'].values[0]
@@ -61,9 +60,6 @@ class Expenses():
                 lambda x: (self.accounting_plan
                            .get_poste_by_code(str(x)))['SOUS POSTE']
                 .values[0])
-
-        toc = time.perf_counter()
-        print(f"__compose_accounts..__ : {toc - tic :0.4f} seconds")
 
 
 if __name__ == "__main__":

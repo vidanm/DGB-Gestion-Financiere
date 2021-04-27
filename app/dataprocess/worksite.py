@@ -1,6 +1,7 @@
 from .categories import Categories
 from .imports import get_csv_expenses
 from .expenses import Expenses
+from .revenues import Revenues
 import datetime
 import pandas as pd
 import os
@@ -15,6 +16,8 @@ class Worksite(Categories):
         self.csv_path = csv_path
         self.worksite_name = worksite_name
         self.expenses = self.__get_all_data_of_worksite(accounting_plan)
+        self.cumul_expenses = 0
+        self.year_expenses = 0
         if self.expenses is None:
             raise ValueError("Pas de dépenses pour ce chantier pour ce mois")
 
@@ -27,7 +30,6 @@ class Worksite(Categories):
     def __get_all_data_of_worksite(self, accounting_plan):
         total = None
         for filename in os.listdir(self.csv_path):
-            print(filename)
             if self.worksite_name in filename and filename.endswith(".csv"):
                 if total is None:
                     total = Expenses(
@@ -38,6 +40,27 @@ class Worksite(Categories):
                         get_csv_expenses(self.csv_path + filename),
                         accounting_plan)
         return total
+
+    def calculate_year_expenses(self,month,year):
+        df = self.expenses.data
+        df['Year'] = pd.DatetimeIndex(df['Date']).year
+        df['Month'] = pd.DatetimeIndex(df['Date']).month
+
+        exp = df.loc[ (year == df['Year']) & (month >= df['Month']) ]
+        exp = exp.loc[ (exp['Général']/100000 % 7 > 1) ]
+        return exp['Débit'].sum() - exp['Crédit'].sum()
+
+    def calculate_cumul_expenses(self,month,year):
+        df = self.expenses.data
+        df['Year'] = pd.DatetimeIndex(df['Date']).year
+        df['Month'] = pd.DatetimeIndex(df['Date']).month
+
+        exp = df.loc[ (year > df['Year']) | ((year == df['Year']) & (month >= df['Month'])) ]
+        exp = exp.loc[ (exp['Général']/100000 % 7 > 1) ]
+
+        #print("Debit : "+str(exp['Débit'].sum()))
+        #print("Crédit : "+str(exp['Crédit'].sum()))
+        return exp['Débit'].sum() - exp['Crédit'].sum()
 
     def calculate_worksite(self, month, year, budget):
         """ df = self.expenses.data
@@ -108,6 +131,13 @@ class Worksite(Categories):
         if rad.replace('.', '').isnumeric():
             self.categories[category].loc[subcategory, "RAD"] = float(rad)
 
+    def get_pfdc_total(self):
+        total = 0
+        for name in self.category_names:
+            if (name != 'PRODUITS'):
+                total += self.categories[name]['PFDC'][-1]
+        return total
+
     def compose_pfdc_budget(self):
         """
         Calcul le pfdc et l'ecart pfdc budget.
@@ -156,6 +186,26 @@ class Worksite(Categories):
         for name in self.category_names:
             self.add_category_total(name)
 
+    def calcul_divers_result(self,year):
+        # Format divers tab and return result tab
+        self.categories["DIVERS"] = self.categories["DIVERS"].drop(
+                columns=['Budget','RAD','PFDC','Ecart PFDC/Budget'])
+        
+        ca_cumul = Revenues(self.expenses.data).calculate_cumulative_revenues(year)
+        dep_cumul = self.categories["DIVERS"]["Dépenses cumulées"].sum()
+        marge = ca_cumul - dep_cumul
+        marge_percent = (marge / ca_cumul)*100
+        data = [[ca_cumul,dep_cumul,marge,marge_percent]]
+        row_index = ["Resultat"]
+        column_indexes = ['CA Cumulé','Dépenses cumulées','Marge brute','Marge brute %']
+
+        out = pd.DataFrame(data=data,index=row_index,columns=column_indexes)
+        out['CA Cumulé'] = out['CA Cumulé'].apply("{:0,.2f}€".format)
+        out['Dépenses cumulées'] = out['Dépenses cumulées'].apply("{:0,.2f}€".format)
+        out['Marge brute'] = out['Marge brute'].apply("{:0,.2f}€".format)
+        out['Marge brute %'] = out['Marge brute %'].apply("{:0,.2f}%".format)
+        return out
+
     def calcul_ges_prev(self):
         """
         Calcul la gestion previsionnelle une fois que \
@@ -181,10 +231,11 @@ class Worksite(Categories):
 
         formatted["Dépenses cumulées"] = formatted["Dépenses cumulées"].apply(
             "{:0,.2f}€".format)
-
-        formatted["Budget"] = formatted["Budget"].apply("{:0,.2f}€".format)
-        formatted["RAD"] = formatted["RAD"].apply("{:0,.2f}€".format)
-        formatted["PFDC"] = formatted["PFDC"].apply("{:0,.2f}€".format)
-        formatted["Ecart PFDC/Budget"] = formatted["Ecart PFDC/Budget"].apply(
-            "{:0,.2f}€".format)
+    
+        if (category_name != "DIVERS"):
+            formatted["Budget"] = formatted["Budget"].apply("{:0,.2f}€".format)
+            formatted["RAD"] = formatted["RAD"].apply("{:0,.2f}€".format)
+            formatted["PFDC"] = formatted["PFDC"].apply("{:0,.2f}€".format)
+            formatted["Ecart PFDC/Budget"] = formatted["Ecart PFDC/Budget"].apply(
+                "{:0,.2f}€".format)
         return formatted

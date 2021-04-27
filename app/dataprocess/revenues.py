@@ -45,6 +45,9 @@ class Revenues():
 
         return result
 
+    def calculate_cumulative_with_year_limit(self,year):
+        return self.calculate_cumulative_revenues(year) - self.calculate_year_revenues(year+1)
+
     def calculate_cumulative_revenues(self, year):
         # N'est pas borné au mois demandée
         result = self.data['Crédit'].sum()

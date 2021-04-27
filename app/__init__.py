@@ -15,6 +15,7 @@ from app.dataprocess.imports import \
         get_budget_file, split_salary_file_as_salary_csv
 from app.dataprocess.date import get_month_name
 from app.dataprocess.errors_to_html import errors_to_html
+from app.dataprocess.forward_planning import ForwardPlanning
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 from .models import db, login, UserModel
@@ -115,7 +116,6 @@ def syntpdf():
     """
     Generation de la synthese. Sauvegarde en pdf.
     """
-    tic = time.perf_counter()
     date = request.form['date']
     year = date[0:4]
     month = date[5:7]
@@ -149,8 +149,6 @@ def syntpdf():
     pdf.create_bar_syntgraph(600, 250, overview.data)
     pdf.save_page()
     pdf.save_pdf()
-    toc = time.perf_counter()
-    print(f"SYN : {toc-tic:4f} seconds")
     return send_file(filename, as_attachment=True)
 
 
@@ -161,7 +159,6 @@ def chantpdf():
 
     Affichage en HTML pour permettre a l'utilisateur
     l'entree du Reste A Depenser."""
-    tic = time.perf_counter()
 
     date = request.form['date']
     year = date[0:4]
@@ -193,8 +190,6 @@ def chantpdf():
     session['worksite_name'] = worksite_name
     session['date'] = date
 
-    toc = time.perf_counter()
-    print(f"CHA : {toc-tic:4f} seconds")
 
     if (os.path.exists("log.txt") and
             len(open("log.txt", "r").readlines()) != 0):
@@ -245,8 +240,13 @@ def rad():
 
     worksite.compose_pfdc_budget()
     worksite.add_worksite_total()
+    planning = ForwardPlanning(worksite)
+    planning_margin = planning.calculate_margins(int(month),int(year))
+    planning_pfdc = planning.calculate_pfdc_tab(budget)
     worksite.calcul_ges_prev()
+    divers_result_tab = worksite.calcul_divers_result(year)
     worksite.remove_category("PRODUITS")
+    #worksite.remove_category("PRORATA")
     with open("bibl/" + date + "/" + worksite_name + "_tt.txt", "w") as file:
         file.write(str(worksite.categories["GESPREV"].iloc[-1]["PFDC"]))
 
@@ -257,9 +257,21 @@ def rad():
 
         if (nom == "GESPREV"):
             pdf.new_page("Gestion prévisionnelle", worksite_name)
+            #pdf.add_table(worksite.get_formatted_data(nom),
+            #              y=A4[0] - inch * 3.2,x=inch*4,tableHeight=inch*3)
+            #pdf.create_bar_gesprevgraph(600, 250, worksite)
+            #pdf.add_table(planning_margin,y=A4[0]-inch*3.2,x=inch*9.6,tableHeight=inch*2,indexName="Temps")
+            #pdf.add_table(planning_pfdc,y=inch*2,x=A4[1]-inch*1.5,tableHeight=inch*2,indexName="Marges")
             pdf.add_table(worksite.get_formatted_data(nom),
-                          y=A4[0] - inch * 3.2, tableHeight=inch*3)
-            pdf.create_bar_gesprevgraph(600, 250, worksite)
+                          y=A4[0] - inch * 3.2,tableHeight=inch*3)
+            pdf.add_table(planning_margin,y=inch*2,x=inch*4.5,tableHeight=inch*2,indexName="Temps")
+            pdf.add_table(planning_pfdc,y=inch*2,x=A4[1]-inch*3.5,tableHeight=inch*2,indexName="Marges")
+
+        elif (nom == "DIVERS"):
+            pdf.new_page(nom, worksite_name)
+            pdf.add_table(worksite.get_formatted_data(nom),
+                          y=(A4[0]/2)-inch/2, tableHeight=inch*5)
+            pdf.add_table(divers_result_tab,y=inch,tableHeight=inch*2,indexName="")
         else:
             pdf.new_page(nom, worksite_name)
             pdf.add_table(worksite.get_formatted_data(nom),
@@ -276,7 +288,6 @@ def rad():
 @login_required
 def structpdf():
     """Generation du bilan de la structure."""
-    tic = time.perf_counter()
     if request.method == 'POST':
         date = request.form['date']
         year = date[0:4]
@@ -307,8 +318,6 @@ def structpdf():
         pdf.save_page()
         pdf.save_pdf()
 
-        toc = time.perf_counter()
-        print(f"STRU : {toc-tic:4f} seconds")
         return send_file(filename, as_attachment=True)
     return "B"
 

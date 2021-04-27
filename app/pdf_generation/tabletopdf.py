@@ -112,8 +112,12 @@ class PDF():
 
         for key in postes.categories.keys():
             if key != "GESPREV" and key != "FACTURATION CLIENT":
-                pfdc.append(postes.categories[key].iloc[-1]["PFDC"])
-                budget.append(postes.categories[key].iloc[-1]["Budget"])
+                if key == "DIVERS":
+                    pfdc.append(0)
+                    budget.append(0)
+                else:
+                    pfdc.append(postes.categories[key].iloc[-1]["PFDC"])
+                    budget.append(postes.categories[key].iloc[-1]["Budget"])
                 dep.append(
                         postes.categories[key].iloc[-1]["Dépenses cumulées"]
                         )
@@ -142,7 +146,7 @@ class PDF():
         d.chart.plotColor = None
         d.chart.titleFontColor = black
         # d.rotate(90)
-        d.drawOn(self.c, inch, inch*0.1)
+        d.drawOn(self.c, inch*0.3, inch*0.05)
 
     def eliminate_zeros_add_euros(self, numTable):
         for i in range(1, len(numTable)):
@@ -194,7 +198,7 @@ class PDF():
 
         t.drawOn(self.c, x, y)
 
-    def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1):
+    def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1,indexName="Poste"):
         """Ajoute un tableau a la feuille active.
 
         Le coin bas droite est représenté par (x,y)."""
@@ -202,7 +206,7 @@ class PDF():
         numTable = dataframe.to_numpy().tolist()
         numTable.insert(0, np.array(dataframe.columns.values).tolist())
         if (numTable[0][0] == "index"):
-            numTable[0][0] = "Poste"
+            numTable[0][0] = indexName
 
         if tableHeight != -1:
             rowHeights = (len(dataframe) + 1) *\
