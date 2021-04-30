@@ -48,15 +48,21 @@ class ForwardPlanning():
         return out
 
     def calculate_pfdc_tab(self,budget):
+
         column_indexes = ["PFDC"]
         row_indexes = ["Marge brute","Marge brute %"]
-
-        print("ALO: "+str(int(budget.loc[budget["POSTE"] == "PRIX DE VENTE",self.worksite.worksite_name])))
-        sell_price = int(budget.loc[budget["POSTE"] == "PRIX DE VENTE",
-            self.worksite.worksite_name]) if budget is not None else 0
         
-        avenants = int(budget.loc[budget["POSTE"] == "AVENANTS",
-            self.worksite.worksite_name]) if budget is not None else 0
+        try:
+            sell_price = int(budget.loc[budget["POSTE"] == "PRIX DE VENTE",
+                self.worksite.worksite_name]) if budget is not None else 0
+        except Exception:
+            sell_price = 0
+
+        try:
+            avenants = int(budget.loc[budget["POSTE"] == "AVENANTS",
+                self.worksite.worksite_name]) if budget is not None else 0
+        except Exception:
+            avenants = 0
 
         total_sell = (sell_price + avenants) - self.worksite.get_pfdc_total() 
         percent = total_sell/(sell_price+avenants) if (sell_price+avenants) != 0 else 0

@@ -1,0 +1,10 @@
+Compte 608301 pas dans le plan comptable
+
+Le couple AVENANTS : AVENANTS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+127.0.0.1 - - [30/Apr/2021 11:52:23] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
+127.0.0.1 - - [30/Apr/2021 11:52:24] "[37mGET /rad HTTP/1.1[0m" 200 -
+Compte 608301 pas dans le plan comptable
+
+Le couple AVENANTS : AVENANTS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+127.0.0.1 - - [30/Apr/2021 11:52:31] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/worksite.py', reloading

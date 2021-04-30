@@ -190,7 +190,6 @@ def chantpdf():
     session['worksite_name'] = worksite_name
     session['date'] = date
 
-
     if (os.path.exists("log.txt") and
             len(open("log.txt", "r").readlines()) != 0):
         errors_to_html()
@@ -241,12 +240,12 @@ def rad():
     worksite.compose_pfdc_budget()
     worksite.add_worksite_total()
     planning = ForwardPlanning(worksite)
-    planning_margin = planning.calculate_margins(int(month),int(year))
+    planning_margin = planning.calculate_margins(int(month), int(year))
     planning_pfdc = planning.calculate_pfdc_tab(budget)
     worksite.calcul_ges_prev()
     divers_result_tab = worksite.calcul_divers_result(year)
     worksite.remove_category("PRODUITS")
-    #worksite.remove_category("PRORATA")
+    # worksite.remove_category("PRORATA")
     with open("bibl/" + date + "/" + worksite_name + "_tt.txt", "w") as file:
         file.write(str(worksite.categories["GESPREV"].iloc[-1]["PFDC"]))
 
@@ -257,15 +256,15 @@ def rad():
 
         if (nom == "GESPREV"):
             pdf.new_page("Gestion prévisionnelle", worksite_name)
-            #pdf.add_table(worksite.get_formatted_data(nom),
+            # pdf.add_table(worksite.get_formatted_data(nom),
             #              y=A4[0] - inch * 3.2,x=inch*4,tableHeight=inch*3)
-            #pdf.create_bar_gesprevgraph(600, 250, worksite)
-            #pdf.add_table(planning_margin,y=A4[0]-inch*3.2,x=inch*9.6,tableHeight=inch*2,indexName="Temps")
-            #pdf.add_table(planning_pfdc,y=inch*2,x=A4[1]-inch*1.5,tableHeight=inch*2,indexName="Marges")
+            # pdf.create_bar_gesprevgraph(600, 250, worksite)
+            # pdf.add_table(planning_margin,y=A4[0]-inch*3.2,x=inch*9.6,tableHeight=inch*2,indexName="Temps")
+            # pdf.add_table(planning_pfdc,y=inch*2,x=A4[1]-inch*1.5,tableHeight=inch*2,indexName="Marges")
             pdf.add_table(worksite.get_formatted_data(nom),
-                          y=A4[0] - inch * 3.2,tableHeight=inch*3)
-            pdf.add_table(planning_margin,y=inch*2,x=inch*4.5,tableHeight=inch*2,indexName="Temps")
-            pdf.add_table(planning_pfdc,y=inch*2,x=A4[1]-inch*3.5,tableHeight=inch*2,indexName="Marges")
+                          y=A4[0] - inch * 3.2, tableHeight=inch*3)
+            pdf.add_table(planning_margin, y=inch*2, x=inch*4.5, tableHeight=inch*2, indexName="Temps")
+            pdf.add_table(planning_pfdc, y=inch*2, x=A4[1]-inch*3.5, tableHeight=inch*2, indexName="Marges")
 
         elif (nom == "DIVERS"):
             pdf.new_page(nom, worksite_name)
