@@ -9,6 +9,7 @@ class Categories():
                 accounting_plan['POSTE'] == name]
             self.categories[name] = self.categories[name].drop(
                 columns=['POSTE', 'N° DE COMPTE', 'EX.'])
+            # drop EX. si présent
             self.categories[name]['Dépenses du mois'] = 0
             self.categories[name]["Dépenses cumulées"] = 0
             self.categories[name] = self.categories[name].set_index(

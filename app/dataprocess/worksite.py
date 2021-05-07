@@ -136,7 +136,7 @@ class Worksite(Categories):
     def get_pfdc_total(self):
         total = 0
         for name in self.category_names:
-            if (name != 'PRODUITS'):
+            if (name != 'PRODUITS' and name != 'DIVERS'):
                 total += self.categories[name]['PFDC'][-1]
         return total
 
@@ -214,7 +214,7 @@ class Worksite(Categories):
                 ttes les autres données ont été calculées.
         """
         for name in self.category_names:
-            if name != "PRODUITS":
+            if name != "PRODUITS" and name != "DIVERS":
                 if self.category_names.index(name) == 0:
                     gesprev = pd.DataFrame(
                         columns=self.categories[name].columns.copy())

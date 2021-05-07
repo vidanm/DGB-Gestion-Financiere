@@ -170,12 +170,12 @@ def chantpdf():
         accounting_plan = AccountingPlan(
             get_accounting_file("var/PlanComptable.xls"))
     except Exception as error:
-        return "Erreur de lecture de fichiers :" + str(error)
+        return "Erreur de lecture de plan comptable :" + str(error)
 
-    try:
-        worksite = Worksite(accounting_plan, worksite_name)
-    except Exception as error:
-        return "Erreur de lecture de fichiers : " + str(error)
+    #try:
+    worksite = Worksite(accounting_plan, worksite_name)
+    #except Exception as error:
+    #    return "Erreur de lecture de fichier chantier : " + str(error)
 
     try:
         budget = get_budget_file("var/Budget.xls")
@@ -299,10 +299,10 @@ def structpdf():
         except Exception as e:
             return "Erreur de lecture du plan comptable : "+str(e)
 
-        try:
-            office = Office(accounting_plan, int(month), int(year))
-        except Exception as e:
-            return "Erreur de lecture des charges de la structure : "+str(e)
+        #try:
+        office = Office(accounting_plan, int(month), int(year))
+        #except Exception as e:
+        #    return "Erreur de lecture des charges de la structure : "+str(e)
 
         if not (os.path.exists("bibl/" + date)):
             os.makedirs("bibl/" + date)

@@ -24,54 +24,48 @@ def get_expenses_file(filepath):
 
     expenses = expenses.drop(columns=column_to_drop, errors='ignore')
     expenses = expenses.fillna(0)
-    # expenses = expenses['Section analytique'].str.strip()
+
+    
+    """TODO Ajouter une erreur aux logs quand des lignes sont supprimées"""
+    #tmp = expenses.loc[ expenses['Section analytique'] != 0
+    #                    | expenses['Date'] != 0
+    #                    | expenses['Journal'] != 0
+    #                    | expenses['Général'] != 0]
+        
+    
+    # On élimine toutes les lignes ou les données sont manquantes
+    expenses = expenses.loc[ expenses['Section analytique'] != 0]
+    expenses = expenses.loc[ expenses['Date'] != 0 ]
+    expenses = expenses.loc[ expenses['Journal'] != 0]
+    expenses = expenses.loc[ expenses['Général'] != 0]
+    expenses['Date'] = pd.to_datetime(expenses['Date'], format="%Y-%m-%d")
+
+    #On elimine tout les espaces avant et après les string
+    #expenses = expenses.map
+
     expenses['POSTE'] = ''
     expenses['SOUS POSTE'] = ''
     return expenses
 
 
 def split_expenses_file_as_worksite_csv(filepath, outputpath):
-    # worksites_names = []
 
     expenses = get_expenses_file(filepath)
     worksite_names = expenses["Section analytique"].unique()
-
-    # for _, row in expenses.iternotrows():
-    #    value = row['Section analytique']
-    #
-    #    if not is_in_dic(str(value), worksites_names):
-    #        worksites_names.append(str(value))
 
     for name in worksite_names:
         sep = expenses.loc[expenses['Section analytique'] == name]
         sep = sep.sort_values(['Date'], ascending=True)
         sep['Year'] = pd.DatetimeIndex(sep['Date']).year
 
-        # out = pd.DataFrame(columns=sep.columns)
-
         years = sep['Year'].unique()
 
         for year in years:
             sep.loc[sep['Year'] == year]\
-             .drop(columns='Year')\
-             .to_csv(outputpath + str(year) + "_" + name + ".csv")
+            .drop(columns='Year')\
+            .to_csv(outputpath + str(year) + "_" + name + ".csv")
 
-        # for index, row in sep.iternotrows():
-        #    if index == 0:
-        #        current_year = row['Date'].year
-        #        out = out.append(row)
-        #    else:
-        #        if current_year == row['Date'].year:
-        #            out = out.append(row, ignore_index=True)
-        #        else:
-        #            out.to_csv(outputpath + str(current_year) + "_" + name +
-        #                       ".csv")
-        #            current_year = row['Date'].year
-        #            out = pd.DataFrame(columns=sep.columns)
-        #            out = out.append(row)
-        # out.to_csv(outputpath + str(current_year) + "_" + name + ".csv")
-
-
+   
 def get_csv_expenses(filepath):
     return pd.read_csv(filepath)
 
@@ -117,20 +111,7 @@ def split_salary_file_as_salary_csv(filepath, outputpath):
                         str(outputpath) + sheet[-4::] + "SALAIRES" + "_" +
                         str(name) + ".csv")
 
-            # current_code = ""
-            # for _, row in salary.iternotrows():
-            #    if row["Section analytique"] != current_code:
-            #        if (str(current_code) != ""
-            #                and str(current_code) != "nan"):
-            #            csv.to_csv(
-            #                str(outputpath) + sheet[-4::] + "SALAIRES" + "_" +
-            #                str(current_code) + ".csv")
-            #        current_code = row["Section analytique"]
-            #        csv = pd.DataFrame([row])
-            #    else:
-            #        csv = csv.append(row)
-
-
+    
 def get_salary_file(filepath, columns, sheet):
     try:
         salary = pd.read_excel(filepath,
@@ -146,20 +127,31 @@ def get_salary_file(filepath, columns, sheet):
                     salary = salary.rename(
                         columns={col: (str(col).split('.')[0])})
 
+        if date == "":
+            #Pas de date => Fin de la lecture
+            return
+
         salary = salary.rename(
             columns={
                 date: "Débit",
                 "Code compt": "Général",
                 "Code chantier": "Section analytique"
             })
+        
+        #On supprime les lignes où les données sont manquantes
+        salary = salary.fillna(0)
+        salary = salary.loc[ salary['Général'] != 0 ]
+        salary = salary.loc[ salary['Section analytique'] != 0]
+        print(str(date) + " :  " + str(salary))
+
         salary.insert(0, column="Date", value=date)
         salary.insert(0, column="Journal", value="ACH")
         salary.insert(0, column="Libellé", value="")
         salary.insert(0, column="Crédit", value=0)
         salary["Débit"] = salary["Débit"].fillna(0)
-        # salary["Section analytique"] = \
-        # salary["Section analytique"].str.strip()
+        
         return salary
+
     except Exception as error:
         raise error
 
@@ -222,12 +214,6 @@ def get_accounting_file(filepath):
 
     account_worksite = pd.merge(account_worksite,account_divers,how='outer')
     account_worksite.append(account_divers)
-    # account_worksite["POSTE"] = account_worksite["POSTE"].str.strip()
-    # account_worksite["SOUS POSTE"] =\
-    # account_worksite["SOUS POSTE"].str.strip()
-    # account_office["POSTE"] = account_office["POSTE"].str.strip()
-    # account_office["SOUS POSTE"] = account_office["SOUS POSTE"].str.strip()
-    print(account_worksite)
     return (account_worksite, account_office)
 
 
@@ -249,10 +235,7 @@ def get_budget_file(filepath):
 
     finances['POSTE'] = finances['POSTE'].fillna(method='ffill')
     finances = finances[finances['SOUS-POSTE'].notna()]
-    # finances = finances.set_index('SOUS-POSTE')
     finances = finances.fillna(0)
-    # finances['POSTE'] = finances["POSTE"].str.strip()
-    # finances['SOUS-POSTE'] = finances["SOUS-POSTE"].str.strip()
 
     return finances
 
