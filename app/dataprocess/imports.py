@@ -40,7 +40,7 @@ def get_expenses_file(filepath):
     expenses = expenses.loc[ expenses['Général'] != 0]
     expenses['Général'] = expenses['Général'].astype(int)
     expenses['Date'] = pd.to_datetime(expenses['Date'], format="%Y-%m-%d")
-
+    expenses = expenses.loc[ expenses['Journal'] != 'ANO' ]
     #On elimine tout les espaces avant et après les string
     #expenses = expenses.map
 
@@ -209,6 +209,7 @@ def get_accounting_file(filepath):
     # Fill remaining NA in dataframes with '/'
     values = {'SOUS POSTE': '/'}
     account_worksite = account_worksite.fillna(value=values)
+    print(account_worksite.loc[account_worksite['POSTE'] == 'INTERVENANTS'])
     account_divers = account_divers.fillna(value=values)
     account_office = account_office.fillna(value=values)
 

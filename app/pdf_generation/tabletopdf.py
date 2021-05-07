@@ -220,9 +220,9 @@ class PDF():
         numTable.insert(0, np.array(dataframe.columns.values).tolist())
         
         #if title is not None:
-        #    numTable.insert(0,["" * len(numTable[0]])
+        #    numTable.insert(0,["" * len(numTable[0])])
         #    numTable[0][0] = title
-        #    self.tablestyle.append(
+            #self.tablestyle.append(
 
         if (numTable[0][0] == "index"):
             numTable[0][0] = indexName
@@ -258,7 +258,7 @@ class PDF():
 
     def add_sidetitle(self, text):
         self.c.setFillColor("WHITE")
-        self.c.setFont("Helvetica", 30)  # Draw Title
+        self.c.setFont("Helvetica-Bold", 20)  # Draw Title
         self.c.drawString(inch*1.1, A4[0]-inch*1.14, text)
         self.c.setFillColor("BLACK")
 

@@ -1,8 +1,2 @@
-Compte 624130 pas dans le plan comptable
-
-127.0.0.1 - - [07/May/2021 15:39:03] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
- * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
-Compte 624130 pas dans le plan comptable
-
-127.0.0.1 - - [07/May/2021 15:39:34] "[37mPOST /rad HTTP/1.1[0m" 200 -
- * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/imports.py', reloading
+127.0.0.1 - - [07/May/2021 17:07:15] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
+127.0.0.1 - - [07/May/2021 17:07:22] "[37mPOST /rad HTTP/1.1[0m" 200 -
