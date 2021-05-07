@@ -29,7 +29,8 @@ Les fichiers excel doivent être importés sous le format .xls et non .xlsx .
 1.  Les intitulés de postes doivent se trouver sur la 1ère colonne pour le section chantier et la 5ème colonne pour la section structure.
 2.  Les noms de colonnes doivent se trouver sur la 2e ligne.
 3.  **Une seule ligne par sous poste !** Pour avoir plusieurs compte pour un sous poste, respecter le format suivant :
-
+4. Il faut, pour l'instant, supprimer le tableau ci joint du plan comptable :
+![Tableau a supprimer](https://i.ibb.co/XSj13ky/screenshot.png)
 `NOM DU SOUS POSTE | NUMERO 1 / NUMERO 2 / NUMERO 3`
 
 ### Extractions chantiers
