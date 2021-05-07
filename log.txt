@@ -1,4 +1,4 @@
-127.0.0.1 - - [07/May/2021 12:02:30] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
 Compte 624130 pas dans le plan comptable
 
-127.0.0.1 - - [07/May/2021 12:02:36] "[37mPOST /rad HTTP/1.1[0m" 200 -
+127.0.0.1 - - [07/May/2021 13:33:26] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
+127.0.0.1 - - [07/May/2021 13:33:29] "[37mGET /rad HTTP/1.1[0m" 200 -

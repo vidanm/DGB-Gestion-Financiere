@@ -116,7 +116,6 @@ def get_salary_file(filepath, columns, sheet):
     try:
         salary = pd.read_excel(filepath,
                                usecols=columns,
-                               header=2,
                                sheet_name=sheet)
         date = ""
         for col in salary.columns:
