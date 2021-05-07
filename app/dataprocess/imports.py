@@ -23,7 +23,6 @@ def get_expenses_file(filepath):
     ]
 
     expenses = expenses.drop(columns=column_to_drop, errors='ignore')
-
     expenses = expenses.fillna(0)
     # expenses = expenses['Section analytique'].str.strip()
     expenses['POSTE'] = ''
@@ -105,6 +104,7 @@ def split_salary_file_as_salary_csv(filepath, outputpath):
             salary = salary.append(get_salary_file(filepath, "AI:AK", sheet),
                                    ignore_index=True)
 
+            salary["Section analytique"] = salary["Section analytique"].astype(str)
             salary = salary.sort_values("Section analytique")
             salary = salary.reset_index(drop=True)
 

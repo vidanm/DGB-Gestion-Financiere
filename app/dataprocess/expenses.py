@@ -43,23 +43,24 @@ class Expenses():
         return 1
 
     def __compose_accounts_with_category_name(self):
-        # for index, value in self.data["Général"].iteritems():
-        #    category = self.accounting_plan.get_poste_by_code(
-        #        str(value))['POSTE'].values[0]
-        #    subcategory = self.accounting_plan.get_poste_by_code(
-        #        str(value))['SOUS POSTE'].values[0]
-        #    self.data.loc[index, 'POSTE'] = category
-        #    self.data.loc[index, 'SOUS POSTE'] = subcategory """
+         for index, value in self.data["Général"].iteritems():
+            if len(self.accounting_plan.get_poste_by_code(str(value)).values) > 0:
+                category = self.accounting_plan.get_poste_by_code(
+                    str(value))['POSTE'].values[0]
+                subcategory = self.accounting_plan.get_poste_by_code(
+                    str(value))['SOUS POSTE'].values[0]
+                self.data.loc[index, 'POSTE'] = category
+                self.data.loc[index, 'SOUS POSTE'] = subcategory
 
-        self.data['POSTE'] = self.data['Général'].apply(
-                lambda x: (self.accounting_plan
-                           .get_poste_by_code(str(x)))['POSTE']
-                .values[0])
+        #self.data['POSTE'] = self.data['Général'].apply(
+        #        lambda x: (self.accounting_plan
+        #                   .get_poste_by_code(str(x)))['POSTE']
+        #        .values[0])
 
-        self.data['SOUS POSTE'] = self.data['Général'].apply(
-                lambda x: (self.accounting_plan
-                           .get_poste_by_code(str(x)))['SOUS POSTE']
-                .values[0])
+        #self.data['SOUS POSTE'] = self.data['Général'].apply(
+        #        lambda x: (self.accounting_plan
+        #                   .get_poste_by_code(str(x)))['SOUS POSTE']
+        #        .values[0])
 
 
 if __name__ == "__main__":

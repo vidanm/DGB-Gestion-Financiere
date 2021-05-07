@@ -31,14 +31,16 @@ class Worksite(Categories):
         total = None
         for filename in os.listdir(self.csv_path):
             if self.worksite_name in filename and filename.endswith(".csv"):
-                if total is None:
-                    total = Expenses(
-                        get_csv_expenses(self.csv_path + filename),
-                        accounting_plan)
-                else:
-                    total += Expenses(
-                        get_csv_expenses(self.csv_path + filename),
-                        accounting_plan)
+                if (os.stat(self.csv_path + filename).st_size != 0):
+                    print(filename)
+                    if total is None:
+                        total = Expenses(
+                            get_csv_expenses(self.csv_path + filename),
+                            accounting_plan)
+                    else:
+                        total += Expenses(
+                            get_csv_expenses(self.csv_path + filename),
+                            accounting_plan)
         return total
 
     def calculate_year_expenses(self,month,year):
