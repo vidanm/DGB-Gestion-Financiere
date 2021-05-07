@@ -263,8 +263,12 @@ def rad():
             # pdf.add_table(planning_pfdc,y=inch*2,x=A4[1]-inch*1.5,tableHeight=inch*2,indexName="Marges")
             pdf.add_table(worksite.get_formatted_data(nom),
                           y=A4[0] - inch * 3.2, tableHeight=inch*3)
-            pdf.add_table(planning_margin, y=inch*2, x=inch*4.5, tableHeight=inch*2, indexName="Temps")
-            pdf.add_table(planning_pfdc, y=inch*2, x=A4[1]-inch*3.5, tableHeight=inch*2, indexName="Marges")
+            pdf.add_table(planning_margin, y=inch*2, x=inch*4.5, tableHeight=inch*2, 
+                    indexName="Période", title="Marge à l'avancement")
+            pdf.add_table(planning_pfdc, y=inch*2, x=A4[1]-inch*3.5, tableHeight=inch*2, indexName="Marges", title="Marge à fin de chantier")
+            pdf.add_legend("PFDC = Prévision fin de chantier",x=inch*0.3,y=A4[0]-2*inch)
+            pdf.add_legend("RAD = Restes à dépenser",x=inch*0.3,y=A4[0]-2.2*inch)
+            pdf.add_legend("CA = Chiffre d'affaires",x=inch*0.3,y=A4[0]-2.4*inch)
 
         elif (nom == "DIVERS"):
             pdf.new_page(nom, worksite_name)

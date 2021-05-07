@@ -38,6 +38,7 @@ def get_expenses_file(filepath):
     expenses = expenses.loc[ expenses['Date'] != 0 ]
     expenses = expenses.loc[ expenses['Journal'] != 0]
     expenses = expenses.loc[ expenses['Général'] != 0]
+    expenses['Général'] = expenses['Général'].astype(int)
     expenses['Date'] = pd.to_datetime(expenses['Date'], format="%Y-%m-%d")
 
     #On elimine tout les espaces avant et après les string

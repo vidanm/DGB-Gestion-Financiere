@@ -24,6 +24,7 @@ class PDF():
         self.__background()
         self.tablestyle = TableStyle([
             ('FACE', (0, 0), (-1, -1), "Helvetica-Bold"),
+            ('FACE', (1, 1), (-1,-2), "Helvetica"),
             ('GRID', (0, 0), (-1, -1), 0.1, black),
             ('FONTSIZE', (0, 0), (-1, -1), 8),
             ('ALIGN', (0, 0), (-1, -1), "CENTER"),
@@ -154,9 +155,8 @@ class PDF():
                 if (numTable[i][j] == 0):
                     numTable[i][j] = '--'
                 else:
-                    asStr = str(numTable[i][j])
+                    asStr = str(int(numTable[i][j]))
                     numTable[i][j] = asStr + " €"
-
         return numTable
 
     def convert_struct_string(self, numTable):
@@ -164,15 +164,15 @@ class PDF():
             for j in range(0, len(numTable[i])):
                 if (isinstance(numTable[i][j], float)):
                     if (j > 2):
-                        numTable[i][j] = "{:.2f}"\
-                                .format(numTable[i][j]) +\
-                                " %" if numTable[i][j] != 0 \
-                                else "/"
+                        numTable[i][j] = int(numTable[i][j])#"{:.0f}"\
+                                # .format(numTable[i][j]) +\
+                                # " %" if numTable[i][j] != 0 \
+                                # else "/"
                     else:
-                        numTable[i][j] = "{:.2f}"\
-                                .format(numTable[i][j]) +\
-                                " €" if numTable[i][j] != 0 \
-                                else "/"
+                        numTable[i][j] = int(numTable[i][j]) #"{:.0f}"\
+                                #.format(numTable[i][j]) +\
+                                #" €" if numTable[i][j] != 0 \
+                                #else "/"
         return numTable
 
     def add_struct_table(self, dataframe,
@@ -198,13 +198,32 @@ class PDF():
 
         t.drawOn(self.c, x, y)
 
-    def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1,indexName="Poste"):
+    def add_negative_positive_coloring(self,numTable):
+        colored = []
+        for i in numTable:
+            for j in numTable[i]:
+                pass
+
+    def add_legend(self,text,x=-1,y=-1,size=9):
+
+        self.c.setFont("Helvetica", size)  # Draw Title
+        self.c.setFillColor("BLACK")
+        self.c.drawString(x, y, text)
+
+
+    def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1,indexName="Poste",title=None):
         """Ajoute un tableau a la feuille active.
 
         Le coin bas droite est représenté par (x,y)."""
         dataframe = dataframe.reset_index()
         numTable = dataframe.to_numpy().tolist()
         numTable.insert(0, np.array(dataframe.columns.values).tolist())
+        
+        #if title is not None:
+        #    numTable.insert(0,["" * len(numTable[0]])
+        #    numTable[0][0] = title
+        #    self.tablestyle.append(
+
         if (numTable[0][0] == "index"):
             numTable[0][0] = indexName
 
@@ -239,6 +258,7 @@ class PDF():
 
     def add_sidetitle(self, text):
         self.c.setFillColor("WHITE")
+        self.c.setFont("Helvetica", 30)  # Draw Title
         self.c.drawString(inch*1.1, A4[0]-inch*1.14, text)
         self.c.setFillColor("BLACK")
 
