@@ -16,6 +16,7 @@ class ForwardPlanning():
                 self.forward_planning = self.forward_planning.append(line,ignore_index=False)
 
     def calculate_margins(self,month,year):
+        #Concerne le tableau marge à l'avancement
         revenues = Revenues(self.worksite.expenses.data) # Verifier si les lignes de ventes sont bien dedans
         
         year_revenues = revenues.calculate_year_revenues(year)
@@ -48,7 +49,7 @@ class ForwardPlanning():
         return out
 
     def calculate_pfdc_tab(self,budget):
-
+        # Concerne le tableau Marge à fin de chantier
         column_indexes = ["PFDC"]
         row_indexes = ["Marge brute","Marge brute %"]
         
