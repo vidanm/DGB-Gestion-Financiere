@@ -1,2 +1,153 @@
-127.0.0.1 - - [07/May/2021 17:07:15] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
-127.0.0.1 - - [07/May/2021 17:07:22] "[37mPOST /rad HTTP/1.1[0m" 200 -
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:48:04] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:48:06] "[37mGET /rad HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:48:06] "[36mGET /static/rad.css HTTP/1.1[0m" 304 -
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:48:16] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/__init__.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:48:53] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 12:48:54] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:48:54] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:48:54] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:48:54] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:48:54] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:48:54] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:49:17] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 12:49:17] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:49:17] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:49:17] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:49:17] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:49:17] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:49:18] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:50:11] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 12:50:12] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:50:12] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:50:12] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:50:12] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:50:12] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:50:12] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:50:41] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 12:50:41] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:50:41] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:50:41] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:50:42] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:50:42] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:50:42] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:51:07] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:52:20] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:53:05] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:54:24] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:55:24] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:56:56] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 12:56:56] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:56:56] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:56:56] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:56:56] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:56:57] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:56:57] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 12:57:14] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 12:57:14] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:57:14] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:57:14] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:57:14] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:57:14] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 12:57:14] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 13:00:19] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 13:00:19] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:00:19] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:00:19] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:00:19] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:00:19] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:00:19] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 13:02:03] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 13:02:03] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:02:03] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:02:03] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:02:03] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:02:03] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:02:03] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 13:02:31] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 13:02:31] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:02:31] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:02:31] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:02:32] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:02:32] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:02:32] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 13:03:23] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 13:03:23] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:03:23] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:03:23] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:03:23] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:03:23] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:03:23] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 13:05:37] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 13:05:37] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:05:37] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:05:37] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:05:38] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:05:38] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:05:38] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 13:05:58] "[35m[1mPOST /rad HTTP/1.1[0m" 500 -
+127.0.0.1 - - [18/May/2021 13:05:58] "[37mGET /rad?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:05:58] "[37mGET /rad?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:05:58] "[37mGET /rad?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:05:58] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:05:58] "[37mGET /rad?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [18/May/2021 13:05:59] "[37mGET /rad?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading
+Compte 608301 pas dans le plan comptable
+
+127.0.0.1 - - [18/May/2021 13:07:11] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/tabletopdf.py', reloading

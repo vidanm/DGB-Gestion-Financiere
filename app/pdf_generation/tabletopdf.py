@@ -22,7 +22,7 @@ class PDF():
         self.c = canvas.Canvas(nom, pagesize=(A4[1], A4[0]))
         self.logo = os.path.join('images/DGB.jpeg')
         self.__background()
-        self.tablestyle = TableStyle([
+        self.tablestyle = [
             ('FACE', (0, 0), (-1, -1), "Helvetica-Bold"),
             ('FACE', (1, 1), (-1,-2), "Helvetica"),
             ('GRID', (0, 0), (-1, -1), 0.1, black),
@@ -33,7 +33,7 @@ class PDF():
             ('TEXTCOLOR', (0, 0), (-1, 0), "BLACK"),
             ('BACKGROUND', (1, 1), (-1, -1), "WHITE"),
             ('BACKGROUND', (0, -1), (-1, -1), yellow)
-            ])
+            ]
 
     def __background(self):
         self.c.setFillColorRGB(1, 1, 1)
@@ -200,9 +200,12 @@ class PDF():
 
     def add_negative_positive_coloring(self,numTable):
         colored = []
-        for i in numTable:
-            for j in numTable[i]:
-                pass
+        for i in range(len(numTable)):
+            for j in range(len(numTable[i])):
+                if numTable[i][j][0].isnumeric():
+                    self.tablestyle.append(('TEXTCOLOR', (j, i), (j+1, i+1), "GREEN"))
+                elif numTable[i][j][0] == '-':
+                    self.tablestyle.append(('TEXTCOLOR', (j, i), (j+1, i+1), "RED"))
 
     def add_legend(self,text,x=-1,y=-1,size=9):
 
@@ -210,23 +213,39 @@ class PDF():
         self.c.setFillColor("BLACK")
         self.c.drawString(x, y, text)
 
+    
+    def add_letters_to_column_names(self,columns):
+        """ tabtype could be POS (Poste) or MAA (Marge a l'avancement) or FDC (Marge fdc) """
+        for i in range(len(columns)):
+            if columns[i] == 'Dépenses du mois':
+                columns[i] += " (A)"
+            elif columns[i] == 'Dépenses cumulées':
+                columns[i] += " (B)"
+            elif columns[i] == 'Budget':
+                columns[i] += " (C)"
+            elif columns[i] == 'RAD':
+                columns[i] += " (D)"
+            elif columns[i] == 'PFDC':
+                columns[i] += " (E = B + D)"
+            elif columns[i] == 'Ecart PFDC/Budget':
+                columns[i] += " (F = E - C)"
+            elif columns[i] == 'CA':
+                columns[i] += ' (G)'
+            elif columns[i] == 'Marge brute':
+                columns[i] += ' (H = G - B)'
 
-    def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1,indexName="Poste",title=None):
+
+    def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1,indexName="Poste",\
+            title=None,noIndexLine=False,coloring=False):
         """Ajoute un tableau a la feuille active.
 
         Le coin bas droite est représenté par (x,y)."""
         dataframe = dataframe.reset_index()
         numTable = dataframe.to_numpy().tolist()
-        numTable.insert(0, np.array(dataframe.columns.values).tolist())
+        indexes =  dataframe.columns.values.tolist()
+        self.add_letters_to_column_names(indexes)
+        numTable.insert(0, indexes)
         
-        #if title is not None:
-        #    numTable.insert(0,["" * len(numTable[0])])
-        #    numTable[0][0] = title
-            #self.tablestyle.append(
-
-        if (numTable[0][0] == "index"):
-            numTable[0][0] = indexName
-
         if tableHeight != -1:
             rowHeights = (len(dataframe) + 1) *\
                     [min([int(tableHeight/(len(dataframe) + 1)), 30])]
@@ -234,11 +253,34 @@ class PDF():
             rowHeights = (len(dataframe)+1) * [12]
 
         rowHeights[0] = rowHeights[0] * 1.4
-        # self.ajoute_total(numTable)
-        # self.eliminate_zeros_add_euros(numTable)
+
+        if (numTable[0][0] == "index"):
+            numTable[0][0] = indexName
+
+        
+        if title is not None:
+            lst = [i for i in range(len(numTable[0])-1)]
+            numTable.insert(0,lst)
+            numTable[0][0] = title
+            rowHeights.insert(0,min([int(tableHeight/(len(dataframe) +1)),30]))
+            if noIndexLine:
+                self.tablestyle.append(('SPAN', (0, 0), (-1, 1)))
+                rowHeights[0] = rowHeights[0] / 3
+            else:
+                self.tablestyle.append(('SPAN', (0, 0), (-1, 0)))
+
+            self.tablestyle.append(('FACE', (0, 1), (-1, 1), "Helvetica-Bold"))
+            self.tablestyle.append(('BACKGROUND', (0, 1), (-1, 1), bleuciel))
+
+        for i in range(len(numTable)):
+            for j in range(len(numTable[i])):
+                numTable[i][j] = str(numTable[i][j])
+
+        if coloring:
+            self.add_negative_positive_coloring(numTable)
 
         t = Table(numTable, rowHeights=rowHeights)
-        t.setStyle(self.tablestyle)
+        t.setStyle(TableStyle(self.tablestyle))
         w, h = t.wrapOn(self.c, 0, 0)  # Draw Table
 
         # Si la position n'est pas définie par l'utilisateur
