@@ -152,6 +152,46 @@ def syntpdf():
     return send_file(filename, as_attachment=True)
 
 
+@app.route('/synthese_divers', methods=['POST'])
+@login_required
+def diverspdf():
+    """Generation de la synthese divers"""
+
+    date = request.form['date']
+    year = date[0:4]
+    month = date[5:7]
+    worksite_name = request.form['code']
+    
+    filename = "bibl/" + date + "/" + worksite_name + "_DIV.pdf"
+    if not (os.path.exists('bibl/'+date)):
+        os.makedirs("bibl/"+date)
+
+
+    try :
+        accounting_plan = AccountingPlan(
+                get_accounting_file("var/PlanComptable.xls"))
+    except Exception as error:
+        return "Erreur de lecture du plan comptable :" + str(error)
+
+    worksite = Worksite(accounting_plan,worksite_name)
+    worksite.calculate_worksite(int(month), int(year))
+    divers_result_tab = worksite.calcul_divers_result(year)
+    pdf = PDF(filename)
+    for nom in worksite.categories.keys():
+
+        if (nom == "DIVERS"):
+            pdf.new_page(nom, worksite_name)
+            pdf.add_table(worksite.get_formatted_data(nom),
+                          y=(A4[0]/2)-inch/2, tableHeight=inch*5)
+            pdf.add_table(divers_result_tab,y=inch,tableHeight=inch*2,indexName="")
+            pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
+            pdf.save_page()
+            break
+
+    pdf.save_pdf()
+    return send_file(filename, as_attachment=True)
+
+
 @app.route('/synthese_chantier', methods=['POST'])
 @login_required
 def chantpdf():

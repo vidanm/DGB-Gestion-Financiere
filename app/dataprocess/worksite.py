@@ -64,7 +64,7 @@ class Worksite(Categories):
             exp = exp.loc[ (exp['Général']/100000 % 7 > 1) ]
         return exp['Débit'].sum() - exp['Crédit'].sum()
 
-    def calculate_worksite(self, month, year, budget):
+    def calculate_worksite(self, month, year, budget=None):
         """ df = self.expenses.data
         df['Year'] = pd.DatetimeIndex(df['Date']).year
         df['Month'] = pd.DatetimeIndex(df['Date']).month

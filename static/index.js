@@ -17,9 +17,14 @@ window.addEventListener("load", function(){
 	var z = document.getElementById("structureform");
 	z.style.display = "none";
 
+	var w = document.getElementById("diversform");
+	w.style.display = "none";
+
+	
 	var buttonChantier = document.getElementById("buttonChantier");
 	var buttonSynthese = document.getElementById("buttonSynthese");
 	var buttonStructure = document.getElementById("buttonStructure");
+	var buttonDivers = document.getElementById("buttonDivers");
 	/* buttonChantier.disabled = true;
 	buttonSynthese.disabled = true;
 	buttonStructure.disabled = true; */
