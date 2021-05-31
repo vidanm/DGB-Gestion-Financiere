@@ -1,6 +1,5 @@
 from .accounting_plan import AccountingPlan
 from .imports import get_accounting_file, get_csv_expenses
-import time
 import logging
 
 
@@ -43,8 +42,10 @@ class Expenses():
         return 1
 
     def __compose_accounts_with_category_name(self):
-         for index, value in self.data["Général"].iteritems():
-            if len(self.accounting_plan.get_poste_by_code(str(value)).values) > 0:
+        for index, value in self.data["Général"].iteritems():
+            if len(self.accounting_plan
+                    .get_poste_by_code(str(value))
+                    .values) > 0:
                 category = self.accounting_plan.get_poste_by_code(
                     str(value))['POSTE'].values[0]
                 subcategory = self.accounting_plan.get_poste_by_code(
@@ -52,12 +53,12 @@ class Expenses():
                 self.data.loc[index, 'POSTE'] = category
                 self.data.loc[index, 'SOUS POSTE'] = subcategory
 
-        #self.data['POSTE'] = self.data['Général'].apply(
+        # self.data['POSTE'] = self.data['Général'].apply(
         #        lambda x: (self.accounting_plan
         #                   .get_poste_by_code(str(x)))['POSTE']
         #        .values[0])
 
-        #self.data['SOUS POSTE'] = self.data['Général'].apply(
+        # self.data['SOUS POSTE'] = self.data['Général'].apply(
         #        lambda x: (self.accounting_plan
         #                   .get_poste_by_code(str(x)))['SOUS POSTE']
         #        .values[0])

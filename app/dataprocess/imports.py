@@ -25,24 +25,21 @@ def get_expenses_file(filepath):
     expenses = expenses.drop(columns=column_to_drop, errors='ignore')
     expenses = expenses.fillna(0)
 
-    
     """TODO Ajouter une erreur aux logs quand des lignes sont supprimées"""
-    #tmp = expenses.loc[ expenses['Section analytique'] != 0
+    # tmp = expenses.loc[ expenses['Section analytique'] != 0
     #                    | expenses['Date'] != 0
     #                    | expenses['Journal'] != 0
     #                    | expenses['Général'] != 0]
-        
-    
     # On élimine toutes les lignes ou les données sont manquantes
-    expenses = expenses.loc[ expenses['Section analytique'] != 0]
-    expenses = expenses.loc[ expenses['Date'] != 0 ]
-    expenses = expenses.loc[ expenses['Journal'] != 0]
-    expenses = expenses.loc[ expenses['Général'] != 0]
+    expenses = expenses.loc[expenses['Section analytique'] != 0]
+    expenses = expenses.loc[expenses['Date'] != 0]
+    expenses = expenses.loc[expenses['Journal'] != 0]
+    expenses = expenses.loc[expenses['Général'] != 0]
     expenses['Général'] = expenses['Général'].astype(int)
     expenses['Date'] = pd.to_datetime(expenses['Date'], format="%Y-%m-%d")
-    expenses = expenses.loc[ expenses['Journal'] != 'ANO' ]
-    #On elimine tout les espaces avant et après les string
-    #expenses = expenses.map
+    expenses = expenses.loc[expenses['Journal'] != 'ANO']
+    # On elimine tout les espaces avant et après les string
+    # expenses = expenses.map
 
     expenses['POSTE'] = ''
     expenses['SOUS POSTE'] = ''
@@ -63,10 +60,10 @@ def split_expenses_file_as_worksite_csv(filepath, outputpath):
 
         for year in years:
             sep.loc[sep['Year'] == year]\
-            .drop(columns='Year')\
-            .to_csv(outputpath + str(year) + "_" + name + ".csv")
+                .drop(columns='Year')\
+                .to_csv(outputpath + str(year) + "_" + name + ".csv")
 
-   
+
 def get_csv_expenses(filepath):
     return pd.read_csv(filepath)
 
@@ -99,7 +96,9 @@ def split_salary_file_as_salary_csv(filepath, outputpath):
             salary = salary.append(get_salary_file(filepath, "AI:AK", sheet),
                                    ignore_index=True)
 
-            salary["Section analytique"] = salary["Section analytique"].astype(str)
+            salary["Section analytique"] = salary["Section analytique"]\
+                .astype(str)
+
             salary = salary.sort_values("Section analytique")
             salary = salary.reset_index(drop=True)
 
@@ -112,7 +111,7 @@ def split_salary_file_as_salary_csv(filepath, outputpath):
                         str(outputpath) + sheet[-4::] + "SALAIRES" + "_" +
                         str(name) + ".csv")
 
-    
+
 def get_salary_file(filepath, columns, sheet):
     try:
         salary = pd.read_excel(filepath,
@@ -128,7 +127,7 @@ def get_salary_file(filepath, columns, sheet):
                         columns={col: (str(col).split('.')[0])})
 
         if date == "":
-            #Pas de date => Fin de la lecture
+            # Pas de date => Fin de la lecture
             return
 
         salary = salary.rename(
@@ -137,11 +136,11 @@ def get_salary_file(filepath, columns, sheet):
                 "Code compt": "Général",
                 "Code chantier": "Section analytique"
             })
-        
-        #On supprime les lignes où les données sont manquantes
+
+        # On supprime les lignes où les données sont manquantes
         salary = salary.fillna(0)
-        salary = salary.loc[ salary['Général'] != 0 ]
-        salary = salary.loc[ salary['Section analytique'] != 0]
+        salary = salary.loc[salary['Général'] != 0]
+        salary = salary.loc[salary['Section analytique'] != 0]
         print(str(date) + " :  " + str(salary))
 
         salary.insert(0, column="Date", value=date)
@@ -149,7 +148,7 @@ def get_salary_file(filepath, columns, sheet):
         salary.insert(0, column="Libellé", value="")
         salary.insert(0, column="Crédit", value=0)
         salary["Débit"] = salary["Débit"].fillna(0)
-        
+
         return salary
 
     except Exception as error:
@@ -172,7 +171,7 @@ def get_accounting_file(filepath):
     try:
         account_worksite = pd.read_excel(filepath, header=1, usecols="A:D")
         account_office = pd.read_excel(filepath, header=1, usecols="E:H")
-        account_divers = pd.read_excel(filepath,header=1,usecols="I:K")
+        account_divers = pd.read_excel(filepath, header=1, usecols="I:K")
     except Exception as error:
         raise error
 
@@ -198,7 +197,7 @@ def get_accounting_file(filepath):
 
     account_divers = account_divers.rename(
             columns={'N° DE COMPTE.2': 'N° DE COMPTE', 'POSTE.2': 'POSTE',
-                 'SOUS POSTE.2': 'SOUS POSTE'})
+                     'SOUS POSTE.2': 'SOUS POSTE'})
 
     # Accounting numbers conversion to string
     account_worksite['N° DE COMPTE'] = account_worksite['N° DE COMPTE'].apply(
@@ -213,7 +212,7 @@ def get_accounting_file(filepath):
     account_divers = account_divers.fillna(value=values)
     account_office = account_office.fillna(value=values)
 
-    account_worksite = pd.merge(account_worksite,account_divers,how='outer')
+    account_worksite = pd.merge(account_worksite, account_divers, how='outer')
     account_worksite.append(account_divers)
     return (account_worksite, account_office)
 

@@ -7,6 +7,7 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
 from .style import Style
+from .index_letters import default_table
 import os.path
 import numpy as np
 
@@ -56,6 +57,7 @@ class PDF():
         self.c.setFillColorRGB(0, 0, 0)
 
     def ajoute_total(self, numTable):
+        #Vérifier utilité
         total = [[0] * 7]
         for i in range(1, len(numTable)):
             for j in range(1, len(numTable[0])):
@@ -63,6 +65,10 @@ class PDF():
 
         total[0][0] = 'Total'
         numTable.append(total[0])
+
+    """
+    Déplacer tout ces fonctions dans un fichier graphe.py
+
 
     def create_bar_syntgraph(self, width, height, synt):
         pfdc = synt["PFDC"].tolist()
@@ -137,16 +143,7 @@ class PDF():
         d.chart.titleFontColor = black
         # d.rotate(90)
         d.drawOn(self.c, inch*0.3, inch*0.05)
-
-    def eliminate_zeros_add_euros(self, numTable):
-        for i in range(1, len(numTable)):
-            for j in range(1, len(numTable[0])):
-                if (numTable[i][j] == 0):
-                    numTable[i][j] = '--'
-                else:
-                    asStr = str(int(numTable[i][j]))
-                    numTable[i][j] = asStr + " €"
-        return numTable
+    """
 
     def convert_struct_string(self, numTable):
         for i in range(0, len(numTable)):
@@ -193,43 +190,27 @@ class PDF():
         self.c.setFillColor("BLACK")
         self.c.drawString(x, y, text)
 
-    def add_letters_to_column_names(self,columns):
-        """ tabtype could be POS (Poste) or MAA (Marge a l'avancement) or FDC (Marge fdc) """
-        for i in range(len(columns)):
-            if columns[i] == 'Dépenses du mois':
-                columns[i] += " (A)"
-            elif columns[i] == 'Dépenses cumulées':
-                columns[i] += " (B)"
-            elif columns[i] == 'Budget':
-                columns[i] += " (C)"
-            elif columns[i] == 'RAD':
-                columns[i] += " (D)"
-            elif columns[i] == 'PFDC':
-                columns[i] += " (E = B + D)"
-            elif columns[i] == 'Ecart PFDC/Budget':
-                columns[i] += " (F = E - C)"
-            elif columns[i] == 'CA':
-                columns[i] += ' (G)'
-            elif columns[i] == 'Marge brute':
-                columns[i] += ' (I = G - H)'
-            elif columns[i] == 'Dépenses':
-                columns[i] += ' (H)'
-
     def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1,indexName="Poste",\
-            title=None,noIndexLine=False,coloring=False,total=True):
+            title=None,noIndexLine=False,coloring=False,total=True,letters=default_table):
         """Ajoute un tableau a la feuille active.
 
         Le coin bas droite est représenté par (x,y)."""
         dataframe = dataframe.reset_index()
         numTable = dataframe.to_numpy().tolist()
         indexes =  dataframe.columns.values.tolist()
-        self.add_letters_to_column_names(indexes)
+
+        
         numTable.insert(0, indexes)
         tablestyle = Style(numTable,tableHeight,total)
 
         if (numTable[0][0] == "index"):
             numTable[0][0] = indexName
-        
+ 
+        if noIndexLine:
+            self.change_index_names(letters,numTable,axis=1)
+        else:
+            self.change_index_names(letters,numTable,axis=0)
+
         if title is not None:
             lst = [i for i in range(len(numTable[0])-1)]
             numTable.insert(0,lst)
@@ -295,3 +276,18 @@ class PDF():
 
     def save_pdf(self):
         self.c.save()
+    
+
+    def change_index_names(self,new_index,table,axis=0):
+        """ axis = 0 -> rows
+            1 -> columns """
+        if not axis:
+            for j in range(len(table[0])):
+                if table[0][j] in new_index.keys():
+                    table[0][j] = new_index[table[0][j]]
+        else :
+            for i in range(len(table)):
+                if table[i][0] in new_index.keys():
+                    table[i][0] = new_index[table[i][0]]
+        return table
+

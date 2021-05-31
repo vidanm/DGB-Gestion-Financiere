@@ -16,6 +16,7 @@ from app.dataprocess.imports import \
 from app.dataprocess.date import get_month_name
 from app.dataprocess.errors_to_html import errors_to_html
 from app.dataprocess.forward_planning import ForwardPlanning
+from app.pdf_generation.index_letters import default_table,marge_a_avancement,marge_fdc
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 from .models import db, login, UserModel
@@ -313,12 +314,13 @@ def rad():
                           y=A4[0] - inch * 3.2, tableHeight=inch*3,coloring=True)
             
             pdf.add_table(planning_margin, y=inch*2, x=inch*4.5, tableHeight=inch*2, 
-                    indexName="Période", title="Marge à l'avancement",coloring=True,total=False
+                    indexName="Période", title="Marge à l'avancement",coloring=True,total=False,
+                    letters=marge_a_avancement
                     )
             
             pdf.add_table(planning_pfdc, y=inch*2, x=A4[1]-inch*3, tableHeight=inch*2,
                     indexName="Marges", title="Marge à fin de chantier",noIndexLine=True,
-                    coloring=True,total=False)
+                    coloring=True,total=False,letters=marge_fdc)
 
             pdf.add_legend("PFDC = Prévision fin de chantier",x=0.1*inch,y=0.2*inch)
             pdf.add_legend("RAD = Restes à dépenser",x=inch*0.1,y=0.4*inch)
@@ -328,7 +330,7 @@ def rad():
 
             pdf.new_page("Gestion prévisionnelle 2/2", worksite_name)
             pdf.add_table(planning_margin_cumul,tableHeight=inch*2,indexName="Période",
-                    title="Marge à l'avancement",coloring=True,total=False)
+                    title="Marge à l'avancement",coloring=True,total=False,letters=marge_a_avancement)
 
         elif (nom == "DIVERS"):
             continue

@@ -43,25 +43,26 @@ class Worksite(Categories):
                             accounting_plan)
         return total
 
-    def calculate_year_expenses(self,month,year):
+    def calculate_year_expenses(self, month, year):
         df = self.expenses.data
         df['Year'] = pd.DatetimeIndex(df['Date']).year
         df['Month'] = pd.DatetimeIndex(df['Date']).month
 
-        exp = df.loc[ (year == df['Year']) & (month >= df['Month']) ]
-        if isinstance(exp['Général'],int):
-            exp = exp.loc[ (exp['Général']/100000 % 7 > 1) ]
+        exp = df.loc[(year == df['Year']) & (month >= df['Month'])]
+        if isinstance(exp['Général'], int):
+            exp = exp.loc[(exp['Général']/100000 % 7 > 1)]
         return exp['Débit'].sum() - exp['Crédit'].sum()
 
-    def calculate_cumul_expenses(self,month,year):
+    def calculate_cumul_expenses(self, month, year):
         df = self.expenses.data
         df['Year'] = pd.DatetimeIndex(df['Date']).year
         df['Month'] = pd.DatetimeIndex(df['Date']).month
 
-        exp = df.loc[ (year > df['Year']) | ((year == df['Year']) & (month >= df['Month'])) ]
-        
-        if isinstance(exp['Général'],int):
-            exp = exp.loc[ (exp['Général']/100000 % 7 > 1) ]
+        exp = df.loc[(year > df['Year']) | ((year == df['Year'])
+                     & (month >= df['Month']))]
+
+        if isinstance(exp['Général'], int):
+            exp = exp.loc[(exp['Général']/100000 % 7 > 1)]
         return exp['Débit'].sum() - exp['Crédit'].sum()
 
     def calculate_worksite(self, month, year, budget=None):
@@ -188,20 +189,23 @@ class Worksite(Categories):
         for name in self.category_names:
             self.add_category_total(name)
 
-    def calcul_divers_result(self,year):
+    def calcul_divers_result(self, year):
         # Format divers tab and return result tab
         self.categories["DIVERS"] = self.categories["DIVERS"].drop(
-                columns=['Budget','RAD','PFDC','Ecart PFDC/Budget'])
-        
-        ca_cumul = Revenues(self.expenses.data).calculate_cumulative_revenues(year)
+                columns=['Budget', 'RAD', 'PFDC', 'Ecart PFDC/Budget'])
+
+        ca_cumul = Revenues(self.expenses.data)\
+            .calculate_cumulative_revenues(year)
+
         dep_cumul = self.categories["DIVERS"]["Dépenses cumulées"].sum()
         marge = ca_cumul - dep_cumul
         marge_percent = (marge / ca_cumul)*100
-        data = [[ca_cumul,dep_cumul,marge,marge_percent]]
+        data = [[ca_cumul, dep_cumul, marge, marge_percent]]
         row_index = ["Resultat"]
-        column_indexes = ['CA Cumulé','Dépenses cumulées','Marge brute','Marge brute %']
+        column_indexes = ['CA Cumulé', 'Dépenses cumulées',
+                          'Marge brute', 'Marge brute %']
 
-        out = pd.DataFrame(data=data,index=row_index,columns=column_indexes)
+        out = pd.DataFrame(data=data, index=row_index, columns=column_indexes)
         out['CA Cumulé'] = out['CA Cumulé'].astype(int)
         out['Dépenses cumulées'] = out['Dépenses cumulées'].astype(int)
         out['Marge brute'] = out['Marge brute'].astype(int)
@@ -233,11 +237,11 @@ class Worksite(Categories):
 
         formatted["Dépenses cumulées"] = formatted["Dépenses cumulées"].apply(
             "{:0,.2f}€".format)
-    
+
         if (category_name != "DIVERS"):
             formatted["Budget"] = formatted["Budget"].apply("{:0,.2f}€".format)
             formatted["RAD"] = formatted["RAD"].apply("{:0,.2f}€".format)
             formatted["PFDC"] = formatted["PFDC"].apply("{:0,.2f}€".format)
-            formatted["Ecart PFDC/Budget"] = formatted["Ecart PFDC/Budget"].apply(
-                "{:0,.2f}€".format)
+            formatted["Ecart PFDC/Budget"] = formatted["Ecart PFDC/Budget"]\
+                .apply("{:0,.2f}€".format)
         return formatted
