@@ -187,22 +187,12 @@ class PDF():
 
         t.drawOn(self.c, x, y)
 
-    def add_negative_positive_coloring(self,numTable):
-        colored = []
-        for i in range(len(numTable)):
-            for j in range(len(numTable[i])):
-                if numTable[i][j][0].isnumeric():
-                    self.tablestyle.append(('TEXTCOLOR', (j, i), (j+1, i+1), "GREEN"))
-                elif numTable[i][j][0] == '-':
-                    self.tablestyle.append(('TEXTCOLOR', (j, i), (j+1, i+1), "RED"))
-
     def add_legend(self,text,x=-1,y=-1,size=9):
 
         self.c.setFont("Helvetica", size)  # Draw Title
         self.c.setFillColor("BLACK")
         self.c.drawString(x, y, text)
 
-    
     def add_letters_to_column_names(self,columns):
         """ tabtype could be POS (Poste) or MAA (Marge a l'avancement) or FDC (Marge fdc) """
         for i in range(len(columns)):
@@ -225,9 +215,8 @@ class PDF():
             elif columns[i] == 'Dépenses':
                 columns[i] += ' (H)'
 
-
     def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1,indexName="Poste",\
-            title=None,noIndexLine=False,coloring=False):
+            title=None,noIndexLine=False,coloring=False,total=True):
         """Ajoute un tableau a la feuille active.
 
         Le coin bas droite est représenté par (x,y)."""
@@ -236,28 +225,17 @@ class PDF():
         indexes =  dataframe.columns.values.tolist()
         self.add_letters_to_column_names(indexes)
         numTable.insert(0, indexes)
-        tablestyle = Style()
-
-        if tableHeight != -1:
-            rowHeights = (len(dataframe) + 1) *\
-                    [min([int(tableHeight/(len(dataframe) + 1)), 30])]
-        else:
-            rowHeights = (len(dataframe)+1) * [12]
-
-        rowHeights[0] = rowHeights[0] * 1.4
+        tablestyle = Style(numTable,tableHeight,total)
 
         if (numTable[0][0] == "index"):
             numTable[0][0] = indexName
-
         
         if title is not None:
             lst = [i for i in range(len(numTable[0])-1)]
             numTable.insert(0,lst)
             numTable[0][0] = title
-            rowHeights.insert(0,min([int(tableHeight/(len(dataframe) +1)),30]))
             if noIndexLine:
                 tablestyle.delete_index_line()
-                rowHeights[0] = rowHeights[0] / 3
             else:
                 tablestyle.add_title_style()
 
@@ -270,9 +248,8 @@ class PDF():
 
         if coloring:
             tablestyle.add_coloring(numTable)
-            #self.add_negative_positive_coloring(numTable)
 
-        t = Table(numTable, rowHeights=rowHeights)
+        t = Table(numTable, rowHeights=tablestyle.get_rowheights())
         t.setStyle(TableStyle(tablestyle.get_style()))
         w, h = t.wrapOn(self.c, 0, 0)  # Draw Table
 

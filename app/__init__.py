@@ -311,9 +311,15 @@ def rad():
             # pdf.add_table(planning_pfdc,y=inch*2,x=A4[1]-inch*1.5,tableHeight=inch*2,indexName="Marges")
             pdf.add_table(worksite.get_formatted_data(nom),
                           y=A4[0] - inch * 3.2, tableHeight=inch*3,coloring=True)
+            
             pdf.add_table(planning_margin, y=inch*2, x=inch*4.5, tableHeight=inch*2, 
-                    indexName="Période", title="Marge à l'avancement",coloring=True)
-            pdf.add_table(planning_pfdc, y=inch*2, x=A4[1]-inch*3, tableHeight=inch*2, indexName="Marges", title="Marge à fin de chantier",noIndexLine=True,coloring=True)
+                    indexName="Période", title="Marge à l'avancement",coloring=True,total=False
+                    )
+            
+            pdf.add_table(planning_pfdc, y=inch*2, x=A4[1]-inch*3, tableHeight=inch*2,
+                    indexName="Marges", title="Marge à fin de chantier",noIndexLine=True,
+                    coloring=True,total=False)
+
             pdf.add_legend("PFDC = Prévision fin de chantier",x=0.1*inch,y=0.2*inch)
             pdf.add_legend("RAD = Restes à dépenser",x=inch*0.1,y=0.4*inch)
             pdf.add_legend("CA = Chiffre d'affaires",x=inch*0.1,y=0.6*inch)
@@ -321,7 +327,8 @@ def rad():
             pdf.save_page()
 
             pdf.new_page("Gestion prévisionnelle 2/2", worksite_name)
-            pdf.add_table(planning_margin_cumul,tableHeight=inch*2,indexName="Période", title="Marge à l'avancement",coloring=True)
+            pdf.add_table(planning_margin_cumul,tableHeight=inch*2,indexName="Période",
+                    title="Marge à l'avancement",coloring=True,total=False)
 
         elif (nom == "DIVERS"):
             continue
