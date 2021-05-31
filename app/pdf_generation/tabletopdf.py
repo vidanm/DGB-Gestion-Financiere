@@ -6,6 +6,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
+from .style import Style
 import os.path
 import numpy as np
 
@@ -22,18 +23,6 @@ class PDF():
         self.c = canvas.Canvas(nom, pagesize=(A4[1], A4[0]))
         self.logo = os.path.join('images/DGB.jpeg')
         self.__background()
-        self.tablestyle = [
-            ('FACE', (0, 0), (-1, -1), "Helvetica-Bold"),
-            ('FACE', (1, 1), (-1,-2), "Helvetica"),
-            ('GRID', (0, 0), (-1, -1), 0.1, black),
-            ('FONTSIZE', (0, 0), (-1, -1), 8),
-            ('ALIGN', (0, 0), (-1, -1), "CENTER"),
-            ('VALIGN', (0, 0), (-1, -1), "MIDDLE"),
-            ('BACKGROUND', (0, 0), (-1, 0), bleuciel),
-            ('TEXTCOLOR', (0, 0), (-1, 0), "BLACK"),
-            ('BACKGROUND', (1, 1), (-1, -1), "WHITE"),
-            ('BACKGROUND', (0, -1), (-1, -1), yellow)
-            ]
 
     def __background(self):
         self.c.setFillColorRGB(1, 1, 1)
@@ -232,7 +221,9 @@ class PDF():
             elif columns[i] == 'CA':
                 columns[i] += ' (G)'
             elif columns[i] == 'Marge brute':
-                columns[i] += ' (H = G - B)'
+                columns[i] += ' (I = G - H)'
+            elif columns[i] == 'Dépenses':
+                columns[i] += ' (H)'
 
 
     def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1,indexName="Poste",\
@@ -245,7 +236,8 @@ class PDF():
         indexes =  dataframe.columns.values.tolist()
         self.add_letters_to_column_names(indexes)
         numTable.insert(0, indexes)
-        
+        tablestyle = Style()
+
         if tableHeight != -1:
             rowHeights = (len(dataframe) + 1) *\
                     [min([int(tableHeight/(len(dataframe) + 1)), 30])]
@@ -264,23 +256,24 @@ class PDF():
             numTable[0][0] = title
             rowHeights.insert(0,min([int(tableHeight/(len(dataframe) +1)),30]))
             if noIndexLine:
-                self.tablestyle.append(('SPAN', (0, 0), (-1, 1)))
+                tablestyle.delete_index_line()
                 rowHeights[0] = rowHeights[0] / 3
             else:
-                self.tablestyle.append(('SPAN', (0, 0), (-1, 0)))
+                tablestyle.add_title_style()
 
-            self.tablestyle.append(('FACE', (0, 1), (-1, 1), "Helvetica-Bold"))
-            self.tablestyle.append(('BACKGROUND', (0, 1), (-1, 1), bleuciel))
+            tablestyle.add_custom_style(('FACE', (0, 1), (-1, 1), "Helvetica-Bold"))
+            tablestyle.add_custom_style(('BACKGROUND', (0, 1), (-1, 1), bleuciel))
 
         for i in range(len(numTable)):
             for j in range(len(numTable[i])):
                 numTable[i][j] = str(numTable[i][j])
 
         if coloring:
-            self.add_negative_positive_coloring(numTable)
+            tablestyle.add_coloring(numTable)
+            #self.add_negative_positive_coloring(numTable)
 
         t = Table(numTable, rowHeights=rowHeights)
-        t.setStyle(TableStyle(self.tablestyle))
+        t.setStyle(TableStyle(tablestyle.get_style()))
         w, h = t.wrapOn(self.c, 0, 0)  # Draw Table
 
         # Si la position n'est pas définie par l'utilisateur

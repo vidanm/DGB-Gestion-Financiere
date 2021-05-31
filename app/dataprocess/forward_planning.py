@@ -15,10 +15,9 @@ class ForwardPlanning():
                 line.name = name
                 self.forward_planning = self.forward_planning.append(line,ignore_index=False)
 
-    def calculate_margins(self,month,year):
+    def calculate_margins(self,month,year,with_year=True,with_cumul=False):
         #Concerne le tableau marge à l'avancement
         revenues = Revenues(self.worksite.expenses.data) # Verifier si les lignes de ventes sont bien dedans
-        
         year_revenues = revenues.calculate_year_revenues(year)
         anterior_revenues = revenues.calculate_cumulative_with_year_limit(year-1)
         cumulative_revenues = year_revenues + anterior_revenues
@@ -35,14 +34,29 @@ class ForwardPlanning():
         percent_margin_anterior = (margin_anterior/anterior_expenses)*100
         percent_margin_total = (margin_total/cumulative_expenses)*100
 
-        row_indexes = ["Année courante","Années antérieures","Total"]
-        column_indexes = ["CA","Marge brute","Marge brute %"]
-        data = [[year_revenues,margin_year,percent_margin_year],
-                [anterior_revenues,margin_anterior,percent_margin_anterior],
-                [cumulative_revenues,margin_total,percent_margin_total]]
+        row_indexes = []
+        data = []
+        column_indexes = ["CA","Dépenses","Marge brute","Marge brute %"]
+
+        if with_year:
+            for i in ["Année courante","Années antérieures"]:
+                row_indexes.append(i)
+
+            for i in [[year_revenues,year_expenses,margin_year,percent_margin_year],
+                    [anterior_revenues,anterior_expenses,margin_anterior,percent_margin_anterior]]:
+                data.append(i)
         
+        if with_cumul:
+            for i in ["Cumulé"]:
+                row_indexes.append(i)
+            
+            for i in [[cumulative_revenues,cumulative_expenses,margin_total,percent_margin_total]]:
+                data.append(i)
+            
+
         out = pd.DataFrame(data=data,index=row_indexes,columns=column_indexes)
         out["CA"] = out["CA"].apply("{:0,.2f}€".format)
+        out["Dépenses"] = out["Dépenses"].apply("{:0,.2f}€".format)
         out["Marge brute"] =  out["Marge brute"].apply("{:0,.2f}€".format)
         out["Marge brute %"] = out["Marge brute %"].apply("{:0,.2f}%".format)
 
