@@ -17,12 +17,9 @@ Ils sont :
 3. **Optionnel** Le budget des différents chantiers [ *Champ Budget* ]
 4. **Optionnel** La masse salariale [ *Champ MasseSalariale* ]
 
-La structure attendue des différents fichiers est définie dans [Structure](##Structure des fichiers).
-
-
 ## Structure des fichiers
-
-Les fichiers excel doivent être importés sous le format .xls et non .xlsx .
+Les fichiers fournis doivent respecter un certain format.
+Tous doivent être importés sous le format .xls et non .xlsx.
 
 ### Plan comptable
 ![Example Plan](https://i.ibb.co/MsZhghm/screenshot.png)
