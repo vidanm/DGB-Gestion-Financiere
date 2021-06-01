@@ -6,7 +6,7 @@ import logging
 class Expenses():
 
     def __init__(self, data, accounting_plan, with_category=True):
-        
+
         """
         Traite les dépenses ( provenant de l'extraction comptable ).
         """

@@ -16,6 +16,7 @@ from app.dataprocess.imports import \
 from app.dataprocess.date import get_month_name
 from app.dataprocess.errors_to_html import errors_to_html
 from app.dataprocess.forward_planning import ForwardPlanning
+from app.pdf_generation.colors import bleuciel
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 from .models import db, login, UserModel
@@ -418,11 +419,14 @@ def structpdf():
                 style.append(('SPAN', (0, current_nb_of_rows),
                               (-1, current_nb_of_rows)))
                 # Titre de section
+                style.append(('BACKGROUND', (0, current_nb_of_rows),
+                              (-1, current_nb_of_rows),bleuciel))
 
                 df = df.append(
                     office.get_formatted_data(office.category_names[i]))
                 pdf.new_page("Structure", " ")
-                pdf.add_table(df, custom_style=style, total=False)
+                pdf.add_table(df, custom_style=style,
+                        total=(i >= len(office.category_names)-1))
                 pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
                 df = None
                 num_poste = 0
@@ -433,6 +437,9 @@ def structpdf():
                 num_poste += 1
                 style.append(('SPAN', (0, current_nb_of_rows),
                               (-1, current_nb_of_rows)))
+                style.append(('BACKGROUND', (0, current_nb_of_rows),
+                              (-1, current_nb_of_rows),bleuciel))
+
                 # Titre de section
 
                 df = office.get_formatted_data(office.category_names[i])
@@ -442,6 +449,9 @@ def structpdf():
                 print("\nHELO from " + office.category_names[i] + "\n")
                 style.append(('SPAN', (0, current_nb_of_rows),
                               (-1, current_nb_of_rows)))
+                style.append(('BACKGROUND', (0, current_nb_of_rows),
+                              (-1, current_nb_of_rows),bleuciel))
+
                 # Titre de section
 
                 df = df.append(

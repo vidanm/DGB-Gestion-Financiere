@@ -2,6 +2,7 @@
 """This file is necessary because heroku doesn't support locale_fr
 so we need to calculate month name by hand"""
 
+
 def get_month_name(i):
     switcher = {
         1: "Janvier",
