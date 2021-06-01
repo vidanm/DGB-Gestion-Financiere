@@ -17,10 +17,10 @@ Ils sont :
 3. **Optionnel** Le budget des différents chantiers [ *Champ Budget* ]
 4. **Optionnel** La masse salariale [ *Champ MasseSalariale* ]
 
-La structure attendue des différents fichiers est définie dans [Structure](##Structure).
+La structure attendue des différents fichiers est définie dans [Structure](##Structure des fichiers).
 
 
-## Structure
+## Structure des fichiers
 
 Les fichiers excel doivent être importés sous le format .xls et non .xlsx .
 
@@ -30,7 +30,7 @@ Les fichiers excel doivent être importés sous le format .xls et non .xlsx .
 2.  Les noms de colonnes doivent se trouver sur la 2e ligne.
 3.  **Une seule ligne par sous poste !** Pour avoir plusieurs compte pour un sous poste, respecter le format suivant :
 `NOM DU SOUS POSTE | NUMERO 1 / NUMERO 2 / NUMERO 3`
-4. Il faut, pour l'instant, supprimer le tableau ci joint du plan comptable :
+4. Il faut, pour l'instant, supprimer le tableau ci joint, du plan comptable :
 ![Tableau a supprimer](https://i.ibb.co/XSj13ky/screenshot.png)
 
 
@@ -40,8 +40,9 @@ Les fichiers excel doivent être importés sous le format .xls et non .xlsx .
 2.  Le nom ( *La section analytique* ) des charges qui concernent les dépenses de la structure doivent comporter 'STRUCT'.
 
 ### Budget
-Le nom des postes et des sous postes doivent **obligatoirement** correspondre aux noms donnés dans le plan
+1. Le nom des postes et des sous postes doivent **obligatoirement** correspondre aux noms donnés dans le plan
 comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'oeuvre"
+2. Les champs "MONTANT MARCHE" et "AVENANTS" doivent être placés à la fin du budget, colonne POSTE.
 
 ### Masse salariale
 ![Example Masse Salariale](https://i.ibb.co/6Y1ZDtx/screenshot.png)
