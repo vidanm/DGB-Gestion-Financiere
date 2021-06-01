@@ -29,6 +29,7 @@ Tous doivent être importés sous le format .xls et non .xlsx.
 `NOM DU SOUS POSTE | NUMERO 1 / NUMERO 2 / NUMERO 3`
 4. Il faut, pour l'instant, supprimer le tableau ci joint, du plan comptable :
 ![Tableau a supprimer](https://i.ibb.co/XSj13ky/screenshot.png)
+5. Les cellules POSTE doivent être fusionnées pour éviter les erreurs de calcul.
 
 
 ### Extractions chantiers
@@ -52,8 +53,9 @@ Si après une requête, la page suivante s'affiche :
 Vérifiez les points suivants :
 1. Vous avez bien importé les fichiers préalables ( Au moins le plan comptable et une extraction )
 2. La structure des fichiers fournis corresponds bien à celle décrite ci-dessus ( Pas de colonnes supplémentaires ou manquantes )
+3. Les cellules sont bien fusionnées dans le plan comptable
 
-Si malgré les vérifications le programme ne fonctionne toujours pas : Déconnectez vous et recommencez du départ.
+Si malgré les vérifications le programme ne fonctionne toujours pas : Déconnectez vous puis réimportez les fichiers.
 
 ## À savoir
 Tout les fichiers importés sont supprimés a la déconnexion.
