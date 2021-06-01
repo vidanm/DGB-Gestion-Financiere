@@ -42,7 +42,6 @@ db.init_app(app)
 login.init_app(app)
 login.login_view = 'login'
 
-
 if not (os.path.exists("var")):
     os.makedirs("var/csv/")
 
@@ -105,9 +104,7 @@ def index():
     if (os.path.exists("log.txt")):
         os.remove("log.txt")
 
-    return render_template(
-        "index.html"
-    )
+    return render_template("index.html")
 
 
 @app.route('/synthese_globale', methods=['POST'])
@@ -126,7 +123,7 @@ def syntpdf():
         accounting_plan = AccountingPlan(
             get_accounting_file("var/PlanComptable.xls"))
     except Exception as e:
-        return "Erreur de lecture du plan comptable "+str(e)
+        return "Erreur de lecture du plan comptable " + str(e)
 
     try:
         budget = get_budget_file("var/Budget.xls")
@@ -146,8 +143,11 @@ def syntpdf():
 
     pdf.new_page("Synthese", get_month_name(int(date[5:7])) + ' ' + year)
 
-    pdf.add_table(formatted_overview, y=A4[0] - inch * 3.2, tableHeight=inch*3,
-            indexName="CHANTIER",letters='')
+    pdf.add_table(formatted_overview,
+                  y=A4[0] - inch * 3.2,
+                  tableHeight=inch * 3,
+                  indexName="CHANTIER",
+                  letters='')
     pdf.create_bar_syntgraph(600, 250, overview.data)
     pdf.save_page()
     pdf.save_pdf()
@@ -163,19 +163,18 @@ def diverspdf():
     year = date[0:4]
     month = date[5:7]
     worksite_name = request.form['code']
-    
+
     filename = "bibl/" + date + "/" + worksite_name + "_DIV.pdf"
-    if not (os.path.exists('bibl/'+date)):
-        os.makedirs("bibl/"+date)
+    if not (os.path.exists('bibl/' + date)):
+        os.makedirs("bibl/" + date)
 
-
-    try :
+    try:
         accounting_plan = AccountingPlan(
-                get_accounting_file("var/PlanComptable.xls"))
+            get_accounting_file("var/PlanComptable.xls"))
     except Exception as error:
         return "Erreur de lecture du plan comptable :" + str(error)
 
-    worksite = Worksite(accounting_plan,worksite_name)
+    worksite = Worksite(accounting_plan, worksite_name)
     worksite.calculate_worksite(int(month), int(year))
     divers_result_tab = worksite.calcul_divers_result(year)
     pdf = PDF(filename)
@@ -184,8 +183,12 @@ def diverspdf():
         if (nom == "DIVERS"):
             pdf.new_page(nom, worksite_name)
             pdf.add_table(worksite.get_formatted_data(nom),
-                          y=(A4[0]/2)-inch/2, tableHeight=inch*5)
-            pdf.add_table(divers_result_tab,y=inch,tableHeight=inch*2,indexName="")
+                          y=(A4[0] / 2) - inch / 2,
+                          tableHeight=inch * 5)
+            pdf.add_table(divers_result_tab,
+                          y=inch,
+                          tableHeight=inch * 2,
+                          indexName="")
             pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
             pdf.save_page()
             break
@@ -214,9 +217,9 @@ def chantpdf():
     except Exception as error:
         return "Erreur de lecture de plan comptable :" + str(error)
 
-    #try:
+    # try:
     worksite = Worksite(accounting_plan, worksite_name)
-    #except Exception as error:
+    # except Exception as error:
     #    return "Erreur de lecture de fichier chantier : " + str(error)
 
     try:
@@ -226,14 +229,14 @@ def chantpdf():
 
     worksite.calculate_worksite(int(month), int(year), budget)
     worksite.round_2dec_df()  # Verifier l'utilité
-    convert_single_dataframe_to_html_table(worksite.categories,
-                                           int(month), year, worksite_name)
+    convert_single_dataframe_to_html_table(worksite.categories, int(month),
+                                           year, worksite_name)
 
     session['worksite_name'] = worksite_name
     session['date'] = date
 
-    if (os.path.exists("log.txt") and
-            len(open("log.txt", "r").readlines()) != 0):
+    if (os.path.exists("log.txt")
+            and len(open("log.txt", "r").readlines()) != 0):
         errors_to_html()
         return render_template("errors.html")
     else:
@@ -269,8 +272,8 @@ def rad():
     month = date[5:7]
     filename = "bibl/" + date + "/" + worksite_name + ".pdf"
 
-    if not (os.path.exists('bibl/'+date)):
-        os.makedirs("bibl/"+date)
+    if not (os.path.exists('bibl/' + date)):
+        os.makedirs("bibl/" + date)
 
     worksite.calculate_worksite(int(month), int(year), budget)
     worksite.round_2dec_df()  # Verifier l'utilité
@@ -282,17 +285,19 @@ def rad():
     worksite.compose_pfdc_budget()
     worksite.add_worksite_total()
     planning = ForwardPlanning(worksite)
-    planning_margin = planning.calculate_margins(
-            int(month), int(year), with_cumul=False, with_year=True)
+    planning_margin = planning.calculate_margins(int(month),
+                                                 int(year),
+                                                 with_cumul=False,
+                                                 with_year=True)
 
-    planning_margin_cumul = planning.calculate_margins(
-            int(month), int(year), with_cumul=True, with_year=False)
+    planning_margin_cumul = planning.calculate_margins(int(month),
+                                                       int(year),
+                                                       with_cumul=True,
+                                                       with_year=False)
 
     planning_pfdc = planning.calculate_pfdc_tab(budget)
-    
-    worksite.calcul_ges_prev()
-    divers_result_tab = worksite.calcul_divers_result(year)
 
+    worksite.calcul_ges_prev()
     worksite.remove_category("PRODUITS")
     # worksite.remove_category("PRORATA")
 
@@ -312,37 +317,59 @@ def rad():
             # pdf.add_table(planning_margin,y=A4[0]-inch*3.2,x=inch*9.6,tableHeight=inch*2,indexName="Temps")
             # pdf.add_table(planning_pfdc,y=inch*2,x=A4[1]-inch*1.5,tableHeight=inch*2,indexName="Marges")
             pdf.add_table(worksite.get_formatted_data(nom),
-                          y=A4[0] - inch * 3.2, tableHeight=inch*3,coloring=True)
-            
-            pdf.add_table(planning_margin, y=inch*2, x=inch*4.5, tableHeight=inch*2, 
-                    indexName="Période", title="Marge à l'avancement",coloring=True,total=False,
-                    letters='marge_a_avancement'
-                    )
-            
-            pdf.add_table(planning_pfdc, y=inch*2, x=A4[1]-inch*3, tableHeight=inch*2,
-                    indexName="Marges", title="Marge à fin de chantier",noIndexLine=True,
-                    coloring=True,total=False,letters='marge_fdc')
+                          y=A4[0] - inch * 3.2,
+                          tableHeight=inch * 3,
+                          coloring=True)
 
-            pdf.add_legend("PFDC = Prévision fin de chantier",x=0.1*inch,y=0.2*inch)
-            pdf.add_legend("RAD = Restes à dépenser",x=inch*0.1,y=0.4*inch)
-            pdf.add_legend("CA = Chiffre d'affaires",x=inch*0.1,y=0.6*inch)
+            pdf.add_table(planning_margin,
+                          y=inch * 2,
+                          x=inch * 4.5,
+                          tableHeight=inch * 2,
+                          indexName="Période",
+                          title="Marge à l'avancement",
+                          coloring=True,
+                          total=False,
+                          letters='marge_a_avancement')
+
+            pdf.add_table(planning_pfdc,
+                          y=inch * 2,
+                          x=A4[1] - inch * 3,
+                          tableHeight=inch * 2,
+                          indexName="Marges",
+                          title="Marge à fin de chantier",
+                          noIndexLine=True,
+                          coloring=True,
+                          total=False,
+                          letters='marge_fdc')
+
+            pdf.add_legend("PFDC = Prévision fin de chantier",
+                           x=0.1 * inch,
+                           y=0.2 * inch)
+            pdf.add_legend("RAD = Restes à dépenser",
+                           x=inch * 0.1,
+                           y=0.4 * inch)
+            pdf.add_legend("CA = Chiffre d'affaires",
+                           x=inch * 0.1,
+                           y=0.6 * inch)
             pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
             pdf.save_page()
 
             pdf.new_page("Gestion prévisionnelle 2/2", worksite_name)
-            pdf.add_table(planning_margin_cumul,tableHeight=inch*2,indexName="Période",
-                    title="Marge à l'avancement",coloring=True,total=False,letters='marge_a_avancement')
+            pdf.add_table(planning_margin_cumul,
+                          tableHeight=inch * 2,
+                          indexName="Période",
+                          title="Marge à l'avancement",
+                          coloring=True,
+                          total=False,
+                          letters='marge_a_avancement')
 
         elif (nom == "DIVERS"):
             continue
-            #pdf.new_page(nom, worksite_name)
-            #pdf.add_table(worksite.get_formatted_data(nom),
-                          #y=(A4[0]/2)-inch/2, tableHeight=inch*5)
-            #pdf.add_table(divers_result_tab,y=inch,tableHeight=inch*2,indexName="")
         else:
             pdf.new_page(nom, worksite_name)
             pdf.add_table(worksite.get_formatted_data(nom),
-                          y=(A4[0]/2)-inch/2, tableHeight=inch*5)
+                          y=(A4[0] / 2) - inch / 2,
+                          tableHeight=inch * 5)
 
         pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
         pdf.save_page()
@@ -365,11 +392,11 @@ def structpdf():
             accounting_plan = AccountingPlan(
                 get_accounting_file("var/PlanComptable.xls"))
         except Exception as e:
-            return "Erreur de lecture du plan comptable : "+str(e)
+            return "Erreur de lecture du plan comptable : " + str(e)
 
-        #try:
+        # try:
         office = Office(accounting_plan, int(month), int(year))
-        #except Exception as e:
+        # except Exception as e:
         #    return "Erreur de lecture des charges de la structure : "+str(e)
 
         if not (os.path.exists("bibl/" + date)):
@@ -379,21 +406,23 @@ def structpdf():
 
         pdf = PDF(filename)
         pdf.new_page("Structure", get_month_name(int(month)) + ' ' + year)
-        
-        num_poste = 0#nombre de postes sur la page courante
+
+        num_poste = 0  # nombre de postes sur la page courante
         df = None
         style = []
         current_nb_of_rows = 1
 
         for i in range(len(office.category_names)):
             print(office.category_names)
-            if num_poste >= 2 or i >= len(office.category_names)-1:
-                style.append(('SPAN',(0,current_nb_of_rows),(-1,current_nb_of_rows)))
+            if num_poste >= 2 or i >= len(office.category_names) - 1:
+                style.append(('SPAN', (0, current_nb_of_rows),
+                              (-1, current_nb_of_rows)))
                 # Titre de section
 
-                df = df.append(office.get_formatted_data(office.category_names[i]))
+                df = df.append(
+                    office.get_formatted_data(office.category_names[i]))
                 pdf.new_page("Structure", " ")
-                pdf.add_table(df,custom_style=style,total=False)
+                pdf.add_table(df, custom_style=style, total=False)
                 pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
                 df = None
                 num_poste = 0
@@ -402,21 +431,25 @@ def structpdf():
                 pdf.save_page()
             elif df is None:
                 num_poste += 1
-                style.append(('SPAN',(0,current_nb_of_rows),(-1,current_nb_of_rows)))
+                style.append(('SPAN', (0, current_nb_of_rows),
+                              (-1, current_nb_of_rows)))
                 # Titre de section
 
                 df = office.get_formatted_data(office.category_names[i])
-                current_nb_of_rows = len(df.index)+1
+                current_nb_of_rows = len(df.index) + 1
             else:
                 num_poste += 1
-                print("\nHELO from "+office.category_names[i]+"\n")
-                style.append(('SPAN',(0,current_nb_of_rows),(-1,current_nb_of_rows)))
+                print("\nHELO from " + office.category_names[i] + "\n")
+                style.append(('SPAN', (0, current_nb_of_rows),
+                              (-1, current_nb_of_rows)))
                 # Titre de section
 
-                df = df.append(office.get_formatted_data(office.category_names[i]))
-                current_nb_of_rows = len(df.index)+1
-        
-        for i in style : print("\n"+str(i)+"\n")
+                df = df.append(
+                    office.get_formatted_data(office.category_names[i]))
+                current_nb_of_rows = len(df.index) + 1
+
+        for i in style:
+            print("\n" + str(i) + "\n")
         pdf.save_pdf()
 
         return send_file(filename, as_attachment=True)
@@ -457,7 +490,7 @@ def upload_file():
 def clear():
     if (os.path.exists("var/csv/")):
         for filename in os.listdir("var/csv"):
-            os.remove("var/csv/"+filename)
+            os.remove("var/csv/" + filename)
     if (os.path.exists("log.txt")):
         os.remove("log.txt")
     if (os.path.exists("var/PlanComptable.xls")):
@@ -488,8 +521,7 @@ def check_save_uploaded_file(tag):
                     tag + '.' + filename.split('.')[1]),
                                                     outputpath="var/csv/")
             elif tag == "MasseSalariale":
-                split_salary_file_as_salary_csv(
-                        filepath=os.path.join(
-                            app.config['UPLOAD_FOLDER'],
-                            tag + '.' + filename.split('.')[1]),
-                        outputpath="var/csv/")
+                split_salary_file_as_salary_csv(filepath=os.path.join(
+                    app.config['UPLOAD_FOLDER'],
+                    tag + '.' + filename.split('.')[1]),
+                                                outputpath="var/csv/")

@@ -1,12 +1,12 @@
-from reportlab.platypus import Table, TableStyle
-from .colors import black, lightwhite, bleu, bleuciel, yellow
+from .colors import black, bleuciel, yellow
+
 
 class Style():
-    
-    def __init__(self,table,tableHeight=-1,total=True):
+
+    def __init__(self, table, tableHeight=-1, total=True):
         self.tablestyle = [
             ('FACE', (0, 0), (-1, -1), "Helvetica-Bold"),
-            ('FACE', (1, 1), (-1,-2), "Helvetica"),
+            ('FACE', (1, 1), (-1, -2), "Helvetica"),
             ('GRID', (0, 0), (-1, -1), 0.1, black),
             ('FONTSIZE', (0, 0), (-1, -1), 8),
             ('ALIGN', (0, 0), (-1, -1), "CENTER"),
@@ -19,7 +19,7 @@ class Style():
         self.tablelen = len(table)
 
         if tableHeight != -1:
-            self.rowheights = (self.tablelen ) *\
+            self.rowheights = (self.tablelen) *\
                 [min([int(tableHeight/(self.tablelen + 1)), 30])]
         else:
             self.rowheights = (self.tablelen) * [12]
