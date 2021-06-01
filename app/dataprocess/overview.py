@@ -134,7 +134,7 @@ class Overview():
         self._calculate_total()
 
     def add_revenues(self):
-        """Ajout des chiffres d'affaires"""
+        """Ajout des chiffres d'affaires."""
         for name in self.worksite_names:
             worksite_revenue = Revenues(self.expenses.data.loc[
                 self.expenses.data["Section analytique"] == name])
@@ -215,7 +215,6 @@ class Overview():
                 et le calculate du total. \
                 Se charge de mettre en forme le \
                 tableau du chiffre d'affaire."""
-
         month_revenues = round(month_revenues, 2)
         cumulative_revenues = round(cumulative_revenues, 2)
         self.total_revenue_margin = pd.DataFrame(

@@ -206,9 +206,9 @@ class Worksite(Categories):
                           'Marge brute', 'Marge brute %']
 
         out = pd.DataFrame(data=data, index=row_index, columns=column_indexes)
-        out['CA Cumulé'] = out['CA Cumulé'].astype(int)
-        out['Dépenses cumulées'] = out['Dépenses cumulées'].astype(int)
-        out['Marge brute'] = out['Marge brute'].astype(int)
+        out['CA Cumulé'] = out['CA Cumulé'].astype(int).apply("{:0,.2f}€".format)
+        out['Dépenses cumulées'] = out['Dépenses cumulées'].astype(int).apply("{:0,.2f}€".format)
+        out['Marge brute'] = out['Marge brute'].astype(int).apply("{:0,.2f}€".format)
         out['Marge brute %'] = out['Marge brute %'].apply("{:0,.2f}%".format)
         return out
 

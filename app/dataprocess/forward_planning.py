@@ -82,7 +82,7 @@ class ForwardPlanning():
         row_indexes = ["Marge brute", "Marge brute %"]
 
         try:
-            sell_price = int(budget.loc[budget["POSTE"] == "PRIX DE VENTE",
+            sell_price = int(budget.loc[budget["POSTE"] == "MONTANT MARCHE",
                              self.worksite.worksite_name])\
                              if budget is not None else 0
         except Exception:

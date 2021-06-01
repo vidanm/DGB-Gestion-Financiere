@@ -6,6 +6,11 @@ import logging
 class Expenses():
 
     def __init__(self, data, accounting_plan, with_category=True):
+        
+        """
+        Traite les dépenses ( provenant de l'extraction comptable ).
+        """
+
         self.data = data
         self.accounting_plan = accounting_plan
         if with_category:
@@ -13,12 +18,14 @@ class Expenses():
             self.__compose_accounts_with_category_name()
 
     def __add__(self, other):
+        """Concatene 2 dépenses."""
         a = self.data
         b = other.data
         return Expenses(a.append(b, ignore_index=True),
                         self.accounting_plan, with_category=False)
 
     def __str__(self):
+        """Representation de dépenses."""
         return self.data.to_string()
 
     def __remove_unknown_accounts(self):

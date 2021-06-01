@@ -20,6 +20,7 @@ class Categories():
                 'SOUS POSTE')
 
     def _add_month_expense(self, row):
+        
         """Ajoute une dépense du mois au dictionnaire des postes.
 
             Parameters:
@@ -40,6 +41,7 @@ class Categories():
                   " n'est pas une dépense de structure/chantier")
 
     def _add_cumulative_expense(self, row):
+        
         """Ajoute une dépense de l'année au dictionnaire des postes.
 
             Parameters:
