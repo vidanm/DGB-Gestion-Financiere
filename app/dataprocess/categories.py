@@ -7,8 +7,12 @@ class Categories():
         for name in self.category_names:
             self.categories[name] = accounting_plan.loc[
                 accounting_plan['POSTE'] == name]
+
+            self.categories[name].columns =\
+                [x.strip() for x in self.categories[name].columns]
+
             self.categories[name] = self.categories[name].drop(
-                columns=['POSTE', 'N° DE COMPTE', 'EX.'])
+                columns=['POSTE', 'N° DE COMPTE', 'EX.'], errors='ignore')
             # drop EX. si présent
             self.categories[name]['Dépenses du mois'] = 0
             self.categories[name]["Dépenses cumulées"] = 0

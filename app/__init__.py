@@ -16,7 +16,6 @@ from app.dataprocess.imports import \
 from app.dataprocess.date import get_month_name
 from app.dataprocess.errors_to_html import errors_to_html
 from app.dataprocess.forward_planning import ForwardPlanning
-from app.pdf_generation.index_letters import default_table,marge_a_avancement,marge_fdc
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 from .models import db, login, UserModel
@@ -146,7 +145,9 @@ def syntpdf():
     formatted_overview = overview.get_formatted_data()
 
     pdf.new_page("Synthese", get_month_name(int(date[5:7])) + ' ' + year)
-    pdf.add_table(formatted_overview, y=A4[0] - inch * 3.2, tableHeight=inch*3)
+
+    pdf.add_table(formatted_overview, y=A4[0] - inch * 3.2, tableHeight=inch*3,
+            indexName="CHANTIER",letters='')
     pdf.create_bar_syntgraph(600, 250, overview.data)
     pdf.save_page()
     pdf.save_pdf()
@@ -315,12 +316,12 @@ def rad():
             
             pdf.add_table(planning_margin, y=inch*2, x=inch*4.5, tableHeight=inch*2, 
                     indexName="Période", title="Marge à l'avancement",coloring=True,total=False,
-                    letters=marge_a_avancement
+                    letters='marge_a_avancement'
                     )
             
             pdf.add_table(planning_pfdc, y=inch*2, x=A4[1]-inch*3, tableHeight=inch*2,
                     indexName="Marges", title="Marge à fin de chantier",noIndexLine=True,
-                    coloring=True,total=False,letters=marge_fdc)
+                    coloring=True,total=False,letters='marge_fdc')
 
             pdf.add_legend("PFDC = Prévision fin de chantier",x=0.1*inch,y=0.2*inch)
             pdf.add_legend("RAD = Restes à dépenser",x=inch*0.1,y=0.4*inch)
@@ -330,7 +331,7 @@ def rad():
 
             pdf.new_page("Gestion prévisionnelle 2/2", worksite_name)
             pdf.add_table(planning_margin_cumul,tableHeight=inch*2,indexName="Période",
-                    title="Marge à l'avancement",coloring=True,total=False,letters=marge_a_avancement)
+                    title="Marge à l'avancement",coloring=True,total=False,letters='marge_a_avancement')
 
         elif (nom == "DIVERS"):
             continue
@@ -378,10 +379,44 @@ def structpdf():
 
         pdf = PDF(filename)
         pdf.new_page("Structure", get_month_name(int(month)) + ' ' + year)
-        pdf.add_struct_table(office.format_for_pdf(),
-                             office.row_names,
-                             size=0.6)
-        pdf.save_page()
+        
+        num_poste = 0#nombre de postes sur la page courante
+        df = None
+        style = []
+        current_nb_of_rows = 1
+
+        for i in range(len(office.category_names)):
+            print(office.category_names)
+            if num_poste >= 2 or i >= len(office.category_names)-1:
+                style.append(('SPAN',(0,current_nb_of_rows),(-1,current_nb_of_rows)))
+                # Titre de section
+
+                df = df.append(office.get_formatted_data(office.category_names[i]))
+                pdf.new_page("Structure", " ")
+                pdf.add_table(df,custom_style=style,total=False)
+                pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
+                df = None
+                num_poste = 0
+                current_nb_of_rows = 1
+                style = []
+                pdf.save_page()
+            elif df is None:
+                num_poste += 1
+                style.append(('SPAN',(0,current_nb_of_rows),(-1,current_nb_of_rows)))
+                # Titre de section
+
+                df = office.get_formatted_data(office.category_names[i])
+                current_nb_of_rows = len(df.index)+1
+            else:
+                num_poste += 1
+                print("\nHELO from "+office.category_names[i]+"\n")
+                style.append(('SPAN',(0,current_nb_of_rows),(-1,current_nb_of_rows)))
+                # Titre de section
+
+                df = df.append(office.get_formatted_data(office.category_names[i]))
+                current_nb_of_rows = len(df.index)+1
+        
+        for i in style : print("\n"+str(i)+"\n")
         pdf.save_pdf()
 
         return send_file(filename, as_attachment=True)

@@ -7,9 +7,8 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
 from .style import Style
-from .index_letters import default_table
+from .index_letters import default_table, marge_fdc, marge_a_avancement
 import os.path
-import numpy as np
 
 locale.setlocale(locale.LC_ALL, 'en_US.utf8')
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -57,7 +56,7 @@ class PDF():
         self.c.setFillColorRGB(0, 0, 0)
 
     def ajoute_total(self, numTable):
-        #Vérifier utilité
+        # Vérifier utilité
         total = [[0] * 7]
         for i in range(1, len(numTable)):
             for j in range(1, len(numTable[0])):
@@ -65,10 +64,6 @@ class PDF():
 
         total[0][0] = 'Total'
         numTable.append(total[0])
-
-    """
-    Déplacer tout ces fonctions dans un fichier graphe.py
-
 
     def create_bar_syntgraph(self, width, height, synt):
         pfdc = synt["PFDC"].tolist()
@@ -100,6 +95,9 @@ class PDF():
         d.chart.titleFontColor = black
         # d.rotate(90)
         d.drawOn(self.c, inch, inch*0.1)
+
+    """
+    A deplacer dans graphe.py
 
     def create_bar_gesprevgraph(self, width, height, postes):
         pfdc = []
@@ -145,83 +143,47 @@ class PDF():
         d.drawOn(self.c, inch*0.3, inch*0.05)
     """
 
-    def convert_struct_string(self, numTable):
-        for i in range(0, len(numTable)):
-            for j in range(0, len(numTable[i])):
-                if (isinstance(numTable[i][j], float)):
-                    if (j > 2):
-                        numTable[i][j] = int(numTable[i][j])#"{:.0f}"\
-                                # .format(numTable[i][j]) +\
-                                # " %" if numTable[i][j] != 0 \
-                                # else "/"
-                    else:
-                        numTable[i][j] = int(numTable[i][j]) #"{:.0f}"\
-                                #.format(numTable[i][j]) +\
-                                #" €" if numTable[i][j] != 0 \
-                                #else "/"
-        return numTable
-
-    def add_struct_table(self, dataframe,
-                         row_noms, x='center', y='center', size=1):
-        dataframe = dataframe.reset_index()
-        rowHeights = (len(dataframe)+1)*[11*size]
-        rowHeights[0] = 18
-        numTable = dataframe.to_numpy().tolist()
-        numTable.insert(0, np.array(dataframe.columns.values).tolist())
-        numTable = self.convert_struct_string(numTable)
-        # self.eliminate_zeros_add_euros(numTable)
-        if (numTable[0][0] == "index"):
-            numTable[0][0] = "Poste"
-
-        t = Table(numTable, rowHeights=rowHeights)
-        t.setStyle(self.struct_style(row_noms))
-        w, h = t.wrapOn(self.c, 0, 0)
-
-        if (x == -1 or x == 'center'):
-            x = (A4[1]/2)-(w/2)
-        if (y == -1 or y == 'center'):
-            y = (A4[0]/2)-(h/2)-inch*0.8
-
-        t.drawOn(self.c, x, y)
-
-    def add_legend(self,text,x=-1,y=-1,size=9):
+    def add_legend(self, text, x=-1, y=-1, size=9):
 
         self.c.setFont("Helvetica", size)  # Draw Title
         self.c.setFillColor("BLACK")
         self.c.drawString(x, y, text)
 
-    def add_table(self, dataframe, x=-1, y=-1, tableHeight=-1,indexName="Poste",\
-            title=None,noIndexLine=False,coloring=False,total=True,letters=default_table):
+    def add_table(self, dataframe, x=-1, y=-1,
+                  tableHeight=-1, indexName="Poste",
+                  title=None, noIndexLine=False, coloring=False, total=True,
+                  letters=default_table, custom_style=[]):
         """Ajoute un tableau a la feuille active.
 
         Le coin bas droite est représenté par (x,y)."""
         dataframe = dataframe.reset_index()
         numTable = dataframe.to_numpy().tolist()
-        indexes =  dataframe.columns.values.tolist()
+        indexes = dataframe.columns.values.tolist()
 
-        
         numTable.insert(0, indexes)
-        tablestyle = Style(numTable,tableHeight,total)
+        tablestyle = Style(numTable, tableHeight, total)
 
         if (numTable[0][0] == "index"):
             numTable[0][0] = indexName
- 
+
         if noIndexLine:
-            self.change_index_names(letters,numTable,axis=1)
+            self.change_index_names(letters, numTable, axis=1)
         else:
-            self.change_index_names(letters,numTable,axis=0)
+            self.change_index_names(letters, numTable, axis=0)
 
         if title is not None:
             lst = [i for i in range(len(numTable[0])-1)]
-            numTable.insert(0,lst)
+            numTable.insert(0, lst)
             numTable[0][0] = title
             if noIndexLine:
                 tablestyle.delete_index_line()
             else:
                 tablestyle.add_title_style()
 
-            tablestyle.add_custom_style(('FACE', (0, 1), (-1, 1), "Helvetica-Bold"))
-            tablestyle.add_custom_style(('BACKGROUND', (0, 1), (-1, 1), bleuciel))
+            tablestyle.add_custom_style(
+                ('FACE', (0, 1), (-1, 1), "Helvetica-Bold"))
+            tablestyle.add_custom_style(
+                ('BACKGROUND', (0, 1), (-1, 1), bleuciel))
 
         for i in range(len(numTable)):
             for j in range(len(numTable[i])):
@@ -229,6 +191,9 @@ class PDF():
 
         if coloring:
             tablestyle.add_coloring(numTable)
+
+        for i in custom_style:
+            tablestyle.add_custom_style(i)
 
         t = Table(numTable, rowHeights=tablestyle.get_rowheights())
         t.setStyle(TableStyle(tablestyle.get_style()))
@@ -276,18 +241,26 @@ class PDF():
 
     def save_pdf(self):
         self.c.save()
-    
 
-    def change_index_names(self,new_index,table,axis=0):
+    def change_index_names(self, new_index, table, axis=0):
         """ axis = 0 -> rows
             1 -> columns """
+
+        if new_index == 'default':
+            new_index = default_table
+        elif new_index == 'marge_a_avancement':
+            new_index = marge_a_avancement
+        elif new_index == 'marge_fdc':
+            new_index = marge_fdc
+        else:
+            return
+
         if not axis:
             for j in range(len(table[0])):
                 if table[0][j] in new_index.keys():
                     table[0][j] = new_index[table[0][j]]
-        else :
+        else:
             for i in range(len(table)):
                 if table[i][0] in new_index.keys():
                     table[i][0] = new_index[table[i][0]]
         return table
-

@@ -8,6 +8,7 @@ import os
 
 
 class Office(Categories):
+
     def __init__(self,
                  accounting_plan,
                  month,
@@ -77,24 +78,24 @@ class Office(Categories):
         self._add_revenues(month, self.year)
         self.add_office_total()
 
-    def format_for_pdf(self):
-        self.row_names = [
-            1
-        ]  # On garde les positions des names de poste pour
-        # pouvoir les colorier différemment
-        for name in self.category_names:
-            if (self.category_names.index(name) == 0):
-                title = pd.DataFrame([[]], [name])
-                formatted_office = pd.DataFrame(self.categories[name])
-                formatted_office = title.append(formatted_office)
-            else:
-                self.row_names.append(len(formatted_office) + 1)
-                title = pd.DataFrame([[]], [name])
-                formatted_office = formatted_office.append(title)
-                formatted_office = formatted_office.append(
-                    self.categories[name])
+    def get_formatted_data(self, category_name):
+        title = pd.DataFrame([[]], [category_name])
+        formatted = self.categories[category_name].copy()
+        formatted = title.append(formatted)
 
-        return formatted_office
+        formatted["Dépenses du mois"] = formatted["Dépenses du mois"].apply(
+            "{:0,.2f}€".format)
+
+        formatted["Dépenses cumulées"] = formatted["Dépenses cumulées"].apply(
+            "{:0,.2f}€".format)
+
+        formatted["%CA MOIS"] = formatted["%CA MOIS"].apply(
+            "{:0,.2f}%".format)
+
+        formatted["%CA Cumul"] = formatted["%CA Cumul"].apply(
+            "{:0,.2f}%".format)
+
+        return formatted
 
     def _add_revenues(self, month, year):
         revenues = Revenues(self.year_expenses.data)
@@ -106,12 +107,14 @@ class Office(Categories):
                                                            'Dépenses du mois']
                 cumulative_expenses = self.categories[name].loc[
                     row.name, "Dépenses cumulées"]
-                self.categories[name].loc[
-                    row.name,
-                    '%CA MOIS'] = month_expenses * 100 / month_revenue
-                self.categories[name].loc[
-                    row.name,
-                    '%CA Cumul'] = cumulative_expenses * 100 / year_revenue
+
+                self.categories[name].loc[row.name, '%CA MOIS'] =\
+                    month_expenses * 100 / month_revenue\
+                    if month_revenue != 0 else 0
+
+                self.categories[name].loc[row.name, '%CA Cumul'] =\
+                    cumulative_expenses * 100 / year_revenue\
+                    if year_revenue != 0 else 0
 
     def add_category_total(self):
         month_total = 0

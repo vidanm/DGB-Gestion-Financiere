@@ -100,10 +100,20 @@ class Overview():
                             (tmp['Date'].dt.year == year))]
             cumul_tmp = tmp[((tmp['Date'].dt.month <= month) |
                             (tmp['Date'].dt.year < year))]
-            cumul_debit = cumul_tmp['Débit'].sum()
-            cumul_credit = cumul_tmp['Crédit'].sum()
-            month_debit = month_tmp['Débit'].sum()
-            month_credit = month_tmp['Crédit'].sum()
+
+            # On parse avant de faire la somme
+            # au cas ou un index se serait glissé entre les données
+            cumul_debit = pd.to_numeric(cumul_tmp['Débit'], errors='coerce')\
+                .sum()
+
+            cumul_credit = pd.to_numeric(cumul_tmp['Crédit'], errors='coerce')\
+                .sum()
+
+            month_debit = pd.to_numeric(month_tmp['Débit'], errors='coerce')\
+                .sum()
+
+            month_credit = pd.to_numeric(month_tmp['Crédit'], errors='coerce')\
+                .sum()
 
             worksite_line[6] = cumul_debit - cumul_credit
             worksite_line[3] = month_debit - month_credit
