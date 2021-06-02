@@ -1,58 +1,6 @@
-Compte 625100 pas dans le plan comptable
-
-Compte 218310 pas dans le plan comptable
-
-Compte 645700 pas dans le plan comptable
-
-Compte 612900 pas dans le plan comptable
-
-Compte 631300 pas dans le plan comptable
-
-Compte 641200 pas dans le plan comptable
-
-127.0.0.1 - - [01/Jun/2021 15:24:19] "[37mPOST /synthese_structure HTTP/1.1[0m" 200 -
+127.0.0.1 - - [02/Jun/2021 09:17:37] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
+127.0.0.1 - - [02/Jun/2021 09:17:37] "[36mGET /static/rad.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [02/Jun/2021 09:17:45] "[37mPOST /rad HTTP/1.1[0m" 200 -
  * Detected change in '/home/vidan/DGB_Gesfin/app/__init__.py', reloading
-Compte 625100 pas dans le plan comptable
-
-Compte 218310 pas dans le plan comptable
-
-Compte 645700 pas dans le plan comptable
-
-Compte 612900 pas dans le plan comptable
-
-Compte 631300 pas dans le plan comptable
-
-Compte 641200 pas dans le plan comptable
-
-127.0.0.1 - - [01/Jun/2021 15:25:52] "[37mPOST /synthese_structure HTTP/1.1[0m" 200 -
- * Detected change in '/home/vidan/DGB_Gesfin/app/__init__.py', reloading
-Compte 625100 pas dans le plan comptable
-
-Compte 218310 pas dans le plan comptable
-
-Compte 645700 pas dans le plan comptable
-
-Compte 612900 pas dans le plan comptable
-
-Compte 631300 pas dans le plan comptable
-
-Compte 641200 pas dans le plan comptable
-
-127.0.0.1 - - [01/Jun/2021 15:27:37] "[37mPOST /synthese_structure HTTP/1.1[0m" 200 -
- * Detected change in '/home/vidan/DGB_Gesfin/app/pdf_generation/style.py', reloading
-Compte 623800 pas dans le plan comptable
-
-Compte 645700 pas dans le plan comptable
-
-Compte 635430 pas dans le plan comptable
-
-Compte 625100 pas dans le plan comptable
-
-Compte 218310 pas dans le plan comptable
-
-Compte 627500 pas dans le plan comptable
-
-Compte 635140 pas dans le plan comptable
-
-127.0.0.1 - - [01/Jun/2021 15:32:23] "[37mPOST /synthese_structure HTTP/1.1[0m" 200 -
+127.0.0.1 - - [02/Jun/2021 09:18:07] "[37mPOST /rad HTTP/1.1[0m" 200 -
  * Detected change in '/home/vidan/DGB_Gesfin/app/__init__.py', reloading

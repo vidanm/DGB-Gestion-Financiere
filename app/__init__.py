@@ -352,6 +352,10 @@ def rad():
             pdf.add_legend("CA = Chiffre d'affaires",
                            x=inch * 0.1,
                            y=0.6 * inch)
+            pdf.add_legend("V = Montant marché + Avenants",
+                           x=inch * 0.1,
+                           y=0.8 * inch)
+
             pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
             pdf.save_page()
 
