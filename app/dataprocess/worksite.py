@@ -49,8 +49,9 @@ class Worksite(Categories):
         df['Month'] = pd.DatetimeIndex(df['Date']).month
 
         exp = df.loc[(year == df['Year']) & (month >= df['Month'])]
-        if isinstance(exp['Général'], int):
-            exp = exp.loc[(exp['Général']/100000 % 7 > 1)]
+        exp = exp.loc[ (exp['Général'].astype(str).str.slice(stop=1) != '7') ]
+
+        print(exp['Débit'].sum())
         return exp['Débit'].sum() - exp['Crédit'].sum()
 
     def calculate_cumul_expenses(self, month, year):
@@ -60,9 +61,10 @@ class Worksite(Categories):
 
         exp = df.loc[(year > df['Year']) | ((year == df['Year'])
                      & (month >= df['Month']))]
+        
+        exp = exp.loc[ (exp['Général'].astype(str).str.slice(stop=1) != '7') ]
 
-        if isinstance(exp['Général'], int):
-            exp = exp.loc[(exp['Général']/100000 % 7 > 1)]
+        print(exp['Débit'].sum())
         return exp['Débit'].sum() - exp['Crédit'].sum()
 
     def calculate_worksite(self, month, year, budget=None):

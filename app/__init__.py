@@ -424,13 +424,13 @@ def structpdf():
                               (-1, current_nb_of_rows)))
                 # Titre de section
                 style.append(('BACKGROUND', (0, current_nb_of_rows),
-                              (-1, current_nb_of_rows),bleuciel))
+                              (-1, current_nb_of_rows), bleuciel))
 
                 df = df.append(
                     office.get_formatted_data(office.category_names[i]))
                 pdf.new_page("Structure", " ")
                 pdf.add_table(df, custom_style=style,
-                        total=(i >= len(office.category_names)-1))
+                              total=(i >= len(office.category_names)-1))
                 pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
                 df = None
                 num_poste = 0
@@ -442,7 +442,7 @@ def structpdf():
                 style.append(('SPAN', (0, current_nb_of_rows),
                               (-1, current_nb_of_rows)))
                 style.append(('BACKGROUND', (0, current_nb_of_rows),
-                              (-1, current_nb_of_rows),bleuciel))
+                              (-1, current_nb_of_rows), bleuciel))
 
                 # Titre de section
 
@@ -454,7 +454,7 @@ def structpdf():
                 style.append(('SPAN', (0, current_nb_of_rows),
                               (-1, current_nb_of_rows)))
                 style.append(('BACKGROUND', (0, current_nb_of_rows),
-                              (-1, current_nb_of_rows),bleuciel))
+                              (-1, current_nb_of_rows), bleuciel))
 
                 # Titre de section
 

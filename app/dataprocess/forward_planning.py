@@ -41,9 +41,12 @@ class ForwardPlanning():
         margin_anterior = anterior_revenues - anterior_expenses
         margin_total = cumulative_revenues - cumulative_expenses
 
-        percent_margin_year = (margin_year/year_expenses)*100
-        percent_margin_anterior = (margin_anterior/anterior_expenses)*100
-        percent_margin_total = (margin_total/cumulative_expenses)*100
+        percent_margin_year = (year_revenues/year_expenses)*100\
+            if year_expenses != 0 else 0
+        percent_margin_anterior = (anterior_revenues/anterior_expenses)*100\
+            if anterior_expenses != 0 else 0
+        percent_margin_total = (cumulative_revenues/cumulative_expenses)*100\
+            if cumulative_expenses != 0 else 0
 
         row_indexes = []
         data = []
