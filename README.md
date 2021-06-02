@@ -40,7 +40,7 @@ Tous doivent être importés sous le format .xls et non .xlsx.
 ### Budget
 1. Le nom des postes et des sous postes doivent **obligatoirement** correspondre aux noms donnés dans le plan
 comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'oeuvre"
-2. Les champs "MONTANT MARCHE" et "AVENANTS" doivent être placés à la fin du budget, colonne POSTE.
+2. Les champs "MONTANT MARCHE" et "AVENANTS" doivent être placés à la fin du budget, dans la colonne POSTE et la colonne.
 
 ### Masse salariale
 ![Example Masse Salariale](https://i.ibb.co/6Y1ZDtx/screenshot.png)
