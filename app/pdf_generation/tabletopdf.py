@@ -152,7 +152,7 @@ class PDF():
     def add_table(self, dataframe, x=-1, y=-1,
                   tableHeight=-1, indexName="Poste",
                   title=None, noIndexLine=False, coloring=False, total=True,
-                  letters=default_table, custom_style=[]):
+                  letters='default', custom_style=[]):
         """Ajoute un tableau a la feuille active.
 
         Le coin bas droite est représenté par (x,y)."""
