@@ -168,9 +168,8 @@ def diverspdf():
     date = request.form['date']
     year = date[0:4]
     month = date[5:7]
-    worksite_name = request.form['code']
 
-    filename = "bibl/" + date + "/" + worksite_name + "_DIV.pdf"
+    filename = "bibl/" + date + "/" + date + "_DIV.pdf"
     if not (os.path.exists('bibl/' + date)):
         os.makedirs("bibl/" + date)
 
@@ -180,14 +179,14 @@ def diverspdf():
     except Exception as error:
         return "Erreur de lecture du plan comptable :" + str(error)
 
-    worksite = Worksite(accounting_plan, worksite_name)
+    worksite = Worksite(accounting_plan, "DIV")
     worksite.calculate_worksite(int(month), int(year))
     divers_result_tab = worksite.calcul_divers_result(year)
     pdf = PDF(filename)
     for nom in worksite.categories.keys():
 
         if (nom == "DIVERS"):
-            pdf.new_page(nom, worksite_name)
+            pdf.new_page(nom, "DIV")
             pdf.add_table(worksite.get_formatted_data(nom),
                           y=(A4[0] / 2) - inch / 2,
                           tableHeight=inch * 5)

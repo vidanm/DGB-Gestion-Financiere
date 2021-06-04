@@ -1,14 +1,113 @@
-127.0.0.1 - - [04/Jun/2021 11:09:28] "[37mGET / HTTP/1.1[0m" 200 -
-Compte 608301 pas dans le plan comptable
+Compte 603100 pas dans le plan comptable
 
-127.0.0.1 - - [04/Jun/2021 11:09:32] "[37mPOST /rad HTTP/1.1[0m" 200 -
-127.0.0.1 - - [04/Jun/2021 11:09:34] "[37mPOST /synthese_globale HTTP/1.1[0m" 200 -
+Compte 604101 pas dans le plan comptable
+
+Compte 611400 pas dans le plan comptable
+
+Compte 611100 pas dans le plan comptable
+
+Compte 616330 pas dans le plan comptable
+
+Compte 606140 pas dans le plan comptable
+
+Compte 627500 pas dans le plan comptable
+
+Compte 612600 pas dans le plan comptable
+
+Compte 627000 pas dans le plan comptable
+
+Compte 641108 pas dans le plan comptable
+
+Compte 641110 pas dans le plan comptable
+
+Compte 623800 pas dans le plan comptable
+
+Compte 635140 pas dans le plan comptable
+
+Compte 603100 pas dans le plan comptable
+
+Compte 654000 pas dans le plan comptable
+
+Compte 603100 pas dans le plan comptable
+
+Compte 611448 pas dans le plan comptable
+
+127.0.0.1 - - [04/Jun/2021 15:36:16] "[35m[1mPOST /synthese_divers HTTP/1.1[0m" 500 -
+127.0.0.1 - - [04/Jun/2021 15:36:17] "[37mGET /synthese_divers?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [04/Jun/2021 15:36:17] "[37mGET /synthese_divers?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 200 -
+127.0.0.1 - - [04/Jun/2021 15:36:17] "[37mGET /synthese_divers?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 200 -
+127.0.0.1 - - [04/Jun/2021 15:36:17] "[37mGET /synthese_divers?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1[0m" 200 -
+127.0.0.1 - - [04/Jun/2021 15:36:17] "[37mGET /synthese_divers?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
+127.0.0.1 - - [04/Jun/2021 15:36:17] "[37mGET /synthese_divers?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 200 -
  * Detected change in '/home/vidan/DGB_Gesfin/app/__init__.py', reloading
-Compte 608301 pas dans le plan comptable
+Compte 603100 pas dans le plan comptable
 
-127.0.0.1 - - [04/Jun/2021 11:15:35] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
-127.0.0.1 - - [04/Jun/2021 11:15:39] "[37mGET /rad HTTP/1.1[0m" 200 -
-Compte 608301 pas dans le plan comptable
+Compte 604101 pas dans le plan comptable
 
-127.0.0.1 - - [04/Jun/2021 11:15:49] "[37mPOST /rad HTTP/1.1[0m" 200 -
+Compte 611400 pas dans le plan comptable
+
+Compte 611100 pas dans le plan comptable
+
+Compte 616330 pas dans le plan comptable
+
+Compte 606140 pas dans le plan comptable
+
+Compte 627500 pas dans le plan comptable
+
+Compte 612600 pas dans le plan comptable
+
+Compte 627000 pas dans le plan comptable
+
+Compte 641108 pas dans le plan comptable
+
+Compte 641110 pas dans le plan comptable
+
+Compte 623800 pas dans le plan comptable
+
+Compte 635140 pas dans le plan comptable
+
+Compte 603100 pas dans le plan comptable
+
+Compte 654000 pas dans le plan comptable
+
+Compte 603100 pas dans le plan comptable
+
+Compte 611448 pas dans le plan comptable
+
+127.0.0.1 - - [04/Jun/2021 15:36:47] "[37mPOST /synthese_divers HTTP/1.1[0m" 200 -
  * Detected change in '/home/vidan/DGB_Gesfin/app/__init__.py', reloading
+Compte 603100 pas dans le plan comptable
+
+Compte 604101 pas dans le plan comptable
+
+Compte 611400 pas dans le plan comptable
+
+Compte 611100 pas dans le plan comptable
+
+Compte 616330 pas dans le plan comptable
+
+Compte 606140 pas dans le plan comptable
+
+Compte 627500 pas dans le plan comptable
+
+Compte 612600 pas dans le plan comptable
+
+Compte 627000 pas dans le plan comptable
+
+Compte 641108 pas dans le plan comptable
+
+Compte 641110 pas dans le plan comptable
+
+Compte 623800 pas dans le plan comptable
+
+Compte 635140 pas dans le plan comptable
+
+Compte 603100 pas dans le plan comptable
+
+Compte 654000 pas dans le plan comptable
+
+Compte 603100 pas dans le plan comptable
+
+Compte 611448 pas dans le plan comptable
+
+127.0.0.1 - - [04/Jun/2021 15:37:54] "[37mPOST /synthese_divers HTTP/1.1[0m" 200 -

@@ -155,6 +155,9 @@ class Worksite(Categories):
                     row.name, "Ecart PFDC/Budget"] = row['Budget'] - pfdc
 
     def add_category_total(self, name):
+        """
+        Ajoute le total d'un poste à la fin de son tableau
+        """
         totalmois = 0
         totalannee = 0
         totalbudget = 0
