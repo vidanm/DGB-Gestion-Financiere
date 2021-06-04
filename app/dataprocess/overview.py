@@ -94,7 +94,8 @@ class Overview():
                     self.expenses.data["Section analytique"] ==
                     name]
             tmp['Date'] = pd.to_datetime(tmp['Date'])
-            tmp = tmp.loc[tmp["Journal"] == "ACH"]
+            tmp = tmp.loc[tmp["Journal"] != "VEN"]
+            tmp = tmp.loc[tmp["Journal"] != "ANO"]
 
             month_tmp = tmp[((tmp['Date'].dt.month == month) &
                             (tmp['Date'].dt.year == year))]

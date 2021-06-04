@@ -145,7 +145,7 @@ def syntpdf():
     pdf.new_page("Synthese Globale", get_month_name(int(date[5:7])) + ' ' + year)
 
     pdf.add_table(formatted_overview,
-                  tableHeight=inch * 3,
+                  tableHeight=inch * 5,
                   indexName="CHANTIER",
                   letters='globale')
     
