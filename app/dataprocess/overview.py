@@ -200,7 +200,7 @@ class Overview():
             self.data.loc[name, "MARGE MOIS"] = round(
                 month_revenues - month_expenses, 2)
             self.data.loc[name, "MARGE A FIN DE MOIS"] = round(
-                cumulative_expenses - cumulative_revenues, 2)
+                cumulative_revenues - cumulative_expenses, 2)
             self.data.loc[name, "MARGE FDC"] = round(
                 sell_price - pfdc,
                 2)

@@ -145,6 +145,7 @@ def syntpdf():
     pdf.new_page("Synthese Globale", get_month_name(int(date[5:7])) + ' ' + year)
 
     pdf.add_table(formatted_overview,
+                  y=A4[0] - inch * 3.2,
                   tableHeight=inch * 3,
                   indexName="CHANTIER",
                   letters='globale')
@@ -377,10 +378,6 @@ def rad():
                           total=False,
                           letters='marge_fdc')
 
-            pdf.add_legend("V = Montant marché + Avenants",
-                       x=inch * 7,
-                       y=0.1 * inch)
-
 
         elif (nom == "DIVERS"):
             continue
@@ -399,7 +396,10 @@ def rad():
         pdf.add_legend("CA = Chiffre d'affaires",
                        x=inch * 5,
                        y=0.1 * inch)
-        
+        pdf.add_legend("V = Montant marché + Avenants",
+                       x=inch * 7,
+                       y=0.1 * inch)
+
         pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
         pdf.save_page()
 
