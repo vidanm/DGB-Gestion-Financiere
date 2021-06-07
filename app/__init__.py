@@ -181,12 +181,13 @@ def diverspdf():
 
     worksite = Worksite(accounting_plan, "DIV")
     worksite.calculate_worksite(int(month), int(year))
+    worksite.add_worksite_total()
     divers_result_tab = worksite.calcul_divers_result(year)
     pdf = PDF(filename)
     for nom in worksite.categories.keys():
 
         if (nom == "DIVERS"):
-            pdf.new_page(nom, "DIV")
+            pdf.new_page(nom, "")
             pdf.add_table(worksite.get_formatted_data(nom),
                           y=(A4[0] / 2) - inch / 2,
                           tableHeight=inch * 5)
