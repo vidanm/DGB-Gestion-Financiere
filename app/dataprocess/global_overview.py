@@ -137,8 +137,7 @@ class GlobalOverview(Overview):
 
             sell_price = 0
             if budget is not None and name in budget.columns:
-                tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE') |
-                                 (budget['POSTE'] == 'AVENANTS')]
+                tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE')]
                 sell_price = tmp[name].sum()
 
             self.data.loc[name, "MARGE MOIS"] = round(

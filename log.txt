@@ -1,10 +1,11 @@
-Compte 625100 pas dans le plan comptable
-
-Compte 613210 pas dans le plan comptable
-
-Compte 635430 pas dans le plan comptable
-
-Pas de budget associé a ce chantier
-127.0.0.1 - - [09/Jun/2021 11:43:13] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
-127.0.0.1 - - [09/Jun/2021 11:43:14] "[37mGET /rad HTTP/1.1[0m" 200 -
+Le couple CHARGES TEMPORELLES : SECURITE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+127.0.0.1 - - [09/Jun/2021 12:10:04] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
+127.0.0.1 - - [09/Jun/2021 12:10:06] "[37mGET /rad HTTP/1.1[0m" 200 -
+Le couple CHARGES TEMPORELLES : SECURITE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+127.0.0.1 - - [09/Jun/2021 12:10:13] "[37mPOST /rad HTTP/1.1[0m" 200 -
  * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/global_overview.py', reloading
+Le couple CHARGES TEMPORELLES : SECURITE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+127.0.0.1 - - [09/Jun/2021 12:16:05] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/forward_planning.py', reloading
+Le couple CHARGES TEMPORELLES : SECURITE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+127.0.0.1 - - [09/Jun/2021 12:20:13] "[37mPOST /rad HTTP/1.1[0m" 200 -

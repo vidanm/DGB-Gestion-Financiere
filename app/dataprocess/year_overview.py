@@ -75,9 +75,9 @@ class YearOverview(Overview):
         totaldep = self.data["Dépenses"].sum()
         totalraf = self.data["Reste à facturer"].sum()
         totalmarg = self.data["Marge €"].sum()
-        totalmargper = self.data["Marge %"].sum()
+        totalmargper = ((totalca - totaldep)/totalca) * 100 if totalca > 0 else 0
         totalmargyear = self.data["Marge fin annee €"].sum()
-        totalmargyearper = self.data["Marge fin annee %"].sum()
+        totalmargyearper = (sell_price - pfdc)/(sell_price - anterior_revenues)\
 
         total = pd.DataFrame(
             {
@@ -116,8 +116,7 @@ class YearOverview(Overview):
 
             sell_price = 0
             if budget is not None and name in budget.columns:
-                tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE') |
-                                 (budget['POSTE'] == 'AVENANTS')]
+                tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE')]
                 sell_price = tmp[name].sum()
 
 
