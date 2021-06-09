@@ -150,10 +150,10 @@ class YearOverview(Overview):
                 if revenues > 0 else 0
 
             self.data.loc[name,"Marge fin annee €"] =\
-                (sell_price - pfdc)
+                (sell_price - pfdc) - (revenues - expenses)
 
             self.data.loc[name, "Marge fin annee %"] =\
-                (sell_price - pfdc)/(sell_price - anterior_revenues)\
+                ((sell_price - pfdc) - (revenues - expenses))/(sell_price - anterior_revenues)\
                 if (sell_price - anterior_revenues) > 0 else 0
 
     def get_formatted_data(self):
