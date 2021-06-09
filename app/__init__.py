@@ -156,7 +156,7 @@ def syntpdf():
     """ Year Overview """
     year_overview = YearOverview(accounting_plan, int(month), int(year))
     year_overview.calculate_data(int(month), int(year), budget)
-    year_overview.add_total()
+    year_overview.add_total(budget)
     pdf.new_page("Synthese Globale 2/2", get_month_name(int(date[5:7])) + ' ' + year)
     
     pdf.add_table(year_overview.get_formatted_data(),

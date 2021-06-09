@@ -3,7 +3,7 @@ index_default_table = {"Dépenses du mois": "Dépenses du mois (B1)",
                  "Budget": "Budget (C)",
                  "RAD": "RAD (D)",
                  "PFDC": "PFDC (E = B + D)",
-                 "Ecart PFDC/Budget": "Ecart PFDC/Budget (F = E - C)",
+                 "Ecart PFDC/Budget": "Ecart PFDC/Budget (F = C - E)",
                  "CA": "CA (G)"}
 
 index_marge_a_avancement = {

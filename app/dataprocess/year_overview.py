@@ -69,15 +69,35 @@ class YearOverview(Overview):
                 worksite_revenue.calculate_year_revenues(
                     self.year)
 
-    def add_total(self):
+    def add_total(self,budget):
         """Ajout du total de la synthèse."""
+
+        sell_price = 0
+        pfdc = 0
+        for name in self.worksite_names:
+
+            if budget is not None:
+                tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE')]
+                try:
+                    sell_price += tmp[name].sum()
+                except:
+                    print("") # useless
+        
+            try:
+                pfdc += int(self.csv_pfdc[name])
+            except:
+                print("") # useless
+
+
+
+        
         totalca = self.data["CA"].sum()
         totaldep = self.data["Dépenses"].sum()
         totalraf = self.data["Reste à facturer"].sum()
         totalmarg = self.data["Marge €"].sum()
         totalmargper = ((totalca - totaldep)/totalca) * 100 if totalca > 0 else 0
         totalmargyear = self.data["Marge fin annee €"].sum()
-        totalmargyearper = (sell_price - pfdc)/(sell_price - anterior_revenues)\
+        totalmargyearper = (sell_price - pfdc)/(totalraf)\
 
         total = pd.DataFrame(
             {

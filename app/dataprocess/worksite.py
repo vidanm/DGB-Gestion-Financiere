@@ -51,8 +51,7 @@ class Worksite(Categories):
         exp = df.loc[(year == df['Year']) & (month >= df['Month'])]
         exp = exp.loc[ (exp['Général'].astype(str).str.slice(stop=1) != '7') ]
 
-        print(exp['Débit'].sum())
-        return exp['Débit'].sum() - exp['Crédit'].sum()
+        return exp['Débit'].astype(float).sum() - exp['Crédit'].astype(float).sum()
 
     def calculate_cumul_expenses(self, month, year):
         df = self.expenses.data
@@ -64,7 +63,8 @@ class Worksite(Categories):
         
         exp = exp.loc[ (exp['Général'].astype(str).str.slice(stop=1) != '7') ]
 
-        return exp['Débit'].sum() - exp['Crédit'].sum()
+        print(exp.loc[exp['Débit'] == '19-PRO-NLG'])
+        return exp['Débit'].astype(float).sum() - exp['Crédit'].astype(float).sum()
 
     def calculate_worksite(self, month, year, budget=None):
         """ df = self.expenses.data
