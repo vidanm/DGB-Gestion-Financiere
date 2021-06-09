@@ -66,38 +66,25 @@ class Worksite(Categories):
         print(exp.loc[exp['Débit'] == '19-PRO-NLG'])
         return exp['Débit'].astype(float).sum() - exp['Crédit'].astype(float).sum()
 
-    def calculate_worksite(self, month, year, budget=None):
-        """ df = self.expenses.data
-        df['Year'] = pd.DatetimeIndex(df['Date']).year
-        df['Month'] = pd.DatetimeIndex(df['Date']).month
+    def calculate_worksite(self, month, year, budget=None, only_year=False):
+        
+        if only_year:
+            for _, row in self.expenses.data.iterrows():
+                date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
+                if (date.year == year and date.month <= month):
+                    super(Worksite, self)._add_cumulative_expense(row)
+                    if (date.month == month):
+                        super(Worksite, self)._add_month_expense(row)
 
-        cumulativeExpenses = df.loc[ (year > df['Year']) |
-                ((df['Month'] <= month) & (df['Year'] == year))]
+        else:
+            for _, row in self.expenses.data.iterrows():
+                date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
+                if (date.year < year) or (date.month <= month
+                                          and date.year == year):
+                    super(Worksite, self)._add_cumulative_expense(row)
+                    if (date.month == month and date.year == year):
+                        super(Worksite, self)._add_month_expense(row)
 
-        monthExpenses = df.loc[ (year == df['Year']) & (month == df['Month']) ]
-
-        cumulativeDebit = cumulativeExpenses['Débit'].sum()
-        cumulativeCredit = cumulativeExpenses['Crédit'].sum()
-        monthDebit = monthExpenses['Débit'].sum()
-        monthCredit = monthExpenses['Crédit'].sum()
-
-        self.categories[cumulativeExpenses['POSTE']]\
-                .loc[cumulativeExpenses['SOUS POSTE'],
-                "Dépenses cumulées"] += round (cumulativeDebit
-                                        - cumulativeCredit, 2)
-
-        self.categories[monthExpenses['POSTE']]\
-                .loc[monthExpenses['SOUS POSTE'],
-                "Dépenses du mois"] += round(monthDebit
-                                        - monthCredit,2)
-        """
-        for _, row in self.expenses.data.iterrows():
-            date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
-            if (date.year < year) or (date.month <= month
-                                      and date.year == year):
-                super(Worksite, self)._add_cumulative_expense(row)
-                if (date.month == month and date.year == year):
-                    super(Worksite, self)._add_month_expense(row)
         if (budget is not None):
             self.__add_budget(budget)
 
@@ -195,13 +182,17 @@ class Worksite(Categories):
 
     def calcul_divers_result(self, year):
         # Format divers tab and return result tab
+
         self.categories["DIVERS"] = self.categories["DIVERS"].drop(
                 columns=['Budget', 'RAD', 'PFDC', 'Ecart PFDC/Budget'])
 
         ca_cumul = Revenues(self.expenses.data)\
-            .calculate_cumulative_revenues(year)
+            .calculate_year_revenues(year)
 
-        dep_cumul = self.categories["DIVERS"]["Dépenses cumulées"].sum()
+        dep_cumul = 0
+        for key in self.categories.keys():
+            dep_cumul += self.categories[key]["Dépenses cumulées"].sum()
+        
         marge = ca_cumul - dep_cumul
         marge_percent = (marge / ca_cumul)*100
         data = [[ca_cumul, dep_cumul, marge, marge_percent]]
@@ -210,6 +201,7 @@ class Worksite(Categories):
                           'Marge brute', 'Marge brute %']
 
         out = pd.DataFrame(data=data, index=row_index, columns=column_indexes)
+
         out['CA Cumulé'] = out['CA Cumulé']\
             .astype(int).apply("{:0,.2f}€".format)
 

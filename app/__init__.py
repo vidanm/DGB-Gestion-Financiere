@@ -195,7 +195,7 @@ def diverspdf():
         return "Erreur de lecture du plan comptable :" + str(error)
 
     worksite = Worksite(accounting_plan, "DIV")
-    worksite.calculate_worksite(int(month), int(year))
+    worksite.calculate_worksite(int(month), int(year),only_year=False)
     worksite.add_worksite_total()
     divers_result_tab = worksite.calcul_divers_result(year)
     pdf = PDF(filename)
