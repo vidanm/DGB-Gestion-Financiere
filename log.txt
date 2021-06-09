@@ -9,3 +9,4 @@ Le couple CHARGES TEMPORELLES : SECURITE CHANTIER spécifié dans le fichier bud
  * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/forward_planning.py', reloading
 Le couple CHARGES TEMPORELLES : SECURITE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
 127.0.0.1 - - [09/Jun/2021 12:20:13] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/worksite.py', reloading

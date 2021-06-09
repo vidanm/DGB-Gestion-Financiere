@@ -64,7 +64,6 @@ class Worksite(Categories):
         
         exp = exp.loc[ (exp['Général'].astype(str).str.slice(stop=1) != '7') ]
 
-        print(exp['Débit'].sum())
         return exp['Débit'].sum() - exp['Crédit'].sum()
 
     def calculate_worksite(self, month, year, budget=None):
