@@ -15,7 +15,6 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 class PDF():
-
     def __init__(self, nom):
         """Permets la generation des différents pdf
         ( synthese / structure etc )."""
@@ -30,18 +29,16 @@ class PDF():
         self.c.setFillColorRGB(0, 0, 0)
 
     def struct_style(self, row_nom):
-        style = [
-            ('FACE', (0, 0), (-1, -1), "Helvetica-Bold"),
-            ('GRID', (0, 0), (-1, -1), 0.1, "BLACK"),
-            ('FONTSIZE', (0, 0), (-1, -1), 6),
-            ('ALIGN', (0, 0), (-1, -1), "CENTER"),
-            ('VALIGN', (0, 0), (-1, -1), "MIDDLE"),
-            ('BACKGROUND', (0, 0), (-1, 0), bleuciel),
-            ('TEXTCOLOR', (0, 0), (-1, 0), "BLACK"),
-            ('BACKGROUND', (1, 1), (-1, -1), "WHITE"),
-            ('BACKGROUND', (0, -1), (-1, -1), yellow),
-            ('TOPPADDING', (0, 0), (-1, -1), 6)
-            ]
+        style = [('FACE', (0, 0), (-1, -1), "Helvetica-Bold"),
+                 ('GRID', (0, 0), (-1, -1), 0.1, "BLACK"),
+                 ('FONTSIZE', (0, 0), (-1, -1), 6),
+                 ('ALIGN', (0, 0), (-1, -1), "CENTER"),
+                 ('VALIGN', (0, 0), (-1, -1), "MIDDLE"),
+                 ('BACKGROUND', (0, 0), (-1, 0), bleuciel),
+                 ('TEXTCOLOR', (0, 0), (-1, 0), "BLACK"),
+                 ('BACKGROUND', (1, 1), (-1, -1), "WHITE"),
+                 ('BACKGROUND', (0, -1), (-1, -1), yellow),
+                 ('TOPPADDING', (0, 0), (-1, -1), 6)]
 
         for i in row_nom:
             style.append(('BACKGROUND', (0, i), (-1, i), bleu))
@@ -52,7 +49,7 @@ class PDF():
 
     def draw_header(self):
         self.c.setFillColor(bleu)
-        self.c.rect(inch, A4[0]-inch*1.5, A4[1]-2*inch, inch, fill=1)
+        self.c.rect(inch, A4[0] - inch * 1.5, A4[1] - 2 * inch, inch, fill=1)
         self.c.setFillColorRGB(0, 0, 0)
 
     def ajoute_total(self, numTable):
@@ -94,7 +91,7 @@ class PDF():
         d.chart.plotColor = None
         d.chart.titleFontColor = black
         # d.rotate(90)
-        d.drawOn(self.c, inch, inch*0.1)
+        d.drawOn(self.c, inch, inch * 0.1)
 
     """
     A deplacer dans graphe.py
@@ -149,10 +146,18 @@ class PDF():
         self.c.setFillColor("BLACK")
         self.c.drawString(x, y, text)
 
-    def add_table(self, dataframe, x=-1, y=-1,
-                  tableHeight=-1, indexName="Poste",
-                  title=None, noIndexLine=False, coloring=False, total=True,
-                  letters='default', custom_style=[]):
+    def add_table(self,
+                  dataframe,
+                  x=-1,
+                  y=-1,
+                  tableHeight=-1,
+                  indexName="Poste",
+                  title=None,
+                  noIndexLine=False,
+                  coloring=False,
+                  total=True,
+                  letters='default',
+                  custom_style=[]):
         """Ajoute un tableau a la feuille active.
 
         Le coin bas droite est représenté par (x,y)."""
@@ -172,7 +177,7 @@ class PDF():
             self.change_index_names(letters, numTable, axis=0)
 
         if title is not None:
-            lst = [i for i in range(len(numTable[0])-1)]
+            lst = [i for i in range(len(numTable[0]) - 1)]
             numTable.insert(0, lst)
             numTable[0][0] = title
             if noIndexLine:
@@ -203,35 +208,37 @@ class PDF():
         # alors on ecris la table au milieu de la page
 
         if (x == -1 or x == 'center'):
-            x = (A4[1]/2)-(w/2)
+            x = (A4[1] / 2) - (w / 2)
         else:
-            x = (x) - (w/2)
+            x = (x) - (w / 2)
 
         if (y == -1 or y == 'center'):
-            y = (A4[0]/2)-(h/2)
+            y = (A4[0] / 2) - (h / 2)
         else:
-            y = y-(h/2)
+            y = y - (h / 2)
 
         t.drawOn(self.c, x, y)
 
     def add_sidetitle(self, text):
         self.c.setFillColor("WHITE")
         self.c.setFont("Helvetica-Bold", 20)  # Draw Title
-        self.c.drawString(inch*1.1, A4[0]-inch*1.14, text)
+        self.c.drawString(inch * 1.1, A4[0] - inch * 1.14, text)
         self.c.setFillColor("BLACK")
 
     def new_page(self, titre, sousTitre):
         """Ecris le titre et le sous titre sur une feuille."""
         self.__background()
         self.draw_header()
-        self.c.drawImage(
-                self.logo, A4[1]-inch*2, A4[0]-inch*1.39, width=50, height=50
-                )  # Draw Logo
+        self.c.drawImage(self.logo,
+                         A4[1] - inch * 2,
+                         A4[0] - inch * 1.39,
+                         width=50,
+                         height=50)  # Draw Logo
         self.c.setFillColor("WHITE")
         self.c.setFont("Helvetica-Bold", 30)  # Draw Title
-        self.c.drawCentredString(A4[1]/2, A4[0] - inch, titre)
+        self.c.drawCentredString(A4[1] / 2, A4[0] - inch, titre)
         self.c.setFont("Helvetica-Bold", 20)  # Draw Subtitle
-        self.c.drawCentredString(A4[1]/2, A4[0]-inch*1.3, sousTitre)
+        self.c.drawCentredString(A4[1] / 2, A4[0] - inch * 1.3, sousTitre)
 
     def save_page(self):
         """Sauvegarde la feuille active,

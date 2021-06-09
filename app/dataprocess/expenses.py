@@ -4,9 +4,7 @@ import logging
 
 
 class Expenses():
-
     def __init__(self, data, accounting_plan, with_category=True):
-
         """
         Traite les dépenses ( provenant de l'extraction comptable ).
         """
@@ -22,14 +20,16 @@ class Expenses():
         a = self.data
         b = other.data
         return Expenses(a.append(b, ignore_index=True),
-                        self.accounting_plan, with_category=False)
+                        self.accounting_plan,
+                        with_category=False)
 
     def __str__(self):
         """Representation de dépenses."""
         return self.data.to_string()
 
     def __remove_unknown_accounts(self):
-        logging.basicConfig(filename="log.txt", format='%(message)s',
+        logging.basicConfig(filename="log.txt",
+                            format='%(message)s',
                             filemode='a+')
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
@@ -37,10 +37,9 @@ class Expenses():
         accounts = self.data["Général"].unique()
         for account in accounts:
             if self.accounting_plan.get_poste_by_code(str(account)).empty:
-                if(str(account).isnumeric() and int(account/100000) == 7):
+                if (str(account).isnumeric() and int(account / 100000) == 7):
                     self.accounting_plan.add_code_to_plan(
-                            account, "Unknown category",
-                            "Unknown sub-category")
+                        account, "Unknown category", "Unknown sub-category")
                 else:
                     self.data = self.data.loc[self.data["Général"] != account]
                     logger.warning("Compte " + str(account) +
@@ -50,9 +49,8 @@ class Expenses():
 
     def __compose_accounts_with_category_name(self):
         for index, value in self.data["Général"].iteritems():
-            if len(self.accounting_plan
-                    .get_poste_by_code(str(value))
-                    .values) > 0:
+            if len(self.accounting_plan.get_poste_by_code(
+                    str(value)).values) > 0:
                 category = self.accounting_plan.get_poste_by_code(
                     str(value))['POSTE'].values[0]
                 subcategory = self.accounting_plan.get_poste_by_code(
@@ -73,22 +71,13 @@ class Expenses():
 
 if __name__ == "__main__":
     a = Expenses(
-            get_csv_expenses(
-                "~/DGB_Gesfin/var/csv/2020_20-DIV0000.csv"),
-            AccountingPlan(
-                get_accounting_file(
-                    "~/DGB_Gesfin/var/PlanComptable2020.xls"
-                    )
-                )
-            )
+        get_csv_expenses("~/DGB_Gesfin/var/csv/2020_20-DIV0000.csv"),
+        AccountingPlan(
+            get_accounting_file("~/DGB_Gesfin/var/PlanComptable2020.xls")))
 
     b = Expenses(
-            get_csv_expenses(
-                "~/DGB_Gesfin/var/csv/2020_19-BD-LAIG.csv"),
-            AccountingPlan(
-                get_accounting_file(
-                    "~/DGB_Gesfin/var/PlanComptable2020.xls")
-                )
-            )
+        get_csv_expenses("~/DGB_Gesfin/var/csv/2020_19-BD-LAIG.csv"),
+        AccountingPlan(
+            get_accounting_file("~/DGB_Gesfin/var/PlanComptable2020.xls")))
 
     c = a + b

@@ -3,7 +3,6 @@ import pandas as pd
 
 
 class ForwardPlanning():
-
     def __init__(self, worksite):
         self.worksite = worksite
         for name in worksite.category_names:
@@ -56,21 +55,28 @@ class ForwardPlanning():
             for i in ["Année courante", "Années antérieures"]:
                 row_indexes.append(i)
 
-            for i in [[year_revenues, year_expenses, margin_year,
-                       percent_margin_year],
-                      [anterior_revenues, anterior_expenses,
-                       margin_anterior, percent_margin_anterior]]:
+            for i in [[
+                    year_revenues, year_expenses, margin_year,
+                    percent_margin_year
+            ],
+                      [
+                          anterior_revenues, anterior_expenses,
+                          margin_anterior, percent_margin_anterior
+                      ]]:
                 data.append(i)
 
         if with_cumul:
             for i in ["Cumulé"]:
                 row_indexes.append(i)
 
-            for i in [[cumulative_revenues, cumulative_expenses,
-                       margin_total, percent_margin_total]]:
+            for i in [[
+                    cumulative_revenues, cumulative_expenses, margin_total,
+                    percent_margin_total
+            ]]:
                 data.append(i)
 
-        out = pd.DataFrame(data=data, index=row_indexes,
+        out = pd.DataFrame(data=data,
+                           index=row_indexes,
                            columns=column_indexes)
         out["CA"] = out["CA"].apply("{:0,.2f}€".format)
         out["Dépenses"] = out["Dépenses"].apply("{:0,.2f}€".format)
@@ -95,9 +101,10 @@ class ForwardPlanning():
         percent = total_sell/(sell_price)\
             if (sell_price) != 0 else 0
 
-        data = [total_sell, percent*100]
+        data = [total_sell, percent * 100]
 
-        out = pd.DataFrame(data=data, index=row_indexes,
+        out = pd.DataFrame(data=data,
+                           index=row_indexes,
                            columns=column_indexes)
 
         out.loc["Marge brute"] = out.loc["Marge brute"]\

@@ -8,6 +8,7 @@ import numpy as np
 import os
 
 from pandas.core.common import SettingWithCopyWarning
+
 warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
 
 
@@ -16,13 +17,13 @@ class YearOverview(Overview):
         """Calcule la synthese sur l'année \
                 de toutes les dépenses de tout les chantiers."""
         self.col = [
-            "CHANTIER","CA","Dépenses","Reste à facturer","Marge €","Marge %",
-            "Marge fin annee €","Marge fin annee %"
+            "CHANTIER", "CA", "Dépenses", "Reste à facturer", "Marge €",
+            "Marge %", "Marge fin annee €", "Marge fin annee %"
         ]
 
         self.csv_pfdc = self.precalc_pfdc(month, year)
-        super(YearOverview, self).__init__(accounting_plan,month,year,csv_path)
-
+        super(YearOverview, self).__init__(accounting_plan, month, year,
+                                           csv_path)
 
     def calculate_data(self, month, year, budget=None):
         """Calcul de la synthese des dépenses d'une année\
@@ -33,21 +34,20 @@ class YearOverview(Overview):
             worksite_line[0] = name
 
             tmp = self.expenses.data.loc[
-                    self.expenses.data["Section analytique"].astype(str) ==
-                    name]
+                self.expenses.data["Section analytique"].astype(str) == name]
             tmp['Date'] = pd.to_datetime(tmp['Date'])
             tmp = tmp.loc[tmp["Journal"] != "VEN"]
             tmp = tmp.loc[tmp["Journal"] != "ANO"]
 
             tmp = tmp[((tmp['Date'].dt.month <= month) &
-                            (tmp['Date'].dt.year == year))]
+                       (tmp['Date'].dt.year == year))]
 
             year_debit = pd.to_numeric(tmp['Débit'], errors='coerce')\
                 .sum()
 
             year_credit = pd.to_numeric(tmp['Crédit'], errors='coerce')\
                 .sum()
-        
+
             worksite_line[2] = year_debit - year_credit
 
             out = pd.DataFrame([worksite_line], columns=self.col)
@@ -69,7 +69,7 @@ class YearOverview(Overview):
                 worksite_revenue.calculate_year_revenues(
                     self.year)
 
-    def add_total(self,budget):
+    def add_total(self, budget):
         """Ajout du total de la synthèse."""
 
         sell_price = 0
@@ -81,21 +81,19 @@ class YearOverview(Overview):
                 try:
                     sell_price += tmp[name].sum()
                 except:
-                    print("") # useless
-        
+                    print("")  # useless
+
             try:
                 pfdc += int(self.csv_pfdc[name])
             except:
-                print("") # useless
+                print("")  # useless
 
-
-
-        
         totalca = self.data["CA"].sum()
         totaldep = self.data["Dépenses"].sum()
         totalraf = self.data["Reste à facturer"].sum()
         totalmarg = self.data["Marge €"].sum()
-        totalmargper = ((totalca - totaldep)/totalca) * 100 if totalca > 0 else 0
+        totalmargper = (
+            (totalca - totaldep) / totalca) * 100 if totalca > 0 else 0
         totalmargyear = self.data["Marge fin annee €"].sum()
         totalmargyearper = (sell_price - pfdc)/(totalraf)\
 
@@ -126,8 +124,8 @@ class YearOverview(Overview):
             try:
                 pfdc = int(self.csv_pfdc[name])
             except Exception:
-                print("Pas de pfdc pour le chantier "+str(name))
-            
+                print("Pas de pfdc pour le chantier " + str(name))
+
             worksite_revenue = Revenues(self.expenses.data.loc[
                 self.expenses.data["Section analytique"] == name])
 
@@ -158,16 +156,14 @@ class YearOverview(Overview):
 
     def get_formatted_data(self):
         formatted = self.data.copy()
-        formatted["Dépenses"] = formatted["Dépenses"].apply(
-            "{:0,.2f}€".format)
+        formatted["Dépenses"] = formatted["Dépenses"].apply("{:0,.2f}€".format)
         formatted["CA"] = formatted["CA"].apply("{:0,.2f}€".format)
         formatted["Reste à facturer"] = formatted["Reste à facturer"].apply(
             "{:0,.2f}€".format)
         formatted["Marge €"] = formatted["Marge €"].apply("{:0,.2f}€".format)
-        formatted["Marge %"] = formatted["Marge %"].apply(
-            "{:0,.2f}%".format)
-        formatted["Marge fin annee €"] = formatted[
-            "Marge fin annee €"].apply("{:0,.2f}€".format)
+        formatted["Marge %"] = formatted["Marge %"].apply("{:0,.2f}%".format)
+        formatted["Marge fin annee €"] = formatted["Marge fin annee €"].apply(
+            "{:0,.2f}€".format)
         formatted["Marge fin annee %"] = formatted["Marge fin annee %"].apply(
             "{:0,.2f}%".format)
 

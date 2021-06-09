@@ -8,13 +8,14 @@ from .date import get_month_name
 
 HTML_HEAD = "<head><meta charset='UTF-8'>\
         <title>Rentrer Reste à dépenser</title>\
-        <link rel='stylesheet' type='text/css' href=" + \
+        <link rel='stylesheet' type='text/css' href="                                                      + \
         '"{{ url_for("static",filename="rad.css") }}' + '"></head>'
 
 HTML_TITLE_HEAD = "<body><div id='image'>\
         <img src=\
         'https://dgb.construction/wp-content/uploads/2019/06/dgb.png'>\
         </div><h1>"
+
 HTML_TITLE_BOT = "</h1>"
 
 HTML_TABLE_HEAD = "<table class='table-fill'><thead><tr>"
@@ -36,8 +37,8 @@ def convert_single_dataframe_to_html_table(dicPostes, mois, annee, chantier):
 
     file.write(HTML_HEAD)
     # file.write(HTML_TITLE_HEAD)
-    file.write("<body><h1>Bilan " + str(chantier) +
-               " | " + get_month_name(mois) + " " + str(annee)+"</h1>")
+    file.write("<body><h1>Bilan " + str(chantier) + " | " +
+               get_month_name(mois) + " " + str(annee) + "</h1>")
     # file.write(HTML_TITLE_BOT)
 
     file.write("<form action='/rad' method=post id='rad'>")

@@ -8,12 +8,7 @@ import os
 
 
 class Office(Categories):
-
-    def __init__(self,
-                 accounting_plan,
-                 month,
-                 year,
-                 csv_path="var/csv/"):
+    def __init__(self, accounting_plan, month, year, csv_path="var/csv/"):
         """Trie les expenses de la structure par postes."""
         super(Office, self).__init__(accounting_plan.get_office_plan())
         self.csv_path = csv_path
@@ -53,13 +48,15 @@ class Office(Categories):
         for filename in os.listdir(self.csv_path):
             if str(self.year) in filename and filename.endswith(".csv"):
                 if total is None:
-                    total = Expenses(
-                            get_csv_expenses(self.csv_path + filename),
-                            accounting_plan, with_category=False)
+                    total = Expenses(get_csv_expenses(self.csv_path +
+                                                      filename),
+                                     accounting_plan,
+                                     with_category=False)
                 else:
-                    total += Expenses(
-                            get_csv_expenses(self.csv_path + filename),
-                            accounting_plan, with_category=False)
+                    total += Expenses(get_csv_expenses(self.csv_path +
+                                                       filename),
+                                      accounting_plan,
+                                      with_category=False)
 
         if total is None:
             raise ValueError("Aucune charges importées")
@@ -89,8 +86,7 @@ class Office(Categories):
         formatted["Dépenses cumulées"] = formatted["Dépenses cumulées"].apply(
             "{:0,.2f}€".format)
 
-        formatted["%CA MOIS"] = formatted["%CA MOIS"].apply(
-            "{:0,.2f}%".format)
+        formatted["%CA MOIS"] = formatted["%CA MOIS"].apply("{:0,.2f}%".format)
 
         formatted["%CA Cumul"] = formatted["%CA Cumul"].apply(
             "{:0,.2f}%".format)

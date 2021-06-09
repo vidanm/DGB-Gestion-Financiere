@@ -3,7 +3,6 @@ import datetime
 
 
 def get_expenses_file(filepath):
-
     """
     Will read the expenses excel file at $filepath
 
@@ -25,7 +24,6 @@ def get_expenses_file(filepath):
 
     expenses = expenses.drop(columns=column_to_drop, errors='ignore')
     expenses = expenses.fillna(0)
-
     """TODO Ajouter une erreur aux logs quand des lignes sont supprimées"""
     # tmp = expenses.loc[ expenses['Section analytique'] != 0
     #                    | expenses['Date'] != 0
@@ -109,15 +107,13 @@ def split_salary_file_as_salary_csv(filepath, outputpath):
                     continue
 
                 salary.loc[salary["Section analytique"] == name].to_csv(
-                        str(outputpath) + sheet[-4::] + "SALAIRES" + "_" +
-                        str(name) + ".csv")
+                    str(outputpath) + sheet[-4::] + "SALAIRES" + "_" +
+                    str(name) + ".csv")
 
 
 def get_salary_file(filepath, columns, sheet):
     try:
-        salary = pd.read_excel(filepath,
-                               usecols=columns,
-                               sheet_name=sheet)
+        salary = pd.read_excel(filepath, usecols=columns, sheet_name=sheet)
         date = ""
         for col in salary.columns:
             if isinstance(col, datetime.datetime):
@@ -193,12 +189,19 @@ def get_accounting_file(filepath):
 
     # Remove '.1' from all columns index in account_office Dataframe
     account_office = account_office.rename(
-        columns={'N° DE COMPTE.1': 'N° DE COMPTE', 'POSTE.1': 'POSTE',
-                 'SOUS POSTE.1': 'SOUS POSTE', 'EX..1': 'EX.'})
+        columns={
+            'N° DE COMPTE.1': 'N° DE COMPTE',
+            'POSTE.1': 'POSTE',
+            'SOUS POSTE.1': 'SOUS POSTE',
+            'EX..1': 'EX.'
+        })
 
     account_divers = account_divers.rename(
-            columns={'N° DE COMPTE.2': 'N° DE COMPTE', 'POSTE.2': 'POSTE',
-                     'SOUS POSTE.2': 'SOUS POSTE'})
+        columns={
+            'N° DE COMPTE.2': 'N° DE COMPTE',
+            'POSTE.2': 'POSTE',
+            'SOUS POSTE.2': 'SOUS POSTE'
+        })
 
     # Accounting numbers conversion to string
     account_worksite['N° DE COMPTE'] = account_worksite['N° DE COMPTE'].apply(
@@ -243,5 +246,5 @@ def get_budget_file(filepath):
 
 if __name__ == "__main__":
     split_expenses_file_as_worksite_csv(
-            filepath="~/DGB_Gesfin/var/Charges2020.xls",
-            outputpath="~/DGB_Gesfin/var/csv/")
+        filepath="~/DGB_Gesfin/var/Charges2020.xls",
+        outputpath="~/DGB_Gesfin/var/csv/")

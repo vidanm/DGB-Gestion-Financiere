@@ -134,40 +134,39 @@ def syntpdf():
     # camois = CA.calcul_ca_mois(int(month),int(year))
     # cacumul = CA.calcul_ca_annee(int(year))
 
-    
     pdf = PDF(filename)
-    
     """ Global Overview """
     global_overview = GlobalOverview(accounting_plan, int(month), int(year))
     global_overview.calculate_data(int(month), int(year), budget)
     global_overview.add_total()
-    pdf.new_page("Synthese Globale 1/2", get_month_name(int(date[5:7])) + ' ' + year)
+    pdf.new_page("Synthese Globale 1/2",
+                 get_month_name(int(date[5:7])) + ' ' + year)
 
     pdf.add_table(global_overview.get_formatted_data(),
                   tableHeight=inch * 5,
                   indexName="CHANTIER",
                   letters='globale')
-    
-    pdf.add_legend("PFDC = Prévision fin de chantier",
-                           x=0.1 * inch,
-                           y=0.1 * inch)
-    pdf.save_page()
 
+    pdf.add_legend("PFDC = Prévision fin de chantier",
+                   x=0.1 * inch,
+                   y=0.1 * inch)
+    pdf.save_page()
     """ Year Overview """
     year_overview = YearOverview(accounting_plan, int(month), int(year))
     year_overview.calculate_data(int(month), int(year), budget)
     year_overview.add_total(budget)
-    pdf.new_page("Synthese Globale 2/2", get_month_name(int(date[5:7])) + ' ' + year)
-    
-    pdf.add_table(year_overview.get_formatted_data(),
-                  tableHeight = inch * 5,
-                  indexName = "Chantier",
-                  letters = 'globale_annee')
+    pdf.new_page("Synthese Globale 2/2",
+                 get_month_name(int(date[5:7])) + ' ' + year)
 
-    
-    pdf.add_legend("G = cumulé | G1 = mois | G2 = année N | G3 = année antérieures",
-                   x=0.1 * inch,
-                   y=0.1 * inch)
+    pdf.add_table(year_overview.get_formatted_data(),
+                  tableHeight=inch * 5,
+                  indexName="Chantier",
+                  letters='globale_annee')
+
+    pdf.add_legend(
+        "G = cumulé | G1 = mois | G2 = année N | G3 = année antérieures",
+        x=0.1 * inch,
+        y=0.1 * inch)
 
     pdf.save_page()
 
@@ -195,7 +194,7 @@ def diverspdf():
         return "Erreur de lecture du plan comptable :" + str(error)
 
     worksite = Worksite(accounting_plan, "DIV")
-    worksite.calculate_worksite(int(month), int(year),only_year=False)
+    worksite.calculate_worksite(int(month), int(year), only_year=False)
     worksite.add_worksite_total()
     divers_result_tab = worksite.calcul_divers_result(year)
     pdf = PDF(filename)
@@ -341,9 +340,9 @@ def rad():
                           y=A4[0] - inch * 3.2,
                           tableHeight=inch * 3,
                           coloring=True)
-    
+
             pdf.add_table(planning_margin_cumul,
-                          y=inch*2,
+                          y=inch * 2,
                           tableHeight=inch * 2,
                           indexName="Période",
                           title="Marge à l'avancement",
@@ -351,20 +350,13 @@ def rad():
                           total=False,
                           letters='marge_a_avancement_cumul')
 
-            
-            
             pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
 
-            
             pdf.add_legend("PFDC = Prévision fin de chantier",
                            x=0.1 * inch,
                            y=0.1 * inch)
-            pdf.add_legend("RAD = Restes à dépenser",
-                           x=inch*3,
-                           y=0.1 * inch)
-            pdf.add_legend("CA = Chiffre d'affaires",
-                           x=inch * 5,
-                           y=0.1 * inch)
+            pdf.add_legend("RAD = Restes à dépenser", x=inch * 3, y=0.1 * inch)
+            pdf.add_legend("CA = Chiffre d'affaires", x=inch * 5, y=0.1 * inch)
             pdf.add_legend("V = Montant marché + Avenants",
                            x=inch * 7,
                            y=0.1 * inch)
@@ -372,7 +364,7 @@ def rad():
             pdf.save_page()
 
             pdf.new_page("Gestion prévisionnelle 2/2", worksite_name)
-            
+
             pdf.add_table(planning_margin,
                           x=inch * 4.5,
                           tableHeight=inch * 2,
@@ -393,9 +385,8 @@ def rad():
                           letters='marge_fdc')
 
             pdf.add_legend("V = Montant marché + Avenants",
-                       x=inch * 7,
-                       y=0.1 * inch)
-
+                           x=inch * 7,
+                           y=0.1 * inch)
 
         elif (nom == "DIVERS"):
             continue
@@ -408,13 +399,9 @@ def rad():
         pdf.add_legend("PFDC = Prévision fin de chantier",
                        x=0.1 * inch,
                        y=0.1 * inch)
-        pdf.add_legend("RAD = Restes à dépenser",
-                       x=inch*3,
-                       y=0.1 * inch)
-        pdf.add_legend("CA = Chiffre d'affaires",
-                       x=inch * 5,
-                       y=0.1 * inch)
-        
+        pdf.add_legend("RAD = Restes à dépenser", x=inch * 3, y=0.1 * inch)
+        pdf.add_legend("CA = Chiffre d'affaires", x=inch * 5, y=0.1 * inch)
+
         pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
         pdf.save_page()
 
@@ -468,8 +455,9 @@ def structpdf():
                 df = df.append(
                     office.get_formatted_data(office.category_names[i]))
                 pdf.new_page("Structure", " ")
-                pdf.add_table(df, custom_style=style,
-                              total=(i >= len(office.category_names)-1))
+                pdf.add_table(df,
+                              custom_style=style,
+                              total=(i >= len(office.category_names) - 1))
                 pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
                 df = None
                 num_poste = 0

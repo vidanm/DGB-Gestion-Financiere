@@ -9,7 +9,6 @@ import logging
 
 
 class Worksite(Categories):
-
     def __init__(self, accounting_plan, worksite_name, csv_path="var/csv/"):
         """Trie les expenses d'un chantier par postes."""
         super(Worksite, self).__init__(accounting_plan.get_worksite_plan())
@@ -49,9 +48,10 @@ class Worksite(Categories):
         df['Month'] = pd.DatetimeIndex(df['Date']).month
 
         exp = df.loc[(year == df['Year']) & (month >= df['Month'])]
-        exp = exp.loc[ (exp['Général'].astype(str).str.slice(stop=1) != '7') ]
+        exp = exp.loc[(exp['Général'].astype(str).str.slice(stop=1) != '7')]
 
-        return exp['Débit'].astype(float).sum() - exp['Crédit'].astype(float).sum()
+        return exp['Débit'].astype(float).sum() - exp['Crédit'].astype(
+            float).sum()
 
     def calculate_cumul_expenses(self, month, year):
         df = self.expenses.data
@@ -59,15 +59,16 @@ class Worksite(Categories):
         df['Month'] = pd.DatetimeIndex(df['Date']).month
 
         exp = df.loc[(year > df['Year']) | ((year == df['Year'])
-                     & (month >= df['Month']))]
-        
-        exp = exp.loc[ (exp['Général'].astype(str).str.slice(stop=1) != '7') ]
+                                            & (month >= df['Month']))]
+
+        exp = exp.loc[(exp['Général'].astype(str).str.slice(stop=1) != '7')]
 
         print(exp.loc[exp['Débit'] == '19-PRO-NLG'])
-        return exp['Débit'].astype(float).sum() - exp['Crédit'].astype(float).sum()
+        return exp['Débit'].astype(float).sum() - exp['Crédit'].astype(
+            float).sum()
 
     def calculate_worksite(self, month, year, budget=None, only_year=False):
-        
+
         if only_year:
             for _, row in self.expenses.data.iterrows():
                 date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
@@ -93,10 +94,13 @@ class Worksite(Categories):
         Ajoute le budget dans les cases de postes correspondantes.
         """
         logging.basicConfig(filename="log.txt",
-                            format='%(message)s', filemode='a+')
+                            format='%(message)s',
+                            filemode='a+')
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
-        not_used_rows = ["PRIX DE VENTE", "TOTAL", "ECART", "MONTANT MARCHE", "AVENANTS"]
+        not_used_rows = [
+            "PRIX DE VENTE", "TOTAL", "ECART", "MONTANT MARCHE", "AVENANTS"
+        ]
         for _, row in budget.iterrows():
             try:
                 row[self.worksite_name]
@@ -110,9 +114,9 @@ class Worksite(Categories):
                                                       "Budget"] += round(row[
                                                           self.worksite_name])
             except Exception:
-                logger.error("Le couple " + row['POSTE']
-                             + " : " + row['SOUS-POSTE']
-                             + " spécifié dans le fichier budget\
+                logger.error("Le couple " + row['POSTE'] + " : " +
+                             row['SOUS-POSTE'] +
+                             " spécifié dans le fichier budget\
                              n'est pas un couple\
                              présent dans le plan comptable")
         logging.shutdown()
@@ -184,7 +188,7 @@ class Worksite(Categories):
         # Format divers tab and return result tab
 
         self.categories["DIVERS"] = self.categories["DIVERS"].drop(
-                columns=['Budget', 'RAD', 'PFDC', 'Ecart PFDC/Budget'])
+            columns=['Budget', 'RAD', 'PFDC', 'Ecart PFDC/Budget'])
 
         ca_cumul = Revenues(self.expenses.data)\
             .calculate_year_revenues(year)
@@ -192,13 +196,14 @@ class Worksite(Categories):
         dep_cumul = 0
         for key in self.categories.keys():
             dep_cumul += self.categories[key]["Dépenses cumulées"].sum()
-        
+
         marge = ca_cumul - dep_cumul
-        marge_percent = (marge / ca_cumul)*100
+        marge_percent = (marge / ca_cumul) * 100
         data = [[ca_cumul, dep_cumul, marge, marge_percent]]
         row_index = ["Resultat"]
-        column_indexes = ['CA Cumulé', 'Dépenses cumulées',
-                          'Marge brute', 'Marge brute %']
+        column_indexes = [
+            'CA Cumulé', 'Dépenses cumulées', 'Marge brute', 'Marge brute %'
+        ]
 
         out = pd.DataFrame(data=data, index=row_index, columns=column_indexes)
 

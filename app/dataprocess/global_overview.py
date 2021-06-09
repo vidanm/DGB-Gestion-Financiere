@@ -8,6 +8,7 @@ import numpy as np
 import os
 
 from pandas.core.common import SettingWithCopyWarning
+
 warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
 
 
@@ -20,8 +21,8 @@ class GlobalOverview(Overview):
             "CA CUMUL", 'DEP CUMULEES', "MARGE A FIN DE MOIS", 'PFDC',
             "MARGE FDC"
         ]
-        super(GlobalOverview, self).__init__(accounting_plan,month,year,csv_path)
-
+        super(GlobalOverview, self).__init__(accounting_plan, month, year,
+                                             csv_path)
 
     def calculate_data(self, month, year, budget=None):
         """Calcul de la synthese des dépenses d'une année\
@@ -34,16 +35,15 @@ class GlobalOverview(Overview):
                 worksite_line[-2] = round(float(csv_worksite[name]), 2)
 
             tmp = self.expenses.data.loc[
-                    self.expenses.data["Section analytique"].astype(str) ==
-                    name]
+                self.expenses.data["Section analytique"].astype(str) == name]
             tmp['Date'] = pd.to_datetime(tmp['Date'])
             tmp = tmp.loc[tmp["Journal"] != "VEN"]
             tmp = tmp.loc[tmp["Journal"] != "ANO"]
 
             month_tmp = tmp[((tmp['Date'].dt.month == month) &
-                            (tmp['Date'].dt.year == year))]
+                             (tmp['Date'].dt.year == year))]
             cumul_tmp = tmp[((tmp['Date'].dt.month <= month) |
-                            (tmp['Date'].dt.year < year))]
+                             (tmp['Date'].dt.year < year))]
 
             # On parse avant de faire la somme
             # au cas ou un index se serait glissé entre les données
@@ -144,9 +144,7 @@ class GlobalOverview(Overview):
                 month_revenues - month_expenses, 2)
             self.data.loc[name, "MARGE A FIN DE MOIS"] = round(
                 cumulative_revenues - cumulative_expenses, 2)
-            self.data.loc[name, "MARGE FDC"] = round(
-                sell_price - pfdc,
-                2)
+            self.data.loc[name, "MARGE FDC"] = round(sell_price - pfdc, 2)
 
     def _calculate_total(self):
         self.cumulative_expenses_total = round(self.data['DEP CUMULEES'].sum(),
@@ -160,25 +158,25 @@ class GlobalOverview(Overview):
                 tableau du chiffre d'affaire."""
         month_revenues = round(month_revenues, 2)
         cumulative_revenues = round(cumulative_revenues, 2)
-        self.total_revenue_margin = pd.DataFrame(
-            np.array([[
-                month_revenues,
-                self.month_expenses_total,
-                month_revenues-self.month_expenses_total,
-                round(100*(
-                    self.month_expenses_total/month_revenues), 2)],
-                    [
-                    cumulative_revenues,
-                    self.cumulative_expenses_total,
-                    round(
-                        cumulative_revenues-self.cumulative_expenses_total, 2
-                        ),
-                    round(100*(
-                        self.cumulative_expenses_total/cumulative_revenues), 2
-                        )
-                    ]
-                ]),
-            columns=["CA", "Depenses", "Marge brute", "Marge brute %"])
+        self.total_revenue_margin = pd.DataFrame(np.array(
+            [[
+                month_revenues, self.month_expenses_total,
+                month_revenues - self.month_expenses_total,
+                round(100 * (self.month_expenses_total / month_revenues), 2)
+            ],
+             [
+                 cumulative_revenues, self.cumulative_expenses_total,
+                 round(cumulative_revenues - self.cumulative_expenses_total,
+                       2),
+                 round(
+                     100 *
+                     (self.cumulative_expenses_total / cumulative_revenues), 2)
+             ]]),
+                                                 columns=[
+                                                     "CA", "Depenses",
+                                                     "Marge brute",
+                                                     "Marge brute %"
+                                                 ])
 
         s = pd.Series(["Mois", "Année"])
         self.total_revenue_margin = self.total_revenue_margin.set_index(s)

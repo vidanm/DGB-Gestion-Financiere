@@ -1,7 +1,7 @@
 "Dual Bar charts on one canvas."
-from reportlab.lib.colors import PCMYKColor,  black
+from reportlab.lib.colors import PCMYKColor, black
 from reportlab.graphics.charts.legends import Legend
-from reportlab.graphics.shapes import Drawing,  _DrawingEditorMixin
+from reportlab.graphics.shapes import Drawing, _DrawingEditorMixin
 from reportlab.lib.formatters import DecimalFormatter
 from reportlab.graphics.charts.barcharts import HorizontalBarChart
 from reportlab.graphics.charts.textlabels import Label
@@ -28,7 +28,7 @@ class SpecialHorizontalBarChart(HorizontalBarChart):
         drawing.bars.strokeWidth = 0
         drawing.bars.strokeColor = None
         drawing.barLabels.angle = 0
-        drawing.barLabelFormat = DecimalFormatter(2,  suffix='%')
+        drawing.barLabelFormat = DecimalFormatter(2, suffix='%')
         drawing.barLabels.boxAnchor = 'w'
         drawing.barLabels.boxFillColor = None
         drawing.barLabels.boxStrokeColor = None
@@ -58,7 +58,7 @@ class SpecialHorizontalBarChart(HorizontalBarChart):
         drawing.valueAxis.visibleLabels = 0
         #  category axis
         drawing.categoryAxis.labels.fontName = _fontName
-        drawing.categoryAxis.labels.fontSize = _fontSize+0.5
+        drawing.categoryAxis.labels.fontSize = _fontSize + 0.5
         drawing.categoryAxis.strokeDashArray = (5, 0)
         # drawing.categoryAxis.gridStrokeDashArray = (1, 1, 1)
         drawing.categoryAxis.visibleGrid = False
@@ -107,14 +107,14 @@ class BarChart11(_DrawingEditorMixin, Drawing):
         self._fontNameDemi = 'Helvetica'
         self._fontSize = 5
         #  colours
-        color = PCMYKColor(0, 51,  100,  1)
+        color = PCMYKColor(0, 51, 100, 1)
         #  chart
         self._add(self,
-                  SpecialHorizontalBarChart(
-                     self._fontNameBook,  self._fontSize, color
-                     ),
-                  name='chart1', validate=None, desc=None
-                  )
+                  SpecialHorizontalBarChart(self._fontNameBook, self._fontSize,
+                                            color),
+                  name='chart1',
+                  validate=None,
+                  desc=None)
 
         self.chart1.bars[0].fillColor = PCMYKColor(100, 60, 0, 50, alpha=85)
         self.chart1.bars[1].fillColor = PCMYKColor(66, 13, 0, 22, alpha=85)
@@ -122,7 +122,7 @@ class BarChart11(_DrawingEditorMixin, Drawing):
         #  legend
         self._add(self, Legend(), name='legend', validate=None, desc=None)
         self.legend.fontName = self._fontNameBook
-        self.legend.fontSize = self._fontSize+0.5
+        self.legend.fontSize = self._fontSize + 0.5
         self.legend.boxAnchor = 'nw'
         self.legend.x = 3
         self.legend.y = 18
@@ -140,11 +140,12 @@ class BarChart11(_DrawingEditorMixin, Drawing):
         self.legend.variColumn = True
         # self.legend.subCols.minWidth = self.chart1.width/2
         # self.legend.colorNamePairs = Auto(obj =self.chart1)
-        self.legend.colorNamePairs = [
-                (PCMYKColor(100, 60, 0, 50, alpha=85),  u'PFDC'),
-                (PCMYKColor(66, 13, 0, 22, alpha=85),  u'Depenses'),
-                (PCMYKColor(100, 0, 90, 50, alpha=85),  u'Budget')
-                ]
+        self.legend.colorNamePairs = [(PCMYKColor(100, 60, 0, 50,
+                                                  alpha=85), u'PFDC'),
+                                      (PCMYKColor(66, 13, 0, 22,
+                                                  alpha=85), u'Depenses'),
+                                      (PCMYKColor(100, 0, 90, 50,
+                                                  alpha=85), u'Budget')]
         self.legend.deltay = 5
         self.legend.y = 20
         # self.chart1.categoryAxis.reverseDirection = 1

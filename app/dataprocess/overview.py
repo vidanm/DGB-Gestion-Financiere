@@ -7,6 +7,7 @@ import numpy as np
 import os
 
 from pandas.core.common import SettingWithCopyWarning
+
 warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
 
 
@@ -14,7 +15,7 @@ class Overview():
     def __init__(self, accounting_plan, month, year, csv_path="var/csv/"):
         """Calcule la synthese sur l'année \
                 de toutes les dépenses de tout les chantiers."""
-        
+
         self.worksite_names = []
         self.month = month
         self.year = year

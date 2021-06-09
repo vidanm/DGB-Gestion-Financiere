@@ -2,7 +2,6 @@ from .colors import black, bleuciel, yellow
 
 
 class Style():
-
     def __init__(self, table, tableHeight=-1, total=True):
         self.tablestyle = [
             ('FACE', (0, 0), (-1, -1), "Helvetica-Bold"),
@@ -14,7 +13,7 @@ class Style():
             ('BACKGROUND', (0, 0), (-1, 0), bleuciel),
             ('TEXTCOLOR', (0, 0), (-1, 0), "BLACK"),
             ('BACKGROUND', (1, 1), (-1, -1), "WHITE"),
-            ]
+        ]
         self.tableHeight = tableHeight
         self.tablelen = len(table)
 
@@ -33,7 +32,7 @@ class Style():
 
     def add_title_style(self):
         self.rowheights.insert(
-            0, min([int(self.tableHeight/(self.tablelen)), 30]))
+            0, min([int(self.tableHeight / (self.tablelen)), 30]))
 
         self.tablestyle.append(('SPAN', (0, 0), (-1, 0)))
         self.tablelen += 1
@@ -43,13 +42,13 @@ class Style():
             for j in range(len(table[i])):
                 if table[i][j][0].isnumeric():
                     self.tablestyle.append(
-                        ('TEXTCOLOR', (j, i), (j+1, i+1), "GREEN"))
+                        ('TEXTCOLOR', (j, i), (j + 1, i + 1), "GREEN"))
                 elif table[i][j][0] == '-':
                     self.tablestyle.append(
-                        ('TEXTCOLOR', (j, i), (j+1, i+1), "RED"))
+                        ('TEXTCOLOR', (j, i), (j + 1, i + 1), "RED"))
                 else:
                     self.tablestyle.append(
-                        ('TEXTCOLOR', (j, i), (j+1, i+1), "BLACK"))
+                        ('TEXTCOLOR', (j, i), (j + 1, i + 1), "BLACK"))
 
     def get_style(self):
         return self.tablestyle
@@ -68,7 +67,7 @@ class Style():
     def delete_index_line(self):
         self.tablestyle.append(('SPAN', (0, 0), (-1, 1)))
         self.rowheights.insert(
-            0, min([int(self.tableHeight/(self.tablelen)), 30]))
+            0, min([int(self.tableHeight / (self.tablelen)), 30]))
 
         self.rowheights[0] = self.rowheights[0] / 3
         self.tablelen += 1
