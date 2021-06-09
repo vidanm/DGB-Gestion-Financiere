@@ -3,8 +3,8 @@
 from flask import Flask, send_file, request, flash, redirect,\
         render_template, session
 from app.dataprocess.accounting_plan import AccountingPlan
-# from app.dataprocess.synthese import Synthese
-from app.dataprocess.overview import Overview
+from app.dataprocess.global_overview import GlobalOverview
+from app.dataprocess.year_overview import YearOverview
 from app.pdf_generation.tabletopdf import PDF
 from app.dataprocess.worksite import Worksite
 from app.dataprocess.office import Office
@@ -134,17 +134,16 @@ def syntpdf():
     # camois = CA.calcul_ca_mois(int(month),int(year))
     # cacumul = CA.calcul_ca_annee(int(year))
 
-    overview = Overview(accounting_plan, int(month), int(year))
+    
     pdf = PDF(filename)
+    
+    """ Global Overview """
+    global_overview = GlobalOverview(accounting_plan, int(month), int(year))
+    global_overview.calculate_data(int(month), int(year), budget)
+    global_overview.add_total()
+    pdf.new_page("Synthese Globale 1/2", get_month_name(int(date[5:7])) + ' ' + year)
 
-    overview.calculate_data(int(month), int(year), budget)
-    overview.add_total()
-    # overview.calcul_tableau_ca(camois,cacumul)
-    formatted_overview = overview.get_formatted_data()
-
-    pdf.new_page("Synthese Globale", get_month_name(int(date[5:7])) + ' ' + year)
-
-    pdf.add_table(formatted_overview,
+    pdf.add_table(global_overview.get_formatted_data(),
                   tableHeight=inch * 5,
                   indexName="CHANTIER",
                   letters='globale')
@@ -152,10 +151,26 @@ def syntpdf():
     pdf.add_legend("PFDC = Prévision fin de chantier",
                            x=0.1 * inch,
                            y=0.1 * inch)
-
-
-    # pdf.create_bar_syntgraph(600, 250, overview.data)
     pdf.save_page()
+
+    """ Year Overview """
+    year_overview = YearOverview(accounting_plan, int(month), int(year))
+    year_overview.calculate_data(int(month), int(year), budget)
+    year_overview.add_total()
+    pdf.new_page("Synthese Globale 2/2", get_month_name(int(date[5:7])) + ' ' + year)
+    
+    pdf.add_table(year_overview.get_formatted_data(),
+                  tableHeight = inch * 5,
+                  indexName = "Chantier",
+                  letters = 'globale_annee')
+
+    
+    pdf.add_legend("G = cumulé | G1 = mois | G2 = année N | G3 = année antérieures",
+                   x=0.1 * inch,
+                   y=0.1 * inch)
+
+    pdf.save_page()
+
     pdf.save_pdf()
     return send_file(filename, as_attachment=True)
 
@@ -334,7 +349,7 @@ def rad():
                           title="Marge à l'avancement",
                           coloring=True,
                           total=False,
-                          letters='marge_a_avancement')
+                          letters='marge_a_avancement_cumul')
 
             
             

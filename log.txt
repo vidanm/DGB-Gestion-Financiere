@@ -1,35 +1,10 @@
-Compte 603100 pas dans le plan comptable
+Compte 625100 pas dans le plan comptable
 
-Compte 604101 pas dans le plan comptable
+Compte 613210 pas dans le plan comptable
 
-Compte 611400 pas dans le plan comptable
+Compte 635430 pas dans le plan comptable
 
-Compte 611100 pas dans le plan comptable
-
-Compte 616330 pas dans le plan comptable
-
-Compte 606140 pas dans le plan comptable
-
-Compte 627500 pas dans le plan comptable
-
-Compte 612600 pas dans le plan comptable
-
-Compte 627000 pas dans le plan comptable
-
-Compte 641108 pas dans le plan comptable
-
-Compte 641110 pas dans le plan comptable
-
-Compte 623800 pas dans le plan comptable
-
-Compte 635140 pas dans le plan comptable
-
-Compte 603100 pas dans le plan comptable
-
-Compte 654000 pas dans le plan comptable
-
-Compte 603100 pas dans le plan comptable
-
-Compte 611448 pas dans le plan comptable
-
-127.0.0.1 - - [07/Jun/2021 15:08:07] "[37mPOST /synthese_divers HTTP/1.1[0m" 200 -
+Pas de budget associé a ce chantier
+127.0.0.1 - - [09/Jun/2021 11:43:13] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
+127.0.0.1 - - [09/Jun/2021 11:43:14] "[37mGET /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/global_overview.py', reloading

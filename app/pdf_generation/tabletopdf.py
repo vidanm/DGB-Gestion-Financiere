@@ -7,7 +7,7 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
 from .style import Style
-from .index_letters import index_default_table, index_marge_fdc, index_marge_a_avancement, index_synthese
+from .index_letters import index_default_table, index_marge_fdc, index_marge_a_avancement, index_synthese, index_marge_a_avancement_cumul, index_synthese_annee
 import os.path
 
 locale.setlocale(locale.LC_ALL, 'en_US.utf8')
@@ -250,10 +250,14 @@ class PDF():
             new_index = index_default_table
         elif new_index == 'marge_a_avancement':
             new_index = index_marge_a_avancement
+        elif new_index == 'marge_a_avancement_cumul':
+            new_index = index_marge_a_avancement_cumul
         elif new_index == 'marge_fdc':
             new_index = index_marge_fdc
         elif new_index == 'globale':
             new_index = index_synthese
+        elif new_index == 'globale_annee':
+            new_index = index_synthese_annee
         else:
             return
 

@@ -110,7 +110,7 @@ class Worksite(Categories):
                             format='%(message)s', filemode='a+')
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
-        not_used_rows = ["PRIX DE VENTE", "TOTAL", "ECART"]
+        not_used_rows = ["PRIX DE VENTE", "TOTAL", "ECART", "MONTANT MARCHE", "AVENANTS"]
         for _, row in budget.iterrows():
             try:
                 row[self.worksite_name]

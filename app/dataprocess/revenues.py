@@ -36,17 +36,17 @@ class Revenues():
         today = datetime.date.today()
         result = 0.0
         if (int(today.year) == int(year)):
-            for i in range(1, today.month):
+            for i in range(1, today.month+1):
                 result += self.calculate_month_revenues(i, year)
         else:
-            for i in range(1, 12):
+            for i in range(1, 13):
                 result += self.calculate_month_revenues(i, year)
 
         return result
 
     def calculate_cumulative_with_year_limit(self, year):
-        return self.calculate_cumulative_revenues(year)\
-                - self.calculate_year_revenues(year+1)
+        return (self.calculate_cumulative_revenues(year) -
+                self.calculate_year_revenues(year+1))
 
     def calculate_cumulative_revenues(self, year):
         # N'est pas borné au mois demandée
