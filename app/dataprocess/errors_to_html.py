@@ -6,7 +6,7 @@ HTML_HEAD = "\
             <title>Erreurs</title>\
             <link rel='stylesheet' \
             type='text/css' \
-            href="                   + '"{{ url_for("static",filename="index.css")}}">' +\
+            href=" + '"{{ url_for("static",filename="index.css")}}">' +\
         "</head>\
         <body>\
             <h1> Erreurs </h1>\

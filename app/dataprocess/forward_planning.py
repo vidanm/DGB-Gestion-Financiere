@@ -92,8 +92,8 @@ class ForwardPlanning():
 
         try:
             sell_price = budget.loc[budget["POSTE"] == "PRIX DE VENTE",
-                             self.worksite.worksite_name].sum()\
-                             if budget is not None else 0
+                                    self.worksite.worksite_name].sum()\
+                                    if budget is not None else 0
         except Exception:
             sell_price = 0
 

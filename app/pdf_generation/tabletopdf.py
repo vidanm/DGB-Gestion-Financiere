@@ -7,7 +7,9 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
 from .style import Style
-from .index_letters import index_default_table, index_marge_fdc, index_marge_a_avancement, index_synthese, index_marge_a_avancement_cumul, index_synthese_annee
+from .index_letters import index_default_table, index_marge_fdc,\
+        index_marge_a_avancement, index_synthese,\
+        index_marge_a_avancement_cumul, index_synthese_annee
 import os.path
 
 locale.setlocale(locale.LC_ALL, 'en_US.utf8')

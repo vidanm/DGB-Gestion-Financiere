@@ -111,9 +111,7 @@ def index():
 @app.route('/synthese_globale', methods=['POST'])
 @login_required
 def syntpdf():
-    """
-    Generation de la synthese. Sauvegarde en pdf.
-    """
+    """ Generation de la synthese. Sauvegarde en pdf. """
     date = request.form['date']
     year = date[0:4]
     month = date[5:7]

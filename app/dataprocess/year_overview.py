@@ -1,11 +1,7 @@
 from .revenues import Revenues
-from .expenses import Expenses
-from .imports import get_csv_expenses
 from .overview import Overview
 import pandas as pd
 import warnings
-import numpy as np
-import os
 
 from pandas.core.common import SettingWithCopyWarning
 
@@ -80,12 +76,12 @@ class YearOverview(Overview):
                 tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE')]
                 try:
                     sell_price += tmp[name].sum()
-                except:
+                except Exception:
                     print("")  # useless
 
             try:
                 pfdc += int(self.csv_pfdc[name])
-            except:
+            except Exception:
                 print("")  # useless
 
         totalca = self.data["CA"].sum()
@@ -94,8 +90,9 @@ class YearOverview(Overview):
         totalmarg = self.data["Marge €"].sum()
         totalmargper = (
             (totalca - totaldep) / totalca) * 100 if totalca > 0 else 0
+
         totalmargyear = self.data["Marge fin annee €"].sum()
-        totalmargyearper = (sell_price - pfdc)/(totalraf)\
+        totalmargyearper = (sell_price - pfdc) / (totalraf)
 
         total = pd.DataFrame(
             {
@@ -130,16 +127,16 @@ class YearOverview(Overview):
                 self.expenses.data["Section analytique"] == name])
 
             anterior_revenues =\
-                worksite_revenue.calculate_cumulative_with_year_limit(self.year-1)
+                worksite_revenue\
+                .calculate_cumulative_with_year_limit(self.year-1)
 
             sell_price = 0
             if budget is not None and name in budget.columns:
                 tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE')]
                 sell_price = tmp[name].sum()
 
-
             self.data.loc[name, "Reste à facturer"] =\
-                    (sell_price - anterior_revenues)
+                (sell_price - anterior_revenues)
 
             self.data.loc[name, "Marge €"] =\
                 revenues - expenses
@@ -147,11 +144,12 @@ class YearOverview(Overview):
                 ((revenues - expenses)/revenues) * 100\
                 if revenues > 0 else 0
 
-            self.data.loc[name,"Marge fin annee €"] =\
+            self.data.loc[name, "Marge fin annee €"] =\
                 (sell_price - pfdc) - (revenues - expenses)
 
             self.data.loc[name, "Marge fin annee %"] =\
-                ((sell_price - pfdc) - (revenues - expenses))/(sell_price - anterior_revenues)\
+                ((sell_price - pfdc) - (revenues - expenses))\
+                / (sell_price - anterior_revenues)\
                 if (sell_price - anterior_revenues) > 0 else 0
 
     def get_formatted_data(self):

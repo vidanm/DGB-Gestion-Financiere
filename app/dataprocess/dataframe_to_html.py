@@ -8,7 +8,7 @@ from .date import get_month_name
 
 HTML_HEAD = "<head><meta charset='UTF-8'>\
         <title>Rentrer Reste à dépenser</title>\
-        <link rel='stylesheet' type='text/css' href="                                                      + \
+        <link rel='stylesheet' type='text/css' href=" +\
         '"{{ url_for("static",filename="rad.css") }}' + '"></head>'
 
 HTML_TITLE_HEAD = "<body><div id='image'>\

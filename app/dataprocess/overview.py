@@ -1,9 +1,7 @@
-from .revenues import Revenues
 from .expenses import Expenses
 from .imports import get_csv_expenses
 import pandas as pd
 import warnings
-import numpy as np
 import os
 
 from pandas.core.common import SettingWithCopyWarning
@@ -28,7 +26,7 @@ class Overview():
 
     def __get_all_worksites_data(self, month, year, accounting_plan):
         """Permets la récupération de toutes les données nécessaires
-           à la synthèse."""
+        à la synthèse."""
         first_file_processed = False
         total = None
         for filename in os.listdir(self.csv_path):
