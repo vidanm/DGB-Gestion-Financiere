@@ -12,7 +12,8 @@ from app.dataprocess.dataframe_to_html \
         import convert_single_dataframe_to_html_table
 from app.dataprocess.imports import \
         split_expenses_file_as_worksite_csv, get_accounting_file,\
-        get_budget_file, split_salary_file_as_salary_csv, store_all_worksites_names
+        get_budget_file, split_salary_file_as_salary_csv,\
+        store_all_worksites_names
 from app.dataprocess.date import get_month_name
 from app.dataprocess.errors_to_html import errors_to_html
 from app.dataprocess.forward_planning import ForwardPlanning
@@ -22,7 +23,6 @@ from reportlab.lib.units import inch
 from .models import db, login, UserModel
 from flask_login import current_user, login_user, login_required, logout_user
 import os
-import time
 
 UPLOAD_FOLDER = 'var'
 DOWNLOAD_FOLDER = 'bibl'
@@ -94,6 +94,7 @@ def logout():
 @app.route('/errors')
 def error_page():
     return render_template("error.html")
+
 
 @app.route('/noms_chantiers')
 @login_required
@@ -369,7 +370,6 @@ def rad():
                           coloring=True,
                           total=False,
                           letters='marge_fdc')
-
 
             pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
 

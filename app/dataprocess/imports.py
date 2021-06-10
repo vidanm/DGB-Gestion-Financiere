@@ -247,10 +247,11 @@ def get_budget_file(filepath):
 def store_all_worksites_names(filepath, outputpath):
     expenses = get_expenses_file(filepath)
     worksite_names = expenses["Section analytique"].unique()
-    file = open(outputpath+"names.txt","w+")
+    file = open(outputpath+"names.txt", "w+")
     for name in worksite_names:
         if 'DIV' not in name and 'STRUCT' not in name:
             file.write(name+"\n")
+
 
 if __name__ == "__main__":
     split_expenses_file_as_worksite_csv(

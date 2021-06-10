@@ -1,9 +1,11 @@
-<!DOCTYPE HTML>    <html>        <head>            <meta charset='UTF-8'>            <title>Erreurs</title>            <link rel='stylesheet'             type='text/css'             href="{{ url_for("static",filename="index.css")}}"></head>        <body>            <h1> Erreurs </h1>            <div id='errors'><p>127.0.0.1 - - [10/Jun/2021 13:17:11] "[37mGET / HTTP/1.1[0m" 200 -
-</p><p>127.0.0.1 - - [10/Jun/2021 13:17:12] "[37mGET /static/index.css HTTP/1.1[0m" 200 -
-</p><p>127.0.0.1 - - [10/Jun/2021 13:17:12] "[37mGET /static/index.js HTTP/1.1[0m" 200 -
-</p><p>127.0.0.1 - - [10/Jun/2021 13:17:12] "[37mGET /static/backgroundbw.jpeg HTTP/1.1[0m" 200 -
-</p><p>127.0.0.1 - - [10/Jun/2021 13:17:13] "[37mGET /noms_chantiers HTTP/1.1[0m" 200 -
-</p><p>Compte 4633.11 pas dans le plan comptable
-</p><p>
+<!DOCTYPE HTML>    <html>        <head>            <meta charset='UTF-8'>            <title>Erreurs</title>            <link rel='stylesheet'             type='text/css'             href="{{ url_for("static",filename="index.css")}}"></head>        <body>            <h1> Erreurs </h1>            <div id='errors'><p>Pas de budget associé a ce chantier
+</p><p>127.0.0.1 - - [10/Jun/2021 13:22:00] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
+</p><p>127.0.0.1 - - [10/Jun/2021 13:22:00] "[37mGET /static/index.css HTTP/1.1[0m" 200 -
+</p><p>127.0.0.1 - - [10/Jun/2021 13:22:00] "[37mGET /static/backgroundbw.jpeg HTTP/1.1[0m" 200 -
+</p><p>127.0.0.1 - - [10/Jun/2021 13:22:02] "[37mGET /rad HTTP/1.1[0m" 200 -
+</p><p>127.0.0.1 - - [10/Jun/2021 13:22:02] "[37mGET /static/rad.css HTTP/1.1[0m" 200 -
+</p><p>127.0.0.1 - - [10/Jun/2021 13:22:02] "[37mGET /static/backgroundbw.jpeg HTTP/1.1[0m" 200 -
+</p><p>Pas de budget associé a ce chantier
+</p><p>127.0.0.1 - - [10/Jun/2021 13:22:06] "[37mPOST /rad HTTP/1.1[0m" 200 -
 </p><p>Pas de budget associé a ce chantier
 </p></div><div id='passer'>                <form id='continuer' method=get action='/rad'>                    <input type='submit' value='Continuer quand même'></input>                </form><br><form id='menu' method=get action='/'>                    <input type='submit' value='Retour au menu'></input>                    </form></div></body></html>
