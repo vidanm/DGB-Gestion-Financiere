@@ -65,7 +65,7 @@ img {
   width: 105px;
 }
 
-button {
+button{
   border: 1px solid rgba(233, 78, 27, 1);
   text-align: left;
   margin: auto;
@@ -157,7 +157,8 @@ input[type="text"],
 input[type="month"],
 input[type="submit"],
 input[type="username"],
-input[type="password"] {
+input[type="password"],
+select {
   border: 0;
   border-radius: 3px;
   border-color: rgba(0, 0, 0, 0.80000000000000004);

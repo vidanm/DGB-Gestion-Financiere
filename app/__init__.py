@@ -12,7 +12,7 @@ from app.dataprocess.dataframe_to_html \
         import convert_single_dataframe_to_html_table
 from app.dataprocess.imports import \
         split_expenses_file_as_worksite_csv, get_accounting_file,\
-        get_budget_file, split_salary_file_as_salary_csv
+        get_budget_file, split_salary_file_as_salary_csv, store_all_worksites_names
 from app.dataprocess.date import get_month_name
 from app.dataprocess.errors_to_html import errors_to_html
 from app.dataprocess.forward_planning import ForwardPlanning
@@ -94,6 +94,16 @@ def logout():
 @app.route('/errors')
 def error_page():
     return render_template("error.html")
+
+@app.route('/noms_chantiers')
+@login_required
+def noms():
+    try:
+        with open('var/names.txt') as f:
+            read_data = f.read()
+            return read_data
+    except Exception:
+        return ""
 
 
 @app.route('/')
@@ -520,7 +530,6 @@ def download_last_file():
 def upload_file():
     """Page permettant a l'utilisateur le telechargement sur le serveur,
     des fichiers prerequis pour le calcul des bilans."""
-    tic = time.perf_counter()
     if not current_user.is_authenticated:
         return redirect('/login')
 
@@ -531,8 +540,6 @@ def upload_file():
         check_save_uploaded_file("Charges")
         check_save_uploaded_file("Budget")
         check_save_uploaded_file("MasseSalariale")
-        toc = time.perf_counter()
-        print(f"IMP : {toc-tic:4f} seconds")
 
         return redirect('/')
         # return redirect(url_for('upload_file',filename=filename))
@@ -572,6 +579,11 @@ def check_save_uploaded_file(tag):
                     app.config['UPLOAD_FOLDER'],
                     tag + '.' + filename.split('.')[1]),
                                                     outputpath="var/csv/")
+                store_all_worksites_names(filepath=os.path.join(
+                    app.config['UPLOAD_FOLDER'],
+                    tag + '.' + filename.split('.')[1]),
+                    outputpath="var/")
+
             elif tag == "MasseSalariale":
                 split_salary_file_as_salary_csv(filepath=os.path.join(
                     app.config['UPLOAD_FOLDER'],

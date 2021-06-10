@@ -244,6 +244,14 @@ def get_budget_file(filepath):
     return finances
 
 
+def store_all_worksites_names(filepath, outputpath):
+    expenses = get_expenses_file(filepath)
+    worksite_names = expenses["Section analytique"].unique()
+    file = open(outputpath+"names.txt","w+")
+    for name in worksite_names:
+        if 'DIV' not in name and 'STRUCT' not in name:
+            file.write(name+"\n")
+
 if __name__ == "__main__":
     split_expenses_file_as_worksite_csv(
         filepath="~/DGB_Gesfin/var/Charges2020.xls",

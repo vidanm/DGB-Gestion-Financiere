@@ -7,7 +7,28 @@ function showChantier(id) {
 	}
 }
 
+function addOptions(){
+	var xmlhttp = new XMLHttpRequest()
+	xmlhttp.open("GET","/noms_chantiers");
+	xmlhttp.send();
+	xmlhttp.onload = function(){
+		var txt = xmlhttp.responseText;
+		var i = 0;
+		var res = txt.split("\n");
+		var x = document.getElementById("chantierSelect");
+		for (i = 0; i < res.length; i++){
+			console.log(res[i]);
+			var option = document.createElement("option");
+			option.text = res[i];
+			x.add(option);
+		}
+	};
+}
+
 window.addEventListener("load", function(){
+	
+	addOptions();
+
 	var x = document.getElementById("syntheseform");
 	x.style.display = "none";
 
@@ -25,7 +46,10 @@ window.addEventListener("load", function(){
 	var buttonSynthese = document.getElementById("buttonSynthese");
 	var buttonStructure = document.getElementById("buttonStructure");
 	var buttonDivers = document.getElementById("buttonDivers");
+
 	/* buttonChantier.disabled = true;
 	buttonSynthese.disabled = true;
 	buttonStructure.disabled = true; */
 });
+
+
