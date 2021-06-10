@@ -340,6 +340,7 @@ def rad():
                           coloring=True)
 
             pdf.add_table(planning_margin_cumul,
+                          x=inch * 5,
                           y=inch * 2,
                           tableHeight=inch * 2,
                           indexName="Période",
@@ -347,6 +348,18 @@ def rad():
                           coloring=True,
                           total=False,
                           letters='marge_a_avancement_cumul')
+
+            pdf.add_table(planning_pfdc,
+                          x=A4[1] - inch * 3,
+                          y=inch * 2,
+                          tableHeight=inch * 2,
+                          indexName="Marges",
+                          title="Marge à fin de chantier",
+                          noIndexLine=True,
+                          coloring=True,
+                          total=False,
+                          letters='marge_fdc')
+
 
             pdf.add_sidetitle(get_month_name(int(month)) + ' ' + year)
 

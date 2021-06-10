@@ -1,12 +1,88 @@
-Le couple CHARGES TEMPORELLES : SECURITE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
-127.0.0.1 - - [09/Jun/2021 12:10:04] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
-127.0.0.1 - - [09/Jun/2021 12:10:06] "[37mGET /rad HTTP/1.1[0m" 200 -
-Le couple CHARGES TEMPORELLES : SECURITE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
-127.0.0.1 - - [09/Jun/2021 12:10:13] "[37mPOST /rad HTTP/1.1[0m" 200 -
- * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/global_overview.py', reloading
-Le couple CHARGES TEMPORELLES : SECURITE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
-127.0.0.1 - - [09/Jun/2021 12:16:05] "[37mPOST /rad HTTP/1.1[0m" 200 -
- * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/forward_planning.py', reloading
-Le couple CHARGES TEMPORELLES : SECURITE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
-127.0.0.1 - - [09/Jun/2021 12:20:13] "[37mPOST /rad HTTP/1.1[0m" 200 -
- * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/worksite.py', reloading
+Compte 608301 pas dans le plan comptable
+
+Le couple MO : SOUS TRAITANT MO spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple ACIERS : ACIERS TS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CONSOMMABLES : PREFA spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CONSOMMABLES : COVID-19 spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : CP spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS ENGINS DE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS AUTRES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : MATERIEL  spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : CLOTURES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATION MATERIELS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS TOURS ESCALIERS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : ESSENCE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INSTALLATIONS : BRANCHEMENTS ELECTRIQUES  spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INSTALLATIONS : BRANCHEMENTS EAU spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : ESSAI PLAQUES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : BASE VIE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : POMPAGE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CHARGES TEMPORELLES : LOCATION CONTAINEUR spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+127.0.0.1 - - [10/Jun/2021 11:25:15] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Jun/2021 11:25:18] "[37mGET /rad HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Jun/2021 11:25:19] "[36mGET /static/rad.css HTTP/1.1[0m" 304 -
+Compte 608301 pas dans le plan comptable
+
+Le couple MO : SOUS TRAITANT MO spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple ACIERS : ACIERS TS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CONSOMMABLES : PREFA spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CONSOMMABLES : COVID-19 spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : CP spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS ENGINS DE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS AUTRES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : MATERIEL  spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : CLOTURES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATION MATERIELS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS TOURS ESCALIERS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : ESSENCE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INSTALLATIONS : BRANCHEMENTS ELECTRIQUES  spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INSTALLATIONS : BRANCHEMENTS EAU spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : ESSAI PLAQUES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : BASE VIE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : POMPAGE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CHARGES TEMPORELLES : LOCATION CONTAINEUR spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+127.0.0.1 - - [10/Jun/2021 11:25:29] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/__init__.py', reloading
+Compte 608301 pas dans le plan comptable
+
+Le couple MO : SOUS TRAITANT MO spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple ACIERS : ACIERS TS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CONSOMMABLES : PREFA spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CONSOMMABLES : COVID-19 spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : CP spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS ENGINS DE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS AUTRES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : MATERIEL  spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : CLOTURES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATION MATERIELS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS TOURS ESCALIERS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : ESSENCE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INSTALLATIONS : BRANCHEMENTS ELECTRIQUES  spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INSTALLATIONS : BRANCHEMENTS EAU spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : ESSAI PLAQUES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : BASE VIE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : POMPAGE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CHARGES TEMPORELLES : LOCATION CONTAINEUR spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+127.0.0.1 - - [10/Jun/2021 11:26:12] "[37mPOST /rad HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/__init__.py', reloading
+Compte 608301 pas dans le plan comptable
+
+Le couple MO : SOUS TRAITANT MO spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple ACIERS : ACIERS TS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CONSOMMABLES : PREFA spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CONSOMMABLES : COVID-19 spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : CP spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS ENGINS DE CHANTIER spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS AUTRES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : MATERIEL  spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : CLOTURES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATION MATERIELS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : LOCATIONS TOURS ESCALIERS spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple MATERIELS : ESSENCE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INSTALLATIONS : BRANCHEMENTS ELECTRIQUES  spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INSTALLATIONS : BRANCHEMENTS EAU spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : ESSAI PLAQUES spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : BASE VIE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple INTERVENANTS : POMPAGE spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+Le couple CHARGES TEMPORELLES : LOCATION CONTAINEUR spécifié dans le fichier budget                             n'est pas un couple                             présent dans le plan comptable
+127.0.0.1 - - [10/Jun/2021 11:26:42] "[37mPOST /rad HTTP/1.1[0m" 200 -

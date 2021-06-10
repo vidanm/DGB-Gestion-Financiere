@@ -232,7 +232,7 @@ def get_budget_file(filepath):
         Dataframe of finances
     """
     try:
-        finances = pd.read_excel(filepath, header=3, usecols="A:J")
+        finances = pd.read_excel(filepath, header=3)
         # A:J n'est pas generique
     except Exception as error:
         raise error
