@@ -194,11 +194,11 @@ class Worksite(Categories):
             .calculate_year_revenues(year)
 
         dep_cumul = 0
-        for key in self.categories.keys():
-            dep_cumul += self.categories[key]["Dépenses cumulées"].sum()
+        dep_cumul = self.categories["DIVERS"]["Dépenses cumulées"].sum() -\
+                self.categories["DIVERS"]["Dépenses cumulées"].iat[-1]
 
         marge = ca_cumul - dep_cumul
-        marge_percent = (marge / ca_cumul) * 100
+        marge_percent = (marge / ca_cumul) * 100 if ca_cumul != 0 else 0
         data = [[ca_cumul, dep_cumul, marge, marge_percent]]
         row_index = ["Resultat"]
         column_indexes = [
