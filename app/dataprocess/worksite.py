@@ -237,6 +237,8 @@ class Worksite(Categories):
 
         self.category_names.append("GESPREV")
         self.categories["GESPREV"] = gesprev
+        self.categories["GESPREV"] = self.categories["GESPREV"]\
+                                        .sort_values("Dépenses cumulées",ascending=False)
         self.add_category_total("GESPREV")
 
     def get_formatted_data(self, category_name):

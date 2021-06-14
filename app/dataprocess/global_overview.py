@@ -73,6 +73,7 @@ class GlobalOverview(Overview):
         self.calculate_margin(budget)
         self.data = self.data.round(2)
         self._calculate_total()
+        self.data = self.data.sort_values("DEP CUMULEES",ascending=False)
 
     def add_revenues(self):
         """Ajout des chiffres d'affaires."""
