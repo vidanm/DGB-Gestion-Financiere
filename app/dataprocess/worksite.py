@@ -5,7 +5,6 @@ from .revenues import Revenues
 import datetime
 import pandas as pd
 import os
-import logging
 
 
 class Worksite(Categories):
@@ -93,11 +92,7 @@ class Worksite(Categories):
         """
         Ajoute le budget dans les cases de postes correspondantes.
         """
-        logging.basicConfig(filename="log.txt",
-                            format='%(message)s',
-                            filemode='a+')
-        logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
+        logging = open("log.txt","a+")
         not_used_rows = [
             "PRIX DE VENTE", "TOTAL", "ECART", "MONTANT MARCHE", "AVENANTS"
         ]
@@ -105,8 +100,8 @@ class Worksite(Categories):
             try:
                 row[self.worksite_name]
             except Exception:
-                logger.warning("Pas de budget associé a ce chantier")
-                logging.shutdown()
+                logging.write("Pas de budget associé a ce chantier")
+                logging.close()
                 return
             try:
                 if row['POSTE'] not in not_used_rows:
@@ -114,12 +109,12 @@ class Worksite(Categories):
                                                       "Budget"] += round(row[
                                                           self.worksite_name])
             except Exception:
-                logger.error("Le couple " + row['POSTE'] + " : " +
+                logging.write("Le couple " + row['POSTE'] + " : " +
                              row['SOUS-POSTE'] +
                              " spécifié dans le fichier budget\
                              n'est pas un couple\
                              présent dans le plan comptable")
-        logging.shutdown()
+                logging.close()
         return 1
 
     def add_rad(self, category, subcategory, rad):

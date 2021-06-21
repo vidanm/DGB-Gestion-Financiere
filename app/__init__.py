@@ -114,7 +114,7 @@ def index():
         return redirect('/login')
 
     if (os.path.exists("log.txt")):
-        os.remove("log.txt")
+        open('log.txt', 'w').close()
 
     return render_template("index.html")
 
@@ -181,6 +181,7 @@ def syntpdf():
 
     pdf.save_pdf()
     return send_file(filename, as_attachment=True)
+    
 
 
 @app.route('/synthese_divers', methods=['POST'])
@@ -223,7 +224,11 @@ def diverspdf():
             break
 
     pdf.save_pdf()
-    return send_file(filename, as_attachment=True)
+
+    session['filename'] = filename
+    errors_to_html(action='/download_last_file')
+    return render_template("errors.html")
+
 
 
 @app.route('/synthese_chantier', methods=['POST'])
@@ -264,12 +269,13 @@ def chantpdf():
     session['worksite_name'] = worksite_name
     session['date'] = date
 
-    if (os.path.exists("log.txt")
-            and len(open("log.txt", "r").readlines()) != 0):
-        errors_to_html()
-        return render_template("errors.html")
-    else:
-        return render_template("rad.html")
+    if os.path.exists("log.txt"):
+            log = open("log.txt", "r")
+            if log.readlines() != 0:
+                log.close()
+                errors_to_html(action='/rad')
+                return render_template("errors.html")
+    return render_template("rad.html")
 
 
 @app.route('/rad', methods=['GET', 'POST'])
@@ -514,7 +520,10 @@ def structpdf():
             print("\n" + str(i) + "\n")
         pdf.save_pdf()
 
-        return send_file(filename, as_attachment=True)
+        session['filename'] = filename
+        errors_to_html(action='/download_last_file')
+        return render_template("errors.html")
+
     return "B"
 
 

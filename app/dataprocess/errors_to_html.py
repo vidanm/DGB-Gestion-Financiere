@@ -12,10 +12,15 @@ HTML_HEAD = "\
             <h1> Erreurs </h1>\
             <div id='errors'>"
 
-HTML_FOOT = "</div><div id='passer'>\
-                <form id='continuer' method=get action='/rad'>\
-                    <input type='submit' value='Continuer quand même'></input>\
-                </form><br>"
+HTML_BODY = "</div><div id='passer'>"\
+
+HTML_ACTION_START = "<form id='continuer' method=get action='"
+
+HTML_ACTION_END = "'>"
+
+HTML_FOOT = "<input type='submit' value='Continuer quand même'></input>\
+        </form><br>"
+
 
 NON_CRITIC = "<form id='menu' method=get action='/'>\
                     <input type='submit' value='Retour au menu'></input>\
@@ -24,12 +29,16 @@ NON_CRITIC = "<form id='menu' method=get action='/'>\
 FOOTER = "</div></body></html>"
 
 
-def errors_to_html(critic=False):
+def errors_to_html(action="/", critic=False):
     output = open("templates/errors.html", "w")
     input_file = open("log.txt", "r")
     output.write(HTML_HEAD)
     for line in input_file.readlines():
         output.write("<p>" + line + "</p>")
+    output.write(HTML_BODY)
+    output.write(HTML_ACTION_START)
+    output.write(action)
+    output.write(HTML_ACTION_END)
     output.write(HTML_FOOT)
     if not critic:
         output.write(NON_CRITIC)

@@ -1,0 +1,11 @@
+Compte 625100 pas dans le plan comptable
+
+Compte 613210 pas dans le plan comptable
+
+Compte 635430 pas dans le plan comptable
+
+Pas de budget associé a ce chantier
+127.0.0.1 - - [21/Jun/2021 11:00:54] "[37mPOST /synthese_chantier HTTP/1.1[0m" 200 -
+127.0.0.1 - - [21/Jun/2021 11:00:59] "[37mGET / HTTP/1.1[0m" 200 -
+127.0.0.1 - - [21/Jun/2021 11:00:59] "[37mGET /noms_chantiers HTTP/1.1[0m" 200 -
+ * Detected change in '/home/vidan/DGB_Gesfin/app/dataprocess/expenses.py', reloading
