@@ -247,7 +247,7 @@ def chantpdf():
 
     try:
         accounting_plan = AccountingPlan(
-            get_accounting_file("var/PlanComptable.xls"))
+            get_accounting_file("var/PlanComptable.xls"), env="CHAN")
     except Exception as error:
         return "Erreur de lecture de plan comptable :" + str(error)
 
@@ -294,7 +294,7 @@ def rad():
     worksite_name = session.get('worksite_name',
                                 'not set')  # Défini dans chantpdf()
     accounting_plan = AccountingPlan(
-        get_accounting_file("var/PlanComptable.xls"))
+        get_accounting_file("var/PlanComptable.xls"), env="CHAN")
 
     worksite = Worksite(accounting_plan, worksite_name)
     try:
@@ -448,7 +448,7 @@ def structpdf():
         filename = "bibl/Structure" + year + "-" + month + ".pdf"
         try:
             accounting_plan = AccountingPlan(
-                get_accounting_file("var/PlanComptable.xls"))
+                get_accounting_file("var/PlanComptable.xls"),env="STRUCT")
         except Exception as e:
             return "Erreur de lecture du plan comptable : " + str(e)
 

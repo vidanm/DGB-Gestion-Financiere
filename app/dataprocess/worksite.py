@@ -10,7 +10,7 @@ import os
 class Worksite(Categories):
     def __init__(self, accounting_plan, worksite_name, csv_path="var/csv/"):
         """Trie les expenses d'un chantier par postes."""
-        super(Worksite, self).__init__(accounting_plan.get_worksite_plan())
+        super(Worksite, self).__init__(accounting_plan.get_plan())
         self.csv_path = csv_path
         self.worksite_name = worksite_name
         self.expenses = self.__get_all_data_of_worksite(accounting_plan)

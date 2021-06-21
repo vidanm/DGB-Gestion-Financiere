@@ -10,7 +10,7 @@ import os
 class Office(Categories):
     def __init__(self, accounting_plan, month, year, csv_path="var/csv/"):
         """Trie les expenses de la structure par postes."""
-        super(Office, self).__init__(accounting_plan.get_office_plan())
+        super(Office, self).__init__(accounting_plan.get_plan())
         self.csv_path = csv_path
         self.row_names = [1]
         self.year = year
