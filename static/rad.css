@@ -15,7 +15,7 @@ th.tab-title {
 
 body {
   background-image: url("backgroundbw.jpeg");
-  background-size: 100%;
+  background-size: cover;
   background-color: #3d3d3d;
   background-repeat: no-repeat;
   background-position: center;
@@ -71,6 +71,7 @@ div.table-title {
   max-width: 1000px;
   padding: 5px;
   padding-top: 0;
+  margin-top: 50px;
   width: 100%;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   animation: float 5s infinite;

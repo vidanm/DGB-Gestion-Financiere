@@ -14,7 +14,7 @@ class YearOverview(Overview):
                 de toutes les dépenses de tout les chantiers."""
         self.col = [
             "CHANTIER", "CA", "Dépenses", "Reste à facturer", "Marge €",
-            "Marge %", "Marge fin annee €", "Marge fin annee %"
+            "Marge %"
         ]
 
         self.csv_pfdc = self.precalc_pfdc(month, year)
@@ -92,9 +92,6 @@ class YearOverview(Overview):
         totalmargper = (
             (totalca - totaldep) / totalca) * 100 if totalca > 0 else 0
 
-        totalmargyear = self.data["Marge fin annee €"].sum()
-        totalmargyearper = (sell_price - pfdc) / (totalraf)
-
         total = pd.DataFrame(
             {
                 "CA": [totalca],
@@ -102,8 +99,6 @@ class YearOverview(Overview):
                 "Reste à facturer": [totalraf],
                 "Marge €": [totalmarg],
                 "Marge %": [totalmargper],
-                "Marge fin annee €": [totalmargyear],
-                "Marge fin annee %": [totalmargyearper],
             }, ["TOTAL"])
 
         self.data = self.data.append(total)
@@ -111,8 +106,8 @@ class YearOverview(Overview):
     def calculate_margin(self, budget=None):
         """Calcul des marges."""
         for name in self.worksite_names:
-            if 'DIV' in name or 'STRUCT' in name:
-                continue
+            """if 'DIV' in name or 'STRUCT' in name:
+                continue"""
 
             # budget = self.data.loc[name,"BUDGET"]
             expenses = self.data.loc[name, "Dépenses"]
@@ -131,27 +126,23 @@ class YearOverview(Overview):
                 worksite_revenue\
                 .calculate_cumulative_with_year_limit(self.year-1)
 
+            cumulative_revenues =\
+                worksite_revenue\
+                .calculate_cumulative_revenues(self.year)
+
             sell_price = 0
             if budget is not None and name in budget.columns:
                 tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE')]
                 sell_price = tmp[name].sum()
 
             self.data.loc[name, "Reste à facturer"] =\
-                (sell_price - anterior_revenues)
+                (sell_price - cumulative_revenues)
 
             self.data.loc[name, "Marge €"] =\
                 revenues - expenses
             self.data.loc[name, "Marge %"] =\
                 ((revenues - expenses)/revenues) * 100\
                 if revenues > 0 else 0
-
-            self.data.loc[name, "Marge fin annee €"] =\
-                (sell_price - pfdc) - (revenues - expenses)
-
-            self.data.loc[name, "Marge fin annee %"] =\
-                ((sell_price - pfdc) - (revenues - expenses))\
-                / (sell_price - anterior_revenues)\
-                if (sell_price - anterior_revenues) > 0 else 0
 
     def get_formatted_data(self):
         formatted = self.data.copy()

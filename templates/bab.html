@@ -1,0 +1,85 @@
+<head>
+   <meta charset='UTF-8'>
+   <title>Bois Beton Acier</title>
+   <link rel='stylesheet' type='text/css' href="{{ url_for('static',filename='rad.css') }}">
+</head>
+
+<body>
+   <h1>Bois Beton Acier</h1>
+   <form action='/rad' method=post id='rad'>
+      <table class='table-fill'>
+         <thead>
+            <tr>
+               <th class='text-left'>Bois</th>
+               <th class='text-left'>M² du mois</th>
+               <th class='text-left'>M² cumulés</th>
+            </tr>
+         </thead>
+         <tbody class='table-hover'>
+            <tr>
+               <td class='text-left'>Contreplaqué</td>
+               <td class='text-left'><input type='text' form='rad' name="Bois$Contreplaqué$M"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Bois$Contreplaqué$C"></input></td>
+            </tr>
+            <tr>
+               <th class='text-left'>Aciers</th>
+               <th class='text-left'>Dépenses du mois (kg)</th>
+               <th class='text-left'>Dépenses cumulées (kg)</th>
+               <th class='text-left'>Quantité restante (kg)</th>
+            </tr>
+            <tr>
+               <td class='text-left'>Aciers HA</td>
+               <td class='text-left'><input type='text' form='rad' name="Aciers$Aciers HA$M"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Aciers$Aciers HA$C"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Aciers$Aciers HA$R"></input></td>
+            </tr>
+            <tr>
+               <td class='text-left'>Aciers treillis</td>
+               <td class='text-left'><input type='text' form='rad' name="Aciers$Aciers treillis$M"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Aciers$Aciers treillis$C"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Aciers$Aciers treillis$R"></input></td>
+            </tr>
+
+            <tr>
+               <th class='text-left'>Beton</th>
+               <th class='text-left'>Quantité du mois m³</th>
+               <th class='text-left'>Quantité cumulées m³</th>
+               <th class='text-left'>Quantité restante m³</th>
+            </tr>
+
+            <tr>
+               <td class='text-left'>Gros beton</td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$Gros beton$M"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$Gros beton$C"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$Gros beton$R"></input></td>
+            </tr>
+            <tr>
+               <td class='text-left'>C 25/30</td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 25/30$M"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 25/30$C"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 25/30$R"></input></td>
+            </tr>
+            <tr>
+               <td class='text-left'>C 30/37</td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 30/37$M"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 30/37$C"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 30/37$R"></input></td>
+            </tr>
+            <tr>
+               <td class='text-left'>C 40/50</td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 40/50$M"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 40/50$C"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 40/50$R"></input></td>
+            </tr>
+            <tr>
+               <td class='text-left'>C 50/60</td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 50/60$M"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 50/60$C"></input></td>
+               <td class='text-left'><input type='text' form='rad' name="Beton$C 50/60$R"></input></td>
+            </tr>
+         </tbody>
+      </table>
+      
+      
+      <input type='submit' id='confirm' value='Confirmer'        form='rad'></input>
+   </form>

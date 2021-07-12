@@ -138,7 +138,6 @@ def get_salary_file(filepath, columns, sheet):
         salary = salary.fillna(0)
         salary = salary.loc[salary['Général'] != 0]
         salary = salary.loc[salary['Section analytique'] != 0]
-        print(str(date) + " :  " + str(salary))
 
         salary.insert(0, column="Date", value=date)
         salary.insert(0, column="Journal", value="ACH")
@@ -212,7 +211,6 @@ def get_accounting_file(filepath):
     # Fill remaining NA in dataframes with '/'
     values = {'SOUS POSTE': '/'}
     account_worksite = account_worksite.fillna(value=values)
-    print(account_worksite.loc[account_worksite['POSTE'] == 'INTERVENANTS'])
     account_divers = account_divers.fillna(value=values)
     account_office = account_office.fillna(value=values)
 
@@ -223,25 +221,46 @@ def get_accounting_file(filepath):
 
 def get_budget_file(filepath):
     """
-    Will read the finances excel file at $filepath
+    Will read the budget excel file at $filepath
 
     Args:
-        param1: path to the finances file
+        param1: path to the budget file
 
     Returns:
-        Dataframe of finances
+        Dataframe of budget splitted in two ( 2 sheets )
     """
+
     try:
-        finances = pd.read_excel(filepath, header=3)
-        # A:J n'est pas generique
+        finances = pd.read_excel(filepath, header=3, sheet_name=0)
     except Exception as error:
-        raise error
+        raise "Probleme de lecture de la première feuille du fichier budget :"+str(error)
+
+    try:
+        mass = pd.read_excel(filepath, header=3, sheet_name=1)
+    except Exception as error:
+        raise "Probleme de lecture de la deuxieme feuille du fichier budget : "+str(error)
+
+    mass['POSTE'] = mass['POSTE'].fillna(method='ffill')
+    mass = mass[mass['SOUS-POSTE'].notna()]
+    mass = mass.fillna(0)
+
+    mass['POSTE'] = mass['POSTE'].apply(lambda s: s.split('\n')[0])
+
+    for column in mass:
+        print(column)
+        if "Unnamed" in column:
+            mass[last+"-AP"] = mass[column] #Avenants/Prixunitaire
+            del mass[column]
+        else:
+            last = column
+            mass[column+"-MQ"] = mass[column] #Marché/Quantité
+            del mass[column]
 
     finances['POSTE'] = finances['POSTE'].fillna(method='ffill')
     finances = finances[finances['SOUS-POSTE'].notna()]
     finances = finances.fillna(0)
 
-    return finances
+    return (finances, mass)
 
 
 def store_all_worksites_names(filepath, outputpath):

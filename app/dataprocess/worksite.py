@@ -114,7 +114,7 @@ class Worksite(Categories):
                              " spécifié dans le fichier budget\
                              n'est pas un couple\
                              présent dans le plan comptable")
-                logging.close()
+        logging.close()
         return 1
 
     def add_rad(self, category, subcategory, rad):

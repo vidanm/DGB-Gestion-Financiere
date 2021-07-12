@@ -90,6 +90,7 @@ class GlobalOverview(Overview):
         """Ajoute les données dans la colonne budget de la synthèse."""
         for name in self.worksite_names:
             tmp = budget.loc[budget['POSTE'] != 'TOTAL']
+            tmp = tmp.loc[tmp['POSTE'] != 'PRIX DE VENTE']
             if name in budget.columns:
                 self.data.loc[name, "BUDGET"] = tmp[name].sum()
 
@@ -123,8 +124,8 @@ class GlobalOverview(Overview):
     def calculate_margin(self, budget=None):
         """Calcul des marges."""
         for name in self.worksite_names:
-            if 'DIV' in name or 'STRUCT' in name:
-                continue
+            #if 'DIV' in name or 'STRUCT' in name:
+            #    continue
 
             # budget = self.data.loc[name,"BUDGET"]
             pfdc = self.data.loc[name, "PFDC"]

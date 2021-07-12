@@ -17,6 +17,7 @@ from app.dataprocess.imports import \
 from app.dataprocess.date import get_month_name
 from app.dataprocess.errors_to_html import errors_to_html
 from app.dataprocess.forward_planning import ForwardPlanning
+from app.dataprocess.bab_to_html import bab_input
 from app.pdf_generation.colors import bleuciel
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
@@ -243,6 +244,12 @@ def chantpdf():
     year = date[0:4]
     month = date[5:7]
     worksite_name = request.form['code']
+    
+    try:
+        bab = request.form['bab']
+    except Exception as error:
+        bab = 'off'
+
     budget = None
 
     try:
@@ -257,9 +264,9 @@ def chantpdf():
     #    return "Erreur de lecture de fichier chantier : " + str(error)
 
     try:
-        budget = get_budget_file("var/Budget.xls")
-    except Exception:
-        print("No Budget")
+        budget = get_budget_file("var/Budget.xls")[0] # finances sheet = 0
+    except Exception as error:
+        print(error)
 
     worksite.calculate_worksite(int(month), int(year), budget)
     worksite.round_2dec_df()  # Verifier l'utilité
@@ -273,10 +280,20 @@ def chantpdf():
             log = open("log.txt", "r")
             if log.readlines() != 0:
                 log.close()
-                errors_to_html(action='/rad')
+                if (bab == 'on'):
+                    errors_to_html(action='/bab')
+                else:
+                    errors_to_html(action='/rad')
+
                 return render_template("errors.html")
     return render_template("rad.html")
 
+@app.route('/bab', methods=['GET', 'POST'])
+@login_required
+def bab():
+    return render_template("bab.html")
+    """Bois Acier Beton"""
+    
 
 @app.route('/rad', methods=['GET', 'POST'])
 @login_required
