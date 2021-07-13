@@ -42,6 +42,7 @@ Tous doivent être importés sous le format .xls et non .xlsx.
 comptable. Exemple : "Sous traitant MO" est différent de "Sous traitant Main d'oeuvre"
 2. Le prix de vente est lu comme un poste contenant les sous postes : Vente / Avenants / Prorata, dans l'application
 tout est additionné pour calculer le prix de vente.
+3. La deuxième feuille comprends les données Marché/Avenants pour certains postes ( Intervenants / MO ) et Quantité/Prix unitaire pour d'autres ( Bois Beton Aciers )
 
 ### Masse salariale
 ![Example Masse Salariale](https://i.ibb.co/6Y1ZDtx/screenshot.png)
