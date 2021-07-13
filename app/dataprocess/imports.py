@@ -233,12 +233,14 @@ def get_budget_file(filepath):
     try:
         finances = pd.read_excel(filepath, header=3, sheet_name=0)
     except Exception as error:
-        raise "Probleme de lecture de la première feuille du fichier budget :"+str(error)
+        raise "Probleme de lecture de la première feuille du fichier budget :" + str(
+            error)
 
     try:
         mass = pd.read_excel(filepath, header=3, sheet_name=1)
     except Exception as error:
-        raise "Probleme de lecture de la deuxieme feuille du fichier budget : "+str(error)
+        raise "Probleme de lecture de la deuxieme feuille du fichier budget : " + str(
+            error)
 
     mass['POSTE'] = mass['POSTE'].fillna(method='ffill')
     mass = mass[mass['SOUS-POSTE'].notna()]
@@ -249,11 +251,11 @@ def get_budget_file(filepath):
     for column in mass:
         print(column)
         if "Unnamed" in column:
-            mass[last+"-AP"] = mass[column] #Avenants/Prixunitaire
+            mass[last + "-AP"] = mass[column]  #Avenants/Prixunitaire
             del mass[column]
         elif "POSTE" not in column:
             last = column
-            mass[column+"-MQ"] = mass[column] #Marché/Quantité
+            mass[column + "-MQ"] = mass[column]  #Marché/Quantité
             del mass[column]
 
     finances['POSTE'] = finances['POSTE'].fillna(method='ffill')
@@ -266,15 +268,19 @@ def get_budget_file(filepath):
 def store_all_worksites_names(filepath, outputpath):
     expenses = get_expenses_file(filepath)
     worksite_names = expenses["Section analytique"].unique()
-    file = open(outputpath+"names.txt", "w+")
+    file = open(outputpath + "names.txt", "w+")
     for name in worksite_names:
         if 'DIV' not in name and 'STRUCT' not in name:
-            file.write(name+"\n")
+            file.write(name + "\n")
+
 
 def get_bab_file(filepath):
-    out = pd.read_csv(filepath,names=["POSTE","SOUS-POSTE","TYPE","VALEUR"],index_col=None)
+    out = pd.read_csv(filepath,
+                      names=["POSTE", "SOUS-POSTE", "TYPE", "VALEUR"],
+                      index_col=None)
     print(out)
     return out
+
 
 if __name__ == "__main__":
     split_expenses_file_as_worksite_csv(

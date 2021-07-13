@@ -6,7 +6,7 @@ HTML_HEAD = "\
             <title>Erreurs</title>\
             <link rel='stylesheet' \
             type='text/css' \
-            href=" + '"{{ url_for("static",filename="index.css")}}">' +\
+            href="                   + '"{{ url_for("static",filename="index.css")}}">' +\
         "</head>\
         <body>\
             <h1> Erreurs </h1>\
@@ -20,7 +20,6 @@ HTML_ACTION_END = "'>"
 
 HTML_FOOT = "<input type='submit' value='Continuer quand même'></input>\
         </form><br>"
-
 
 NON_CRITIC = "<form id='menu' method=get action='/'>\
                     <input type='submit' value='Retour au menu'></input>\

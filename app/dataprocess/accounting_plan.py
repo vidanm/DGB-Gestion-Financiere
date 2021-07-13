@@ -28,13 +28,13 @@ class AccountingPlan():
         Va s'occuper de traiter le fichier excel représentant \
                 le plan comptable."""
         (self.working_site_plan, self.office_plan) = plan
-    
+
         if (env == "ALL"):
-            self.general_plan = self.working_site_plan.append(self.office_plan,
-                                                              ignore_index=True)
+            self.general_plan = self.working_site_plan.append(
+                self.office_plan, ignore_index=True)
         elif (env == "CHAN"):
             self.general_plan = self.working_site_plan
-        
+
         elif (env == "STRUCT"):
             self.general_plan = self.office_plan
 

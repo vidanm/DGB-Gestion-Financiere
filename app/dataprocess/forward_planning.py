@@ -15,7 +15,12 @@ class ForwardPlanning():
                 self.forward_planning = self.forward_planning\
                     .append(line, ignore_index=False)
 
-    def calculate_margins(self, month, year, with_year=True, with_cumul=False, with_month=False):
+    def calculate_margins(self,
+                          month,
+                          year,
+                          with_year=True,
+                          with_cumul=False,
+                          with_month=False):
         # Concerne le tableau marge à l'avancement
         revenues = Revenues(self.worksite.expenses.data)
         # Verifier si les lignes de ventes sont bien dedans
@@ -82,8 +87,8 @@ class ForwardPlanning():
                 row_indexes.append(i)
 
             for i in [[
-                     month_revenues, month_expenses, margin_month,
-                     percent_margin_month
+                    month_revenues, month_expenses, margin_month,
+                    percent_margin_month
             ]]:
                 data.append(i)
 
@@ -100,7 +105,7 @@ class ForwardPlanning():
     def calculate_pfdc_tab(self, budget):
         # Concerne le tableau Marge à fin de chantier
         column_indexes = ["PFDC"]
-        row_indexes = ["CA Chantier","Marge brute", "Marge brute %"]
+        row_indexes = ["CA Chantier", "Marge brute", "Marge brute %"]
 
         try:
             sell_price = budget.loc[budget["POSTE"] == "PRIX DE VENTE",
@@ -118,7 +123,7 @@ class ForwardPlanning():
         out = pd.DataFrame(data=data,
                            index=row_indexes,
                            columns=column_indexes)
-    
+
         out.loc["CA Chantier"] = out.loc["CA Chantier"]\
                                      .apply("{:0,.2f}€".format)
 

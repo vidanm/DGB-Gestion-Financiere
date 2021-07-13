@@ -54,7 +54,7 @@ class YearOverview(Overview):
         self.add_revenues()
         self.calculate_margin(budget)
         self.data = self.data.round(2)
-        self.data = self.data.sort_values("Dépenses",ascending=False)
+        self.data = self.data.sort_values("Dépenses", ascending=False)
 
     def add_revenues(self):
         """Ajout des chiffres d'affaires."""

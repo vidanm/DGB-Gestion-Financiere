@@ -30,9 +30,9 @@ class Overview():
         first_file_processed = False
         total = None
         for filename in os.listdir(self.csv_path):
-            if str(year) in filename: #and\
-                    #'STRUCT' not in filename and\
-                    #'DIV' not in filename:
+            if str(year) in filename:  #and\
+                #'STRUCT' not in filename and\
+                #'DIV' not in filename:
                 if not first_file_processed:
                     total = get_csv_expenses(self.csv_path + filename)
                     first_file_processed = True

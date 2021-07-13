@@ -25,7 +25,7 @@ class Expenses():
         return self.data.to_string()
 
     def __remove_unknown_accounts(self):
-        logging = open("log.txt","a+")
+        logging = open("log.txt", "a+")
         accounts = self.data["Général"].unique()
         for account in accounts:
             if self.accounting_plan.get_poste_by_code(str(account)).empty:
@@ -33,9 +33,10 @@ class Expenses():
                     self.accounting_plan.add_code_to_plan(
                         account, "Unknown category", "Unknown sub-category")
                 else:
-                    print("Compte " + str(account) + " pas dans le plan comptable")
+                    print("Compte " + str(account) +
+                          " pas dans le plan comptable")
                     logging.write("Compte " + str(account) +
-                                   " pas dans le plan comptable\n")
+                                  " pas dans le plan comptable\n")
                     self.data = self.data.loc[self.data["Général"] != account]
         logging.close()
         return 1
