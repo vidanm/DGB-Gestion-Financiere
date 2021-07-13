@@ -251,7 +251,7 @@ def get_budget_file(filepath):
         if "Unnamed" in column:
             mass[last+"-AP"] = mass[column] #Avenants/Prixunitaire
             del mass[column]
-        else:
+        elif "POSTE" not in column:
             last = column
             mass[column+"-MQ"] = mass[column] #Marché/Quantité
             del mass[column]
@@ -271,6 +271,10 @@ def store_all_worksites_names(filepath, outputpath):
         if 'DIV' not in name and 'STRUCT' not in name:
             file.write(name+"\n")
 
+def get_bab_file(filepath):
+    out = pd.read_csv(filepath,names=["POSTE","SOUS-POSTE","TYPE","VALEUR"],index_col=None)
+    print(out)
+    return out
 
 if __name__ == "__main__":
     split_expenses_file_as_worksite_csv(

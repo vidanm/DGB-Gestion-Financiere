@@ -62,9 +62,19 @@ class Worksite(Categories):
 
         exp = exp.loc[(exp['Général'].astype(str).str.slice(stop=1) != '7')]
 
-        print(exp.loc[exp['Débit'] == '19-PRO-NLG'])
         return exp['Débit'].astype(float).sum() - exp['Crédit'].astype(
             float).sum()
+
+    def calculate_month_expenses(self, month, year):
+        df = self.expenses.data
+        df['Year'] = pd.DatetimeIndex(df['Date']).year
+        df['Month'] = pd.DatetimeIndex(df['Date']).month
+
+        exp = df.loc[(year == df['Year']) & (month == df['Month'])]
+        exp = exp.loc[(exp['Général'].astype(str).str.slice(stop=1) != '7')]
+        return exp['Débit'].astype(float).sum() - exp['Crédit'].astype(
+            float).sum()
+
 
     def calculate_worksite(self, month, year, budget=None, only_year=False):
 
@@ -87,6 +97,136 @@ class Worksite(Categories):
 
         if (budget is not None):
             self.__add_budget(budget)
+
+    def calculate_bab(self, budMas, csvBab):
+        return ( self.__calculate_bois(budMas, csvBab),
+                self.__calculate_aciers(budMas, csvBab),
+                self.__calculate_beton(budMas, csvBab))
+
+    def __calculate_bois(self, budMas, csvBab):
+        sp = ["CONTREPLAQUE"]
+        outCol = ["Poste","Surface coffrante (m²)","M² consommé mois","M² consommé cumul",
+                  "Ratio consommation", "PU Moyen", "Ratio €/m²"]
+
+        out = pd.DataFrame(data=None,columns=outCol)
+
+        csvBab = csvBab.loc[csvBab['POSTE'] == 'BOIS']
+        budMas = budMas.loc[budMas['POSTE'] == 'BOIS']
+
+        for poste in sp:
+            surface_coffrante = budMas[self.worksite_name+"-MQ"].loc[budMas['SOUS-POSTE'] == poste].sum()
+
+            metre_consomme_mois = csvBab.loc[(csvBab["TYPE"] == "M") & (csvBab["SOUS-POSTE"] == poste)]["VALEUR"].sum()
+            metre_consomme_cumul = csvBab.loc[(csvBab["TYPE"] == "C") & (csvBab["SOUS-POSTE"] == poste)]["VALEUR"].sum()
+            ratio_consommation = metre_consomme_cumul / surface_coffrante if surface_coffrante != 0 else 0
+
+            dep_cumul = self.categories["BOIS"].loc[poste,"Dépenses cumulées"].sum()
+            print("\n\n\nDPENESES IJDQWILDJ : "+str(dep_cumul)+"\n\n\n")
+
+            pumoyen = dep_cumul / metre_consomme_cumul if metre_consomme_cumul != 0 else 0
+            ratio_euro_metre = dep_cumul / surface_coffrante if surface_coffrante != 0 else 0
+            tmp = pd.DataFrame(data=[[
+                        poste,
+                        surface_coffrante,
+                        metre_consomme_mois,
+                        metre_consomme_cumul,
+                        ratio_consommation,
+                        pumoyen,
+                        ratio_euro_metre
+                       ]],columns=outCol)
+            out = out.append(tmp)
+
+        out = out.set_index("Poste")
+        return out
+
+
+    def __calculate_aciers(self, budMas, csvBab):
+        sp = ["ACIERS HA","TRELLIS"]
+        outCol = ["Poste","Dépenses du mois (kg)","Dépenses cumulées (kg)","Budget (kg)",
+                  "RAD","PFDC (kg)","Ecart","PU Moyen etude","PU Moyen chantier"]
+        
+        out = pd.DataFrame(data=None,columns=outCol)
+        
+        csvBab = csvBab.loc[csvBab['POSTE'] == 'ACIERS']
+        budMas = budMas.loc[budMas['POSTE'] == 'ACIERS']
+        # budMas['SOUS-POSTE'] = budMas['SOUS-POSTE'].filter(items=sp)
+        
+        for poste in sp:
+            type_acier = poste
+            depenses_mois_kg = csvBab.loc[(csvBab["TYPE"] == "M") &\
+                    (csvBab["SOUS-POSTE"] == poste)]["VALEUR"].sum()
+            depenses_cumul_kg = csvBab.loc[(csvBab["TYPE"] == "C") &\
+                    (csvBab["SOUS-POSTE"] == poste)]["VALEUR"].sum()
+            reste_a_depenser = csvBab.loc[(csvBab["TYPE"] == "R") &\
+                    (csvBab["SOUS-POSTE"] == poste)]["VALEUR"].sum()
+
+            dep_cumul = self.categories["ACIERS"].loc[poste,"Dépenses cumulées"].sum()
+            budget_kg = budMas[self.worksite_name+"-MQ"].loc[budMas['SOUS-POSTE'] == poste].sum()
+            pfdc = depenses_cumul_kg + reste_a_depenser
+            ecart = budget_kg - pfdc
+            pu_moyen_etude =  budMas[self.worksite_name+"-AP"].loc[budMas['SOUS-POSTE'] == poste].sum()
+            pu_moyen_chantier = dep_cumul / depenses_cumul_kg if depenses_cumul_kg != 0 else 0
+            
+            tmp = pd.DataFrame(data=[[
+                        poste,
+                        depenses_mois_kg,
+                        depenses_cumul_kg,
+                        budget_kg,
+                        reste_a_depenser,
+                        pfdc,
+                        ecart,
+                        pu_moyen_etude,
+                        pu_moyen_chantier
+                       ]],columns=outCol)
+            out = out.append(tmp)
+
+        out = out.set_index("Poste")
+        return out
+    
+    def __calculate_beton(self, budMas, csvBab):
+        sp = ["BETON C25/30","BETON C30/37","BETON C40/50",
+              "BETON C50/60"]
+        outCol = ["Poste","Quantité du mois (m³)","Quantité cumulée (m³)","M³ Étude",
+                  "Quantité restante (m³)","PFDC","Ecart","PU Moyen etude","PU Moyen chantier"]
+
+        out = pd.DataFrame(data=None, columns=outCol)
+
+        csvBab = csvBab.loc[csvBab['POSTE'] == 'BETON']
+        budMas = budMas.loc[budMas['POSTE'] == 'BETON']
+        # budMas['SOUS-POSTE'] = budMas['SOUS-POSTE'].filter(items=sp)
+
+        for poste in sp:
+            type_beton = poste
+            quantite_du_mois = csvBab.loc[(csvBab["TYPE"] == "M") &\
+                    (csvBab["SOUS-POSTE"] == poste)]["VALEUR"].sum()
+            quantite_cumul = csvBab.loc[(csvBab["TYPE"] == "C") &\
+                    (csvBab["SOUS-POSTE"] == poste)]["VALEUR"].sum()
+            quantite_restante = csvBab.loc[(csvBab["TYPE"] == "R") &\
+                    (csvBab["SOUS-POSTE"] == poste)]["VALEUR"].sum()
+
+            
+            dep_cumul = self.categories["BETON"].loc[poste,"Dépenses cumulées"].sum()
+            pfdc = quantite_cumul + quantite_restante
+            budget_kg = budMas[self.worksite_name+"-MQ"].loc[budMas['SOUS-POSTE'] == poste].sum()
+            ecart = budget_kg - pfdc
+            pu_moyen_etude =  budMas[self.worksite_name+"-AP"].loc[budMas['SOUS-POSTE'] == poste].sum()
+            pu_moyen_chantier = dep_cumul/quantite_cumul if quantite_cumul != 0 else 0
+            
+            tmp = pd.DataFrame(data=[[
+                        poste,
+                        quantite_du_mois,
+                        quantite_cumul,
+                        budget_kg,
+                        quantite_restante,
+                        pfdc,
+                        ecart,
+                        pu_moyen_etude,
+                        pu_moyen_chantier
+                       ]],columns=outCol)
+            out = out.append(tmp)
+
+        out = out.set_index("Poste")
+        return out
 
     def __add_budget(self, budget):
         """
@@ -116,6 +256,26 @@ class Worksite(Categories):
                              présent dans le plan comptable")
         logging.close()
         return 1
+
+    def add_marche_avenants(self, budMas):
+        budMas = budMas.loc[budMas["POSTE"] != "BETON"]
+        budMas = budMas.loc[budMas["POSTE"] != "ACIERS"]
+        budMas = budMas.loc[budMas["POSTE"] != "BOIS"]
+
+
+        for poste in budMas["POSTE"].unique():
+            tmp = budMas.loc[budMas["POSTE"] == poste]
+            self.categories[poste]['Marché'] = 0
+            self.categories[poste]['Avenants'] = 0
+            print("\nPOSTE : "+str(poste))
+            for sp in tmp["SOUS-POSTE"]:
+                self.categories[poste].loc[sp,'Marché'] = budMas[self.worksite_name+'-MQ']\
+                                                            .loc[budMas['SOUS-POSTE'] == sp].sum()
+                self.categories[poste].loc[sp,'Avenants'] = budMas[self.worksite_name+'-AP']\
+                                                            .loc[budMas['SOUS-POSTE'] == sp].sum()
+
+                print(sp)
+                
 
     def add_rad(self, category, subcategory, rad):
         if rad.replace('.', '').isnumeric():

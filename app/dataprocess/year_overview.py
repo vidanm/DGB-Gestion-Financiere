@@ -26,7 +26,7 @@ class YearOverview(Overview):
                 en omettant la structure."""
         for name in self.worksite_names:
             print(name)
-            worksite_line = ["", 0, 0, 0, 0, 0, 0, 0]
+            worksite_line = ["", 0, 0, 0, 0, 0]
             worksite_line[0] = name
 
             tmp = self.expenses.data.loc[
@@ -152,9 +152,5 @@ class YearOverview(Overview):
             "{:0,.2f}€".format)
         formatted["Marge €"] = formatted["Marge €"].apply("{:0,.2f}€".format)
         formatted["Marge %"] = formatted["Marge %"].apply("{:0,.2f}%".format)
-        formatted["Marge fin annee €"] = formatted["Marge fin annee €"].apply(
-            "{:0,.2f}€".format)
-        formatted["Marge fin annee %"] = formatted["Marge fin annee %"].apply(
-            "{:0,.2f}%".format)
 
         return formatted

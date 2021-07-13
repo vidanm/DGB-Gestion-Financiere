@@ -15,30 +15,30 @@ class ForwardPlanning():
                 self.forward_planning = self.forward_planning\
                     .append(line, ignore_index=False)
 
-    def calculate_margins(self, month, year, with_year=True, with_cumul=False):
+    def calculate_margins(self, month, year, with_year=True, with_cumul=False, with_month=False):
         # Concerne le tableau marge à l'avancement
         revenues = Revenues(self.worksite.expenses.data)
         # Verifier si les lignes de ventes sont bien dedans
 
         year_revenues = revenues\
             .calculate_year_revenues(year)
-
         anterior_revenues = revenues\
             .calculate_cumulative_with_year_limit(year-1)
-
         cumulative_revenues = year_revenues + anterior_revenues
+        month_revenues = revenues\
+                .calculate_month_revenues(month, year)
 
         year_expenses = self.worksite\
             .calculate_year_expenses(month, year)
-
         cumulative_expenses = self.worksite\
             .calculate_cumul_expenses(month, year)
-
         anterior_expenses = cumulative_expenses - year_expenses
+        month_expenses = self.worksite.calculate_month_expenses(month, year)
 
         margin_year = year_revenues - year_expenses
         margin_anterior = anterior_revenues - anterior_expenses
         margin_total = cumulative_revenues - cumulative_expenses
+        margin_month = month_revenues - month_expenses
 
         percent_margin_year = (margin_year/year_revenues)*100\
             if year_revenues != 0 else 0
@@ -46,6 +46,8 @@ class ForwardPlanning():
             if anterior_revenues != 0 else 0
         percent_margin_total = (margin_total/cumulative_revenues)*100\
             if cumulative_revenues != 0 else 0
+        percent_margin_month = (margin_month/month_revenues)*100\
+            if month_revenues != 0 else 0
 
         row_indexes = []
         data = []
@@ -75,6 +77,16 @@ class ForwardPlanning():
             ]]:
                 data.append(i)
 
+        if with_month:
+            for i in ["Mois"]:
+                row_indexes.append(i)
+
+            for i in [[
+                     month_revenues, month_expenses, margin_month,
+                     percent_margin_month
+            ]]:
+                data.append(i)
+
         out = pd.DataFrame(data=data,
                            index=row_indexes,
                            columns=column_indexes)
@@ -88,7 +100,7 @@ class ForwardPlanning():
     def calculate_pfdc_tab(self, budget):
         # Concerne le tableau Marge à fin de chantier
         column_indexes = ["PFDC"]
-        row_indexes = ["Marge brute", "Marge brute %"]
+        row_indexes = ["CA Chantier","Marge brute", "Marge brute %"]
 
         try:
             sell_price = budget.loc[budget["POSTE"] == "PRIX DE VENTE",
@@ -101,11 +113,14 @@ class ForwardPlanning():
         percent = total_sell/(sell_price)\
             if (sell_price) != 0 else 0
 
-        data = [total_sell, percent * 100]
+        data = [sell_price, total_sell, percent * 100]
 
         out = pd.DataFrame(data=data,
                            index=row_indexes,
                            columns=column_indexes)
+    
+        out.loc["CA Chantier"] = out.loc["CA Chantier"]\
+                                     .apply("{:0,.2f}€".format)
 
         out.loc["Marge brute"] = out.loc["Marge brute"]\
                                     .apply("{:0,.2f}€".format)
