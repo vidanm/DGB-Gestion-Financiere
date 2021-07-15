@@ -274,8 +274,8 @@ class Worksite(Categories):
                 self.categories[poste].loc[sp,'Avenants'] = budMas[self.worksite_name+'-AP']\
                                                             .loc[budMas['SOUS-POSTE'] == sp].sum()
 
-        self.categories[poste] = self.categories[poste][["Marché","Avenants","Dépenses du mois","Dépenses cumulées",\
-                                                         "Budget","RAD","PFDC","Ecart PFDC/Budget"]]
+           self.categories[poste] = self.categories[poste][["Marché","Avenants","Dépenses du mois","Dépenses cumulées",\
+                                                             "Budget","RAD","PFDC","Ecart PFDC/Budget"]]
 
     def add_rad(self, category, subcategory, rad):
         if rad.replace('.', '').isnumeric():
