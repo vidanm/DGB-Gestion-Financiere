@@ -186,7 +186,7 @@ class Worksite(Categories):
         return out
 
     def __calculate_beton(self, budMas, csvBab):
-        sp = ["BETON C25/30", "BETON C30/37", "BETON C40/50", "BETON C50/60"]
+        sp = ["BETON","BETON C25/30", "BETON C30/37", "BETON C40/50", "BETON C50/60"]
         outCol = [
             "Poste", "Quantité du mois (m³)", "Quantité cumulée (m³)",
             "M³ Étude", "Quantité restante (m³)", "PFDC", "Ecart",
@@ -274,7 +274,8 @@ class Worksite(Categories):
                 self.categories[poste].loc[sp,'Avenants'] = budMas[self.worksite_name+'-AP']\
                                                             .loc[budMas['SOUS-POSTE'] == sp].sum()
 
-                print(sp)
+        self.categories[poste] = self.categories[poste][["Marché","Avenants","Dépenses du mois","Dépenses cumulées",\
+                                                         "Budget","RAD","PFDC","Ecart PFDC/Budget"]]
 
     def add_rad(self, category, subcategory, rad):
         if rad.replace('.', '').isnumeric():

@@ -13,11 +13,10 @@ from app.dataprocess.dataframe_to_html \
 from app.dataprocess.imports import \
         split_expenses_file_as_worksite_csv, get_accounting_file,\
         get_budget_file, split_salary_file_as_salary_csv,\
-        store_all_worksites_names
+        store_all_worksites_names, get_bab_file
 from app.dataprocess.date import get_month_name
 from app.dataprocess.errors_to_html import errors_to_html
 from app.dataprocess.forward_planning import ForwardPlanning
-from app.dataprocess.bab_to_html import bab_input
 from app.pdf_generation.colors import bleuciel
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
@@ -117,6 +116,9 @@ def index():
     if (os.path.exists("log.txt")):
         open('log.txt', 'w').close()
 
+    if (os.path.exists("var/bab.csv")):
+        os.remove("var/bab.csv")
+
     return render_template("index.html")
 
 
@@ -137,7 +139,7 @@ def syntpdf():
         return "Erreur de lecture du plan comptable " + str(e)
 
     try:
-        budget = get_budget_file("var/Budget.xls")
+        budget, mas = get_budget_file("var/Budget.xls")
     except Exception:
         print("Pas de fichier budget")
     # revenues = Revenues(charges.get_raw_charges())
@@ -182,7 +184,6 @@ def syntpdf():
 
     pdf.save_pdf()
     return send_file(filename, as_attachment=True)
-    
 
 
 @app.route('/synthese_divers', methods=['POST'])
@@ -231,7 +232,6 @@ def diverspdf():
     return render_template("errors.html")
 
 
-
 @app.route('/synthese_chantier', methods=['POST'])
 @login_required
 def chantpdf():
@@ -244,7 +244,7 @@ def chantpdf():
     year = date[0:4]
     month = date[5:7]
     worksite_name = request.form['code']
-    
+
     try:
         bab = request.form['bab']
     except Exception as error:
@@ -264,7 +264,8 @@ def chantpdf():
     #    return "Erreur de lecture de fichier chantier : " + str(error)
 
     try:
-        budget = get_budget_file("var/Budget.xls")[0] # finances sheet = 0
+        budget, mas = get_budget_file("var/Budget.xls")[
+            0]  # finances sheet = 0
     except Exception as error:
         print(error)
 
@@ -277,23 +278,35 @@ def chantpdf():
     session['date'] = date
 
     if os.path.exists("log.txt"):
-            log = open("log.txt", "r")
-            if log.readlines() != 0:
-                log.close()
-                if (bab == 'on'):
-                    errors_to_html(action='/bab')
-                else:
-                    errors_to_html(action='/rad')
+        log = open("log.txt", "r")
+        if log.readlines() != 0:
+            log.close()
+            if (bab == 'on'):
+                errors_to_html(action='/bab')
+            else:
+                errors_to_html(action='/rad')
 
-                return render_template("errors.html")
+            return render_template("errors.html")
     return render_template("rad.html")
+
 
 @app.route('/bab', methods=['GET', 'POST'])
 @login_required
 def bab():
-    return render_template("bab.html")
+    if request.method == "GET":
+        return render_template("bab.html")
+
+    file = open("var/bab.csv", "w+")
+    for value in request.form:
+        value = value + '$' + request.form[value]
+        value = value.replace('$', ',')
+        print(value)
+        file.write(value + '\n')
+
+    file.close()
+    return render_template("rad.html")
     """Bois Acier Beton"""
-    
+
 
 @app.route('/rad', methods=['GET', 'POST'])
 @login_required
@@ -308,6 +321,7 @@ def rad():
         return render_template("rad.html")
 
     budget = None
+    is_bab_defined = True
     worksite_name = session.get('worksite_name',
                                 'not set')  # Défini dans chantpdf()
     accounting_plan = AccountingPlan(
@@ -315,9 +329,15 @@ def rad():
 
     worksite = Worksite(accounting_plan, worksite_name)
     try:
-        budget = get_budget_file("var/Budget.xls")
+        budget, mas = get_budget_file("var/Budget.xls")
     except Exception:
         print("Pas de budget")
+
+    try:
+        bab = get_bab_file("var/bab.csv")
+    except Exception as error:
+        print(error)
+        is_bab_defined = False
 
     date = session.get('date', 'not set')  # Défini dans chantpdf()
     year = date[0:4]
@@ -336,6 +356,11 @@ def rad():
 
     worksite.compose_pfdc_budget()
     worksite.add_worksite_total()
+
+    if is_bab_defined :
+        bois, acier, beton = worksite.calculate_bab(mas, bab)
+        worksite.add_marche_avenants(mas)
+
     planning = ForwardPlanning(worksite)
     planning_margin = planning.calculate_margins(int(month),
                                                  int(year),
@@ -345,6 +370,7 @@ def rad():
     planning_margin_cumul = planning.calculate_margins(int(month),
                                                        int(year),
                                                        with_cumul=True,
+                                                       with_month=True,
                                                        with_year=False)
 
     planning_pfdc = planning.calculate_pfdc_tab(budget)
@@ -434,6 +460,34 @@ def rad():
 
         elif (nom == "DIVERS"):
             continue
+        elif (nom == "BOIS") and is_bab_defined :
+            pdf.new_page(nom, worksite_name)
+            pdf.add_table(worksite.get_formatted_data(nom),
+                          y=(A4[0] / 2) + inch / 2,
+                          tableHeight=inch * 5)
+            pdf.add_table(bois,
+                          y=(A4[0] / 4),
+                          tableHeight=inch * 5,
+                          total=False)
+        elif (nom == "ACIERS") and is_bab_defined :
+            pdf.new_page(nom, worksite_name)
+            pdf.add_table(worksite.get_formatted_data(nom),
+                          y=(A4[0] / 2) + inch / 2,
+                          tableHeight=inch * 5)
+            pdf.add_table(acier,
+                          y=(A4[0] / 4),
+                          tableHeight=inch * 5,
+                          total=False)
+        elif (nom == "BETON") and is_bab_defined:
+            pdf.new_page(nom, worksite_name)
+            pdf.add_table(worksite.get_formatted_data(nom),
+                          y=(A4[0] / 2) + inch,
+                          tableHeight=inch * 3)
+            pdf.add_table(beton,
+                          y=(A4[0] / 4),
+                          tableHeight=inch * 2,
+                          total=False)
+
         else:
             pdf.new_page(nom, worksite_name)
             pdf.add_table(worksite.get_formatted_data(nom),
@@ -465,7 +519,7 @@ def structpdf():
         filename = "bibl/Structure" + year + "-" + month + ".pdf"
         try:
             accounting_plan = AccountingPlan(
-                get_accounting_file("var/PlanComptable.xls"),env="STRUCT")
+                get_accounting_file("var/PlanComptable.xls"), env="STRUCT")
         except Exception as e:
             return "Erreur de lecture du plan comptable : " + str(e)
 
@@ -584,6 +638,10 @@ def clear():
         os.remove("var/Charges.xls")
     if (os.path.exists("var/Budget.xls")):
         os.remove("var/Budget.xls")
+    if (os.path.exists("var/bab.csv")):
+        os.remove("var/bab.csv")
+
+
 
 
 def check_save_uploaded_file(tag):
@@ -608,7 +666,7 @@ def check_save_uploaded_file(tag):
                 store_all_worksites_names(filepath=os.path.join(
                     app.config['UPLOAD_FOLDER'],
                     tag + '.' + filename.split('.')[1]),
-                    outputpath="var/")
+                                          outputpath="var/")
 
             elif tag == "MasseSalariale":
                 split_salary_file_as_salary_csv(filepath=os.path.join(
