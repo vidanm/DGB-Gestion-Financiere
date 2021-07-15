@@ -105,7 +105,7 @@ class Worksite(Categories):
     def __calculate_bois(self, budMas, csvBab):
         sp = ["CONTREPLAQUE"]
         outCol = [
-            "Poste", "Surface coffrante (m²)", "M² consommé mois",
+            "Poste", "Surface coffrante","M² consommé mois",
             "M² consommé cumul", "Ratio consommation", "PU Moyen", "Ratio €/m²"
         ]
 
@@ -138,14 +138,21 @@ class Worksite(Categories):
                                columns=outCol)
             out = out.append(tmp)
 
+        out["Surface coffrante"] = out["Surface coffrante"].astype(int).apply("{:0,.2f} m²".format)
+        out["M² consommé mois"] = out["M² consommé mois"].astype(int).apply("{:0,.2f} m²".format)
+        out["M² consommé cumul"] = out["M² consommé cumul"].astype(int).apply("{:0,.2f} m²".format)
+        out["Ratio consommation"] = out["Ratio consommation"].astype(int).apply("{:0,.2f} m²".format)
+        out["PU Moyen"] = out["PU Moyen"].astype(int).apply("{:0,.2f}€".format)
+        out["Ratio €/m²"] = out["Ratio €/m²"].astype(int).apply("{:0,.2f}€".format)
+
         out = out.set_index("Poste")
         return out
 
     def __calculate_aciers(self, budMas, csvBab):
         sp = ["ACIERS HA", "TRELLIS"]
         outCol = [
-            "Poste", "Dépenses du mois (kg)", "Dépenses cumulées (kg)",
-            "Budget (kg)", "RAD", "PFDC (kg)", "Ecart", "PU Moyen etude",
+            "Poste", "Dépenses du mois", "Dépenses cumulées",
+            "Budget", "RAD", "PFDC", "Ecart", "PU Moyen etude",
             "PU Moyen chantier"
         ]
 
@@ -182,14 +189,23 @@ class Worksite(Categories):
                                columns=outCol)
             out = out.append(tmp)
 
+        out["Dépenses du mois"] = out["Dépenses du mois"].astype(int).apply("{:0,.2f} kg".format)
+        out["Dépenses cumulées"] = out["Dépenses cumulées"].astype(int).apply("{:0,.2f} kg".format)
+        out["Budget"] = out["Budget"].astype(int).apply("{:0,.2f} kg".format)
+        out["RAD"] = out["RAD"].astype(int).apply("{:0,.2f} kg".format)
+        out["PFDC"] = out["PFDC"].astype(int).apply("{:0,.2f} kg".format)
+        out["Ecart"] = out["Ecart"].astype(int).apply("{:0,.2f} kg".format)
+        out["PU Moyen etude"] = out["PU Moyen etude"].astype(int).apply("{:0,.2f}€".format)
+        out["PU Moyen chantier"] = out["PU Moyen chantier"].astype(int).apply("{:0,.2f}€".format)
+
         out = out.set_index("Poste")
         return out
 
     def __calculate_beton(self, budMas, csvBab):
         sp = ["BETON","BETON C25/30", "BETON C30/37", "BETON C40/50", "BETON C50/60"]
         outCol = [
-            "Poste", "Quantité du mois (m³)", "Quantité cumulée (m³)",
-            "M³ Étude", "Quantité restante (m³)", "PFDC", "Ecart",
+            "Poste", "Quantité du mois", "Quantité cumulée",
+            "M³ Étude", "Quantité restante", "PFDC", "Ecart",
             "PU Moyen etude", "PU Moyen chantier"
         ]
 
@@ -225,6 +241,15 @@ class Worksite(Categories):
             ]],
                                columns=outCol)
             out = out.append(tmp)
+                
+        out["Quantité du mois"] = out["Quantité du mois"].astype(int).apply("{:0,.2f} m³".format)
+        out["Quantité cumulée"] = out["Quantité cumulée"].astype(int).apply("{:0,.2f} m³".format)
+        out["M³ Étude"] = out["M³ Étude"].astype(int).apply("{:0,.2f} m³".format)
+        out["Quantité restante"] = out["Quantité restante"].astype(int).apply("{:0,.2f} m³".format)
+        out["PFDC"] = out["PFDC"].astype(int).apply("{:0,.2f} m³".format)
+        out["Ecart"] = out["Ecart"].astype(int).apply("{:0,.2f} m³".format)
+        out["PU Moyen etude"] = out["PU Moyen etude"].astype(int).apply("{:0,.2f}€".format)
+        out["PU Moyen chantier"] = out["PU Moyen chantier"].astype(int).apply("{:0,.2f}€".format)
 
         out = out.set_index("Poste")
         return out
@@ -276,6 +301,13 @@ class Worksite(Categories):
 
             self.categories[poste] = self.categories[poste][["Marché","Avenants","Dépenses du mois","Dépenses cumulées",\
                                                              "Budget","RAD","PFDC","Ecart PFDC/Budget"]]
+            
+            self.categories[poste]['Marché'] = self.categories[poste]['Marché']\
+                .astype(int).apply("{:0,.2f}€".format)
+            self.categories[poste]['Avenants'] = self.categories[poste]['Avenants']\
+                .astype(int).apply("{:0,.2f}€".format)
+
+
 
     def add_rad(self, category, subcategory, rad):
         if rad.replace('.', '').isnumeric():
