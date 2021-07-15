@@ -9,7 +9,8 @@ import os
 
 class Worksite(Categories):
     def __init__(self, accounting_plan, worksite_name, csv_path="var/csv/"):
-        """Trie les expenses d'un chantier par postes."""
+        """Trie les dépenses d'un chantier par postes."""
+
         super(Worksite, self).__init__(accounting_plan.get_plan())
         self.csv_path = csv_path
         self.worksite_name = worksite_name
@@ -26,6 +27,7 @@ class Worksite(Categories):
             self.categories[name]['Ecart PFDC/Budget'] = 0
 
     def __get_all_data_of_worksite(self, accounting_plan):
+        """On récupere tout les fichiers csv qui concernent le chantier"""
         total = None
         for filename in os.listdir(self.csv_path):
             if self.worksite_name in filename and filename.endswith(".csv"):
@@ -42,6 +44,7 @@ class Worksite(Categories):
         return total
 
     def calculate_year_expenses(self, month, year):
+        """Calcule des dépenses a l'année"""
         df = self.expenses.data
         df['Year'] = pd.DatetimeIndex(df['Date']).year
         df['Month'] = pd.DatetimeIndex(df['Date']).month
@@ -53,6 +56,7 @@ class Worksite(Categories):
             float).sum()
 
     def calculate_cumul_expenses(self, month, year):
+        """Calcule des dépenses depuis le début du chantier"""
         df = self.expenses.data
         df['Year'] = pd.DatetimeIndex(df['Date']).year
         df['Month'] = pd.DatetimeIndex(df['Date']).month
@@ -66,6 +70,7 @@ class Worksite(Categories):
             float).sum()
 
     def calculate_month_expenses(self, month, year):
+        """Calcule des dépenses du mois"""
         df = self.expenses.data
         df['Year'] = pd.DatetimeIndex(df['Date']).year
         df['Month'] = pd.DatetimeIndex(df['Date']).month
@@ -76,7 +81,7 @@ class Worksite(Categories):
             float).sum()
 
     def calculate_worksite(self, month, year, budget=None, only_year=False):
-
+        """Calcule pour chaque poste les dépenses du mois et de l'année"""
         if only_year:
             for _, row in self.expenses.data.iterrows():
                 date = datetime.datetime.strptime(row['Date'], "%Y-%m-%d")
@@ -98,11 +103,13 @@ class Worksite(Categories):
             self.__add_budget(budget)
 
     def calculate_bab(self, budMas, csvBab):
+        """Calcule les tableaux de surface/m³/m² pour les postes Bois/Acier/Beton"""
         return (self.__calculate_bois(budMas, csvBab),
                 self.__calculate_aciers(budMas, csvBab),
                 self.__calculate_beton(budMas, csvBab))
 
     def __calculate_bois(self, budMas, csvBab):
+        """Calcule et construit le tableau de surface pour BOIS"""
         sp = ["CONTREPLAQUE"]
         outCol = [
             "Poste", "Surface coffrante","M² consommé mois",
@@ -149,6 +156,8 @@ class Worksite(Categories):
         return out
 
     def __calculate_aciers(self, budMas, csvBab):
+        """Calcule et construit le tableau de dépenses kg pour ACIERS"""
+
         sp = ["ACIERS HA", "TRELLIS"]
         outCol = [
             "Poste", "Dépenses du mois", "Dépenses cumulées",
@@ -202,6 +211,7 @@ class Worksite(Categories):
         return out
 
     def __calculate_beton(self, budMas, csvBab):
+        """Calcule et construit le tableau de dépenses m³ pour le poste BETON"""
         sp = ["BETON","BETON C25/30", "BETON C30/37", "BETON C40/50", "BETON C50/60"]
         outCol = [
             "Poste", "Quantité du mois", "Quantité cumulée",
@@ -284,6 +294,9 @@ class Worksite(Categories):
         return 1
 
     def add_marche_avenants(self, budMas):
+        """Ajoute les colonnes marché avenants dans les tableaux de postes
+            pour certains sous postes particuliers"""
+
         budMas = budMas.loc[budMas["POSTE"] != "BETON"]
         budMas = budMas.loc[budMas["POSTE"] != "ACIERS"]
         budMas = budMas.loc[budMas["POSTE"] != "BOIS"]
@@ -310,6 +323,7 @@ class Worksite(Categories):
 
 
     def add_rad(self, category, subcategory, rad):
+        """Ajoute le rad dans le sous poste correspondant"""
         if rad.replace('.', '').isnumeric():
             self.categories[category].loc[subcategory, "RAD"] = float(rad)
 
