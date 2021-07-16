@@ -1,6 +1,5 @@
 import locale
 from .colors import black, lightwhite, bleu, bleuciel, yellow
-from rlextra.graphics.quickchart import QuickChart
 from reportlab.graphics.shapes import Drawing
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
