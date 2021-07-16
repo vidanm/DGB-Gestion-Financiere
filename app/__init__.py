@@ -228,8 +228,14 @@ def diverspdf():
     pdf.save_pdf()
 
     session['filename'] = filename
-    errors_to_html(action='/download_last_file')
-    return render_template("errors.html")
+    if os.path.exists("log.txt"):
+        log = open("log.txt", "r")
+        if len(log.read()) >= 1:
+            log.close()
+            errors_to_html(action='/download_last_file')
+            return render_template("errors.html")
+
+    return send_file(filename, as_attachment=True)
 
 
 @app.route('/synthese_chantier', methods=['POST'])
@@ -279,7 +285,7 @@ def chantpdf():
 
     if os.path.exists("log.txt"):
         log = open("log.txt", "r")
-        if log.readlines() != 0:
+        if len(log.read()) >= 1:
             log.close()
             if (bab == 'on'):
                 errors_to_html(action='/bab')
@@ -516,7 +522,7 @@ def structpdf():
         year = date[0:4]
         month = date[5:7]
 
-        filename = "bibl/Structure" + year + "-" + month + ".pdf"
+        filename = "bibl/" + year + "-" + month + "_STRUCT.pdf"
         try:
             accounting_plan = AccountingPlan(
                 get_accounting_file("var/PlanComptable.xls"), env="STRUCT")
@@ -592,10 +598,16 @@ def structpdf():
         pdf.save_pdf()
 
         session['filename'] = filename
-        errors_to_html(action='/download_last_file')
-        return render_template("errors.html")
 
-    return "B"
+        if os.path.exists("log.txt"):
+            log = open("log.txt", "r")
+            if len(log.read()) >= 1:
+                log.close()
+                errors_to_html(action='/download_last_file')
+                return render_template("errors.html")
+
+        return send_file(filename, as_attachment=True)
+
 
 
 @app.route('/download_last_file', methods=['GET', 'POST'])
