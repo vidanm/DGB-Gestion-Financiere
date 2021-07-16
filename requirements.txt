@@ -17,5 +17,3 @@ sqlalchemy==1.4.0
 Werkzeug==1.0.1
 openpyxl==3.0.5
 xlrd==2.0.1
-rlextra 
--i "https://dgbheroku:herokudgb*15@www.reportlab.com/pypi/"
