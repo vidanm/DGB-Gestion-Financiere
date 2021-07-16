@@ -5,19 +5,19 @@ index_default_table = {
     "RAD": "RAD (D)",
     "PFDC": "PFDC (E = B + D)",
     "Ecart PFDC/Budget": "Ecart PFDC/Budget (F = C - E)",
-    "CA": "CA (G)"
+    "CA": "CA (G)",
 }
 
 index_marge_a_avancement = {
     "CA": "CA (G | G2, G3)",
     "Dépenses": "Dépense (B2, B3)",
-    "Marge brute": "Marge brute (I = G - B | I2, I3)"
+    "Marge brute": "Marge brute (I = G - B | I2, I3)",
 }
 
 index_marge_a_avancement_cumul = {
     "CA": "CA (G)",
     "Dépenses": "Dépense (B)",
-    "Marge brute": "Marge brute (I = G - B)"
+    "Marge brute": "Marge brute (I = G - B)",
 }
 
 index_marge_fdc = {"Marge brute": "Marge brute (J = V - E)"}
@@ -32,7 +32,7 @@ index_synthese = {
     "DEP CUMULEES": "Dép. cumulées (B)",
     "MARGE A FIN DE MOIS": "Marge à l'av. (I3 = G - B)",
     "PFDC": "PFDC (E)",
-    "MARGE FDC": "Marge FDC (J)"
+    "MARGE FDC": "Marge FDC (J)",
 }
 
 index_synthese_annee = {
@@ -43,5 +43,5 @@ index_synthese_annee = {
     "Marge €": "Marge année € (I2 = G2 - B2)",
     "Marge %": "Marge année % (I2 / G2)",
     "Marge fin annee €": "Marge fin d'année € (K = J - I2)",
-    "Marge fin annee %": "Marge fin d'année % (K / W)"
+    "Marge fin annee %": "Marge fin d'année % (K / W)",
 }

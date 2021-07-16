@@ -13,13 +13,18 @@ class YearOverview(Overview):
         """Calcule la synthese sur l'année \
                 de toutes les dépenses de tout les chantiers."""
         self.col = [
-            "CHANTIER", "CA", "Dépenses", "Reste à facturer", "Marge €",
-            "Marge %"
+            "CHANTIER",
+            "CA",
+            "Dépenses",
+            "Reste à facturer",
+            "Marge €",
+            "Marge %",
         ]
 
         self.csv_pfdc = self.precalc_pfdc(month, year)
-        super(YearOverview, self).__init__(accounting_plan, month, year,
-                                           csv_path)
+        super(YearOverview, self).__init__(
+            accounting_plan, month, year, csv_path
+        )
 
     def calculate_data(self, month, year, budget=None):
         """Calcul de la synthese des dépenses d'une année\
@@ -30,19 +35,22 @@ class YearOverview(Overview):
             worksite_line[0] = name
 
             tmp = self.expenses.data.loc[
-                self.expenses.data["Section analytique"].astype(str) == name]
-            tmp['Date'] = pd.to_datetime(tmp['Date'])
+                self.expenses.data["Section analytique"].astype(str) == name
+            ]
+            tmp["Date"] = pd.to_datetime(tmp["Date"])
             tmp = tmp.loc[tmp["Journal"] != "VEN"]
             tmp = tmp.loc[tmp["Journal"] != "ANO"]
 
-            tmp = tmp[((tmp['Date'].dt.month <= month) &
-                       (tmp['Date'].dt.year == year))]
+            tmp = tmp[
+                (
+                    (tmp["Date"].dt.month <= month)
+                    & (tmp["Date"].dt.year == year)
+                )
+            ]
 
-            year_debit = pd.to_numeric(tmp['Débit'], errors='coerce')\
-                .sum()
+            year_debit = pd.to_numeric(tmp["Débit"], errors="coerce").sum()
 
-            year_credit = pd.to_numeric(tmp['Crédit'], errors='coerce')\
-                .sum()
+            year_credit = pd.to_numeric(tmp["Crédit"], errors="coerce").sum()
 
             worksite_line[2] = year_debit - year_credit
 
@@ -59,12 +67,16 @@ class YearOverview(Overview):
     def add_revenues(self):
         """Ajout des chiffres d'affaires."""
         for name in self.worksite_names:
-            worksite_revenue = Revenues(self.expenses.data.loc[
-                self.expenses.data["Section analytique"].astype(str) == name])
+            worksite_revenue = Revenues(
+                self.expenses.data.loc[
+                    self.expenses.data["Section analytique"].astype(str)
+                    == name
+                ]
+            )
 
-            self.data.loc[name, "CA"] =\
-                worksite_revenue.calculate_year_revenues(
-                    self.year)
+            self.data.loc[
+                name, "CA"
+            ] = worksite_revenue.calculate_year_revenues(self.year)
 
     def add_total(self, budget):
         """Ajout du total de la synthèse."""
@@ -74,7 +86,7 @@ class YearOverview(Overview):
         for name in self.worksite_names:
 
             if budget is not None:
-                tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE')]
+                tmp = budget.loc[(budget["POSTE"] == "PRIX DE VENTE")]
                 try:
                     sell_price += tmp[name].sum()
                 except Exception:
@@ -90,7 +102,8 @@ class YearOverview(Overview):
         totalraf = self.data["Reste à facturer"].sum()
         totalmarg = self.data["Marge €"].sum()
         totalmargper = (
-            (totalca - totaldep) / totalca) * 100 if totalca > 0 else 0
+            ((totalca - totaldep) / totalca) * 100 if totalca > 0 else 0
+        )
 
         total = pd.DataFrame(
             {
@@ -99,7 +112,9 @@ class YearOverview(Overview):
                 "Reste à facturer": [totalraf],
                 "Marge €": [totalmarg],
                 "Marge %": [totalmargper],
-            }, ["TOTAL"])
+            },
+            ["TOTAL"],
+        )
 
         self.data = self.data.append(total)
 
@@ -107,7 +122,7 @@ class YearOverview(Overview):
         """Calcul des marges."""
         for name in self.worksite_names:
             """if 'DIV' in name or 'STRUCT' in name:
-                continue"""
+            continue"""
 
             # budget = self.data.loc[name,"BUDGET"]
             expenses = self.data.loc[name, "Dépenses"]
@@ -119,37 +134,43 @@ class YearOverview(Overview):
             except Exception:
                 print("Pas de pfdc pour le chantier " + str(name))
 
-            worksite_revenue = Revenues(self.expenses.data.loc[
-                self.expenses.data["Section analytique"] == name])
+            worksite_revenue = Revenues(
+                self.expenses.data.loc[
+                    self.expenses.data["Section analytique"] == name
+                ]
+            )
 
-            anterior_revenues =\
-                worksite_revenue\
-                .calculate_cumulative_with_year_limit(self.year-1)
+            anterior_revenues = (
+                worksite_revenue.calculate_cumulative_with_year_limit(
+                    self.year - 1
+                )
+            )
 
-            cumulative_revenues =\
-                worksite_revenue\
-                .calculate_cumulative_revenues(self.year)
+            cumulative_revenues = (
+                worksite_revenue.calculate_cumulative_revenues(self.year)
+            )
 
             sell_price = 0
             if budget is not None and name in budget.columns:
-                tmp = budget.loc[(budget['POSTE'] == 'PRIX DE VENTE')]
+                tmp = budget.loc[(budget["POSTE"] == "PRIX DE VENTE")]
                 sell_price = tmp[name].sum()
 
-            self.data.loc[name, "Reste à facturer"] =\
-                (sell_price - cumulative_revenues)
+            self.data.loc[name, "Reste à facturer"] = (
+                sell_price - cumulative_revenues
+            )
 
-            self.data.loc[name, "Marge €"] =\
-                revenues - expenses
-            self.data.loc[name, "Marge %"] =\
-                ((revenues - expenses)/revenues) * 100\
-                if revenues > 0 else 0
+            self.data.loc[name, "Marge €"] = revenues - expenses
+            self.data.loc[name, "Marge %"] = (
+                ((revenues - expenses) / revenues) * 100 if revenues > 0 else 0
+            )
 
     def get_formatted_data(self):
         formatted = self.data.copy()
         formatted["Dépenses"] = formatted["Dépenses"].apply("{:0,.2f}€".format)
         formatted["CA"] = formatted["CA"].apply("{:0,.2f}€".format)
         formatted["Reste à facturer"] = formatted["Reste à facturer"].apply(
-            "{:0,.2f}€".format)
+            "{:0,.2f}€".format
+        )
         formatted["Marge €"] = formatted["Marge €"].apply("{:0,.2f}€".format)
         formatted["Marge %"] = formatted["Marge %"].apply("{:0,.2f}%".format)
 

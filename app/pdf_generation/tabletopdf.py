@@ -6,22 +6,27 @@ from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
 from .style import Style
-from .index_letters import index_default_table, index_marge_fdc,\
-        index_marge_a_avancement, index_synthese,\
-        index_marge_a_avancement_cumul, index_synthese_annee
+from .index_letters import (
+    index_default_table,
+    index_marge_fdc,
+    index_marge_a_avancement,
+    index_synthese,
+    index_marge_a_avancement_cumul,
+    index_synthese_annee,
+)
 import os.path
 
-locale.setlocale(locale.LC_ALL, 'en_US.utf8')
+locale.setlocale(locale.LC_ALL, "en_US.utf8")
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 
-class PDF():
+class PDF:
     def __init__(self, nom):
         """Permets la generation des différents pdf
         ( synthese / structure etc )."""
         self.nom = nom
         self.c = canvas.Canvas(nom, pagesize=(A4[1], A4[0]))
-        self.logo = os.path.join('images/DGB.jpeg')
+        self.logo = os.path.join("images/DGB.jpeg")
         self.__background()
 
     def __background(self):
@@ -30,21 +35,23 @@ class PDF():
         self.c.setFillColorRGB(0, 0, 0)
 
     def struct_style(self, row_nom):
-        style = [('FACE', (0, 0), (-1, -1), "Helvetica-Bold"),
-                 ('GRID', (0, 0), (-1, -1), 0.1, "BLACK"),
-                 ('FONTSIZE', (0, 0), (-1, -1), 6),
-                 ('ALIGN', (0, 0), (-1, -1), "CENTER"),
-                 ('VALIGN', (0, 0), (-1, -1), "MIDDLE"),
-                 ('BACKGROUND', (0, 0), (-1, 0), bleuciel),
-                 ('TEXTCOLOR', (0, 0), (-1, 0), "BLACK"),
-                 ('BACKGROUND', (1, 1), (-1, -1), "WHITE"),
-                 ('BACKGROUND', (0, -1), (-1, -1), yellow),
-                 ('TOPPADDING', (0, 0), (-1, -1), 6)]
+        style = [
+            ("FACE", (0, 0), (-1, -1), "Helvetica-Bold"),
+            ("GRID", (0, 0), (-1, -1), 0.1, "BLACK"),
+            ("FONTSIZE", (0, 0), (-1, -1), 6),
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("BACKGROUND", (0, 0), (-1, 0), bleuciel),
+            ("TEXTCOLOR", (0, 0), (-1, 0), "BLACK"),
+            ("BACKGROUND", (1, 1), (-1, -1), "WHITE"),
+            ("BACKGROUND", (0, -1), (-1, -1), yellow),
+            ("TOPPADDING", (0, 0), (-1, -1), 6),
+        ]
 
         for i in row_nom:
-            style.append(('BACKGROUND', (0, i), (-1, i), bleu))
-            style.append(('TEXTCOLOR', (0, i), (-1, i), bleu))
-            style.append(('TEXTCOLOR', (0, i), (0, i), lightwhite))
+            style.append(("BACKGROUND", (0, i), (-1, i), bleu))
+            style.append(("TEXTCOLOR", (0, i), (-1, i), bleu))
+            style.append(("TEXTCOLOR", (0, i), (0, i), lightwhite))
 
         return TableStyle(style)
 
@@ -60,7 +67,7 @@ class PDF():
             for j in range(1, len(numTable[0])):
                 total[0][j] += numTable[i][j]
 
-        total[0][0] = 'Total'
+        total[0][0] = "Total"
         numTable.append(total[0])
 
     def create_bar_syntgraph(self, width, height, synt):
@@ -69,24 +76,24 @@ class PDF():
         dep = synt["DEP CUMULEES"].tolist()
 
         d = Drawing(width, height)
-        d.add(QuickChart(), name='chart')
+        d.add(QuickChart(), name="chart")
         d.chart.height = height
         d.chart.width = width
-        d.chart.seriesNames = 'PFDC', 'Budget', 'Dépenses cumulées'
-        d.chart.seriesRelation = 'sidebyside'
+        d.chart.seriesNames = "PFDC", "Budget", "Dépenses cumulées"
+        d.chart.seriesRelation = "sidebyside"
         d.chart.dataLabelsFontSize = 10
         d.chart.legendFontSize = 10
         d.chart.chartColors = [bleu, bleuciel, yellow]
         d.chart.data = [pfdc, budget, dep]
-        d.chart.chartType = 'column'
-        d.chart.titleText = ''
-        d.chart.xTitleText = ''
+        d.chart.chartType = "column"
+        d.chart.titleText = ""
+        d.chart.xTitleText = ""
         d.chart.xAxisFontSize = 10
         d.chart.xAxisLabelAngle = 30
         d.chart.yAxisFontSize = 10
         # d.chart.yAxisLabelAngle = 30
         d.chart.categoryNames = synt.index.tolist()
-        d.chart.dataLabelsAlignment = 'bottom'
+        d.chart.dataLabelsAlignment = "bottom"
         # d.chart.pointerLabelMode = 'leftAndRight'
         d.chart.bgColor = None
         d.chart.plotColor = None
@@ -147,18 +154,20 @@ class PDF():
         self.c.setFillColor("BLACK")
         self.c.drawString(x, y, text)
 
-    def add_table(self,
-                  dataframe,
-                  x=-1,
-                  y=-1,
-                  tableHeight=-1,
-                  indexName="Poste",
-                  title=None,
-                  noIndexLine=False,
-                  coloring=False,
-                  total=True,
-                  letters='default',
-                  custom_style=[]):
+    def add_table(
+        self,
+        dataframe,
+        x=-1,
+        y=-1,
+        tableHeight=-1,
+        indexName="Poste",
+        title=None,
+        noIndexLine=False,
+        coloring=False,
+        total=True,
+        letters="default",
+        custom_style=[],
+    ):
         """Ajoute un tableau a la feuille active.
 
         Le coin bas droite est représenté par (x,y)."""
@@ -169,7 +178,7 @@ class PDF():
         numTable.insert(0, indexes)
         tablestyle = Style(numTable, tableHeight, total)
 
-        if (numTable[0][0] == "index"):
+        if numTable[0][0] == "index":
             numTable[0][0] = indexName
 
         if noIndexLine:
@@ -187,9 +196,11 @@ class PDF():
                 tablestyle.add_title_style()
 
             tablestyle.add_custom_style(
-                ('FACE', (0, 1), (-1, 1), "Helvetica-Bold"))
+                ("FACE", (0, 1), (-1, 1), "Helvetica-Bold")
+            )
             tablestyle.add_custom_style(
-                ('BACKGROUND', (0, 1), (-1, 1), bleuciel))
+                ("BACKGROUND", (0, 1), (-1, 1), bleuciel)
+            )
 
         for i in range(len(numTable)):
             for j in range(len(numTable[i])):
@@ -208,12 +219,12 @@ class PDF():
         # Si la position n'est pas définie par l'utilisateur
         # alors on ecris la table au milieu de la page
 
-        if (x == -1 or x == 'center'):
+        if x == -1 or x == "center":
             x = (A4[1] / 2) - (w / 2)
         else:
             x = (x) - (w / 2)
 
-        if (y == -1 or y == 'center'):
+        if y == -1 or y == "center":
             y = (A4[0] / 2) - (h / 2)
         else:
             y = y - (h / 2)
@@ -230,11 +241,13 @@ class PDF():
         """Ecris le titre et le sous titre sur une feuille."""
         self.__background()
         self.draw_header()
-        self.c.drawImage(self.logo,
-                         A4[1] - inch * 2,
-                         A4[0] - inch * 1.39,
-                         width=50,
-                         height=50)  # Draw Logo
+        self.c.drawImage(
+            self.logo,
+            A4[1] - inch * 2,
+            A4[0] - inch * 1.39,
+            width=50,
+            height=50,
+        )  # Draw Logo
         self.c.setFillColor("WHITE")
         self.c.setFont("Helvetica-Bold", 30)  # Draw Title
         self.c.drawCentredString(A4[1] / 2, A4[0] - inch, titre)
@@ -251,20 +264,20 @@ class PDF():
         self.c.save()
 
     def change_index_names(self, new_index, table, axis=0):
-        """ axis = 0 -> rows
-            1 -> columns """
+        """axis = 0 -> rows
+        1 -> columns"""
 
-        if new_index == 'default':
+        if new_index == "default":
             new_index = index_default_table
-        elif new_index == 'marge_a_avancement':
+        elif new_index == "marge_a_avancement":
             new_index = index_marge_a_avancement
-        elif new_index == 'marge_a_avancement_cumul':
+        elif new_index == "marge_a_avancement_cumul":
             new_index = index_marge_a_avancement_cumul
-        elif new_index == 'marge_fdc':
+        elif new_index == "marge_fdc":
             new_index = index_marge_fdc
-        elif new_index == 'globale':
+        elif new_index == "globale":
             new_index = index_synthese
-        elif new_index == 'globale_annee':
+        elif new_index == "globale_annee":
             new_index = index_synthese_annee
         else:
             return

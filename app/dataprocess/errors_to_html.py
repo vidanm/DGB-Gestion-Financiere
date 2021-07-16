@@ -1,4 +1,5 @@
-HTML_HEAD = "\
+HTML_HEAD = (
+    "\
 <!DOCTYPE HTML>\
     <html>\
         <head>\
@@ -6,14 +7,15 @@ HTML_HEAD = "\
             <title>Erreurs</title>\
             <link rel='stylesheet' \
             type='text/css' \
-            href="                   + '"{{ url_for("static",filename="index.css")}}">' +\
-        "</head>\
+            href="
+    + '"{{ url_for("static",filename="index.css")}}">'
+    + "</head>\
         <body>\
             <h1> Erreurs </h1>\
             <div id='errors'>"
+)
 
-HTML_BODY = "</div><div id='passer'>"\
-
+HTML_BODY = "</div><div id='passer'>"
 HTML_ACTION_START = "<form id='continuer' method=get action='"
 
 HTML_ACTION_END = "'>"

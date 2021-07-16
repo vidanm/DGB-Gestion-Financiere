@@ -6,10 +6,13 @@
 # from pandas import Index
 from .date import get_month_name
 
-HTML_HEAD = "<head><meta charset='UTF-8'>\
+HTML_HEAD = (
+    "<head><meta charset='UTF-8'>\
         <title>Rentrer Reste à dépenser</title>\
-        <link rel='stylesheet' type='text/css' href="                                                      +\
-        '"{{ url_for("static",filename="rad.css") }}' + '"></head>'
+        <link rel='stylesheet' type='text/css' href="
+    + '"{{ url_for("static",filename="rad.css") }}'
+    + '"></head>'
+)
 
 HTML_TITLE_HEAD = "<body><div id='image'>\
         <img src=\
@@ -37,8 +40,15 @@ def convert_single_dataframe_to_html_table(dicPostes, mois, annee, chantier):
 
     file.write(HTML_HEAD)
     # file.write(HTML_TITLE_HEAD)
-    file.write("<body><h1>Bilan " + str(chantier) + " | " +
-               get_month_name(mois) + " " + str(annee) + "</h1>")
+    file.write(
+        "<body><h1>Bilan "
+        + str(chantier)
+        + " | "
+        + get_month_name(mois)
+        + " "
+        + str(annee)
+        + "</h1>"
+    )
     # file.write(HTML_TITLE_BOT)
 
     file.write("<form action='/rad' method=post id='rad'>")
@@ -49,15 +59,15 @@ def convert_single_dataframe_to_html_table(dicPostes, mois, annee, chantier):
     for key in dicPostes:
         dataframe = dicPostes[key]
 
-        if (first_df):
+        if first_df:
             file.write(HTML_TABLE_TITLE_HEAD)
             file.write(key)
             file.write(HTML_TABLE_TITLE_BOT)
             for col in dataframe.columns:
-                if ("PFDC" in col.upper()):
+                if "PFDC" in col.upper():
                     skip_column.append(dataframe.columns.get_loc(col) + 1)
                 else:
-                    if (col == 'RAD'):
+                    if col == "RAD":
                         input_col = dataframe.columns.get_loc(col)
                     file.write(HTML_TABLE_TITLE_HEAD)
                     file.write(str(col))
@@ -79,9 +89,9 @@ def convert_single_dataframe_to_html_table(dicPostes, mois, annee, chantier):
 
             for cell in row:
                 index_cell += 1
-                if (index_cell not in skip_column):
+                if index_cell not in skip_column:
                     file.write(HTML_TABLE_ROW_HEAD)
-                    if (index_cell == input_col + 1):
+                    if index_cell == input_col + 1:
                         ind = key + "$" + index
                         file.write("<input type='text' form='rad'")
                         file.write('name="' + ind + '">')
