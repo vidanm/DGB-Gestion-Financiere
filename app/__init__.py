@@ -320,6 +320,10 @@ def chantpdf():
                 errors_to_html(action="/rad")
 
             return render_template("errors.html")
+    
+    if bab == "on":
+        return render_template("bab.html")
+    
     return render_template("rad.html")
 
 
