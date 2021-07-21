@@ -284,6 +284,7 @@ def get_budget_file(filepath):
     mass = mass.fillna(0)
 
     mass["POSTE"] = mass["POSTE"].apply(lambda s: s.split("\n")[0])
+    last = "None"
 
     for column in mass:
         print(column)

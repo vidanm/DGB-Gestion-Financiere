@@ -154,7 +154,7 @@ def syntpdf():
         return "Erreur de lecture du plan comptable " + str(e)
 
     try:
-        budget, mas = get_budget_file("var/Budget.xls")
+        budget, _ = get_budget_file("var/Budget.xls")
     except Exception:
         print("Pas de fichier budget")
     # revenues = Revenues(charges.get_raw_charges())
@@ -289,15 +289,10 @@ def chantpdf():
     except Exception as error:
         return "Erreur de lecture de plan comptable :" + str(error)
 
-    # try:
     worksite = Worksite(accounting_plan, worksite_name)
-    # except Exception as error:
-    #    return "Erreur de lecture de fichier chantier : " + str(error)
 
     try:
-        budget, mas = get_budget_file("var/Budget.xls")[
-            0
-        ]  # finances sheet = 0
+        budget, _ = get_budget_file("var/Budget.xls")[0]
     except Exception as error:
         print(error)
 
