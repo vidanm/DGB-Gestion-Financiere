@@ -27,6 +27,8 @@ class Expenses:
         return self.data.to_string()
 
     def __remove_unknown_accounts(self):
+        """Supprime les comptes qui n'ont pas de poste associé dans 
+        le plan comptable."""
         logging = open("log.txt", "a+")
         accounts = self.data["Général"].unique()
         for account in accounts:
@@ -51,6 +53,7 @@ class Expenses:
         return 1
 
     def __compose_accounts_with_category_name(self):
+        """Rajoute les noms des postes et sous postes au tableau de dépenses"""
         for index, value in self.data["Général"].iteritems():
             if (
                 len(self.accounting_plan.get_poste_by_code(str(value)).values)
@@ -64,31 +67,3 @@ class Expenses:
                 )["SOUS POSTE"].values[0]
                 self.data.loc[index, "POSTE"] = category
                 self.data.loc[index, "SOUS POSTE"] = subcategory
-
-        # self.data['POSTE'] = self.data['Général'].apply(
-        #        lambda x: (self.accounting_plan
-        #                   .get_poste_by_code(str(x)))['POSTE']
-        #        .values[0])
-
-        # self.data['SOUS POSTE'] = self.data['Général'].apply(
-        #        lambda x: (self.accounting_plan
-        #                   .get_poste_by_code(str(x)))['SOUS POSTE']
-        #        .values[0])
-
-
-if __name__ == "__main__":
-    a = Expenses(
-        get_csv_expenses("~/DGB_Gesfin/var/csv/2020_20-DIV0000.csv"),
-        AccountingPlan(
-            get_accounting_file("~/DGB_Gesfin/var/PlanComptable2020.xls")
-        ),
-    )
-
-    b = Expenses(
-        get_csv_expenses("~/DGB_Gesfin/var/csv/2020_19-BD-LAIG.csv"),
-        AccountingPlan(
-            get_accounting_file("~/DGB_Gesfin/var/PlanComptable2020.xls")
-        ),
-    )
-
-    c = a + b

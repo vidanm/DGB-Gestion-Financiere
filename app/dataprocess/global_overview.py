@@ -3,7 +3,6 @@ from .overview import Overview
 import pandas as pd
 import warnings
 import numpy as np
-
 from pandas.core.common import SettingWithCopyWarning
 
 warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
@@ -155,10 +154,6 @@ class GlobalOverview(Overview):
     def calculate_margin(self, budget=None):
         """Calcul des marges."""
         for name in self.worksite_names:
-            # if 'DIV' in name or 'STRUCT' in name:
-            #    continue
-
-            # budget = self.data.loc[name,"BUDGET"]
             pfdc = self.data.loc[name, "PFDC"]
             month_expenses = self.data.loc[name, "DEP DU MOIS"]
             month_revenues = self.data.loc[name, "CA MOIS"]

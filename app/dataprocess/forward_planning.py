@@ -4,6 +4,7 @@ import pandas as pd
 
 class ForwardPlanning:
     def __init__(self, worksite):
+        """Gestion prévisionnelle ( à la fin de la synthèse chantier )."""
         self.worksite = worksite
         for name in worksite.category_names:
             if name != "PRODUITS":
@@ -20,10 +21,8 @@ class ForwardPlanning:
     def calculate_margins(
         self, month, year, with_year=True, with_cumul=False, with_month=False
     ):
-        # Concerne le tableau marge à l'avancement
+        # Calcule et crée le tableau de marge à l'avancement
         revenues = Revenues(self.worksite.expenses.data)
-        # Verifier si les lignes de ventes sont bien dedans
-
         year_revenues = revenues.calculate_year_revenues(year)
         anterior_revenues = revenues.calculate_cumulative_with_year_limit(
             year - 1
@@ -112,7 +111,7 @@ class ForwardPlanning:
             ]:
                 data.append(i)
 
-        out = pd.DataFrame(
+        out = pd.DataFrame( # Création du tableau
             data=data, index=row_indexes, columns=column_indexes
         )
         out["CA"] = out["CA"].apply("{:0,.2f}€".format)
@@ -123,7 +122,7 @@ class ForwardPlanning:
         return out
 
     def calculate_pfdc_tab(self, budget):
-        # Concerne le tableau Marge à fin de chantier
+        # Calcule et crée le tableau Marge à fin de chantier
         column_indexes = ["PFDC"]
         row_indexes = ["CA Chantier", "Marge brute", "Marge brute %"]
 
@@ -144,7 +143,7 @@ class ForwardPlanning:
 
         data = [sell_price, total_sell, percent * 100]
 
-        out = pd.DataFrame(
+        out = pd.DataFrame( # Création du tableau
             data=data, index=row_indexes, columns=column_indexes
         )
 

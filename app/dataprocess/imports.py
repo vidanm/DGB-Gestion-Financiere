@@ -31,12 +31,6 @@ def get_expenses_file(filepath):
 
     expenses = expenses.drop(columns=column_to_drop, errors="ignore")
     expenses = expenses.fillna(0)
-    """TODO Ajouter une erreur aux logs quand des lignes sont supprimées"""
-    # tmp = expenses.loc[ expenses['Section analytique'] != 0
-    #                    | expenses['Date'] != 0
-    #                    | expenses['Journal'] != 0
-    #                    | expenses['Général'] != 0]
-    # On élimine toutes les lignes ou les données sont manquantes
     expenses = expenses.loc[expenses["Section analytique"] != 0]
     expenses = expenses.loc[expenses["Date"] != 0]
     expenses = expenses.loc[expenses["Journal"] != 0]
@@ -44,9 +38,6 @@ def get_expenses_file(filepath):
     expenses["Général"] = expenses["Général"].astype(int)
     expenses["Date"] = pd.to_datetime(expenses["Date"], format="%Y-%m-%d")
     expenses = expenses.loc[expenses["Journal"] != "ANO"]
-    # On elimine tout les espaces avant et après les string
-    # expenses = expenses.map
-
     expenses["POSTE"] = ""
     expenses["SOUS POSTE"] = ""
     return expenses
@@ -304,6 +295,8 @@ def get_budget_file(filepath):
 
 
 def store_all_worksites_names(filepath, outputpath):
+    """Écris le nom des chantiers présents dans le fichier de dépenses\
+            dans un nouveau fichier (utile pour menu déroulant)"""
     expenses = get_expenses_file(filepath)
     worksite_names = expenses["Section analytique"].unique()
     file = open(outputpath + "names.txt", "w+")
@@ -313,6 +306,7 @@ def store_all_worksites_names(filepath, outputpath):
 
 
 def get_bab_file(filepath):
+    """Bois Acier Beton Quantités"""
     out = pd.read_csv(
         filepath,
         names=["POSTE", "SOUS-POSTE", "TYPE", "VALEUR"],
