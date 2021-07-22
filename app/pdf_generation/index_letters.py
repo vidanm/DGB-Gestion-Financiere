@@ -39,7 +39,7 @@ index_synthese_annee = {
     "CHANTIER": "Chantier",
     "CA": "CA année (G2)",
     "Dépenses": "Dépenses année (B2)",
-    "Reste à facturer": "Reste à fac. (W = V - G3)",
+    "Reste à facturer": "Reste à fac. (W = V - G)",
     "Marge €": "Marge année € (I2 = G2 - B2)",
     "Marge %": "Marge année % (I2 / G2)",
     "Marge fin annee €": "Marge fin d'année € (K = J - I2)",
