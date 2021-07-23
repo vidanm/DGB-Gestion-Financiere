@@ -7,7 +7,7 @@ class ForwardPlanning:
         """Gestion prévisionnelle ( à la fin de la synthèse chantier )."""
         self.worksite = worksite
         for name in worksite.category_names:
-            if name != "PRODUITS":
+            if name != "PRODUITS" and name != "DIVERS":
                 if worksite.category_names.index(name) == 0:
                     self.forward_planning = pd.DataFrame(
                         columns=worksite.categories[name].columns.copy()
@@ -17,6 +17,8 @@ class ForwardPlanning:
                 self.forward_planning = self.forward_planning.append(
                     line, ignore_index=False
                 )
+        self.add_total()
+        self.format_forward_planning()
 
     def calculate_margins(
         self, month, year, with_year=True, with_cumul=False, with_month=False
@@ -159,3 +161,35 @@ class ForwardPlanning:
             "{:0,.2f}%".format
         )
         return out
+
+    def add_total(self):
+        columns = ["Dépenses du mois","Dépenses cumulées",\
+                "Budget","RAD","PFDC","Ecart PFDC/Budget"]
+
+        data = [
+                self.forward_planning["Dépenses du mois"].sum(),
+                self.forward_planning["Dépenses cumulées"].sum(),
+                self.forward_planning["Budget"].sum(),
+                self.forward_planning["RAD"].sum(),
+                self.forward_planning["PFDC"].sum(),
+                self.forward_planning["Ecart PFDC/Budget"].sum()
+                ]
+
+        line = pd.Series(data=data,index=columns)
+        line.name = "TOTAL"
+
+        self.forward_planning = self.forward_planning.append(
+                    line, ignore_index=False
+                )
+
+    def format_forward_planning(self):
+        self.forward_planning = self.forward_planning.drop('Marché',errors='ignore',axis=1)
+        self.forward_planning = self.forward_planning.drop('Avenants',errors='ignore',axis=1)
+        self.forward_planning["Budget"] = self.forward_planning["Budget"].apply("{:0,.2f}€".format)
+        self.forward_planning["Dépenses du mois"] = self.forward_planning["Dépenses du mois"].apply("{:0,.2f}€".format)
+        self.forward_planning["Dépenses cumulées"] = self.forward_planning["Dépenses cumulées"].apply("{:0,.2f}€".format)
+        self.forward_planning["RAD"] = self.forward_planning["RAD"].apply("{:0,.2f}€".format)
+        self.forward_planning["PFDC"] = self.forward_planning["PFDC"].apply("{:0,.2f}€".format)
+        self.forward_planning["Ecart PFDC/Budget"] = self.forward_planning["Ecart PFDC/Budget"].apply("{:0,.2f}€".format)
+
+

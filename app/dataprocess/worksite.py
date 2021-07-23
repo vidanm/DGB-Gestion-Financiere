@@ -439,6 +439,9 @@ class Worksite(Categories):
         """Ajoute les colonnes marché avenants dans les tableaux de postes
         pour certains sous postes particuliers"""
 
+        if self.worksite_name + "-MQ" not in budMas.keys():
+            return
+
         budMas = budMas.loc[budMas["POSTE"] != "BETON"]
         budMas = budMas.loc[budMas["POSTE"] != "ACIERS"]
         budMas = budMas.loc[budMas["POSTE"] != "BOIS"]
@@ -566,6 +569,7 @@ class Worksite(Categories):
         dep_cumul = (
             self.categories["DIVERS"]["Dépenses cumulées"].sum()
             - self.categories["DIVERS"]["Dépenses cumulées"].iat[-1]
+            # On soustrait la ligne du total
         )
 
         marge = ca_cumul - dep_cumul

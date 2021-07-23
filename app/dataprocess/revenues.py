@@ -11,10 +11,10 @@ class Revenues:
 
     def _delete_ach_lines(self):
         """Elimine toutes les lignes d'achats pour ne garder que les ventes."""
-        self.data = self.data.loc[self.data["Journal"] == "VEN"]
-        # for index, value in self.data['Journal'].iteritems():
-        #    if value != 'VEN':
-        #        self.data = self.data.drop(index=index)
+
+        self.data = self.data[self.data['Général'].apply(lambda x: str(x).isnumeric())]
+        self.data = self.data.loc[self.data["Général"] > 700000]
+        self.data = self.data.loc[self.data["Général"] < 800000] # Inutile mais protection
 
     def calculate_month_revenues(self, month, year):
         """Calcul le chiffre d'affaire du mois de l'année donné en argument."""
@@ -27,7 +27,7 @@ class Revenues:
                 date = datetime.datetime.strptime(row["Date"], "%Y-%m-%d")
 
             if int(date.month) == int(month) and int(date.year) == int(year):
-                result += row["Crédit"]
+                result += row["Crédit"] - row["Débit"] if row["Crédit"] != 0 else 0
 
         return result
 
@@ -51,7 +51,7 @@ class Revenues:
 
     def calculate_cumulative_revenues(self, year):
         # N'est pas borné au mois demandée
-        result = self.data["Crédit"].sum()
+        result = self.data["Crédit"].sum() - self.data["Débit"].sum()
         # for _, row in self.data.iternotrows():
         #    result += row['Crédit']
 

@@ -69,8 +69,11 @@ class Overview:
         if os.path.exists("bibl/" + date):
             for filename in os.listdir("bibl/" + date):
                 worksite_name = filename[0:-7]
-                with open("bibl/" + date + "/" + filename, "rb") as file:
-                    csv_worksite[worksite_name] = file.read()
+                if os.stat("bibl/" + date + "/" + filename).st_size != 0:
+                    with open("bibl/" + date + "/" + filename, "rb") as file:
+                        csv_worksite[worksite_name] = file.read()
+                else:
+                    csv_worksite[worksite_name] = 0
 
         return csv_worksite
 

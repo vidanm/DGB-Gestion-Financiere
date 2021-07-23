@@ -393,7 +393,11 @@ def rad():
 
     if is_bab_defined:
         bois, acier, beton = worksite.calculate_bab(mas, bab)
+    
+    try:
         worksite.add_marche_avenants(mas)
+    except Exception as error:
+        print("Pas de données marché/avenants pour ce chantier")
 
     planning = ForwardPlanning(worksite)
     planning_margin = planning.calculate_margins(
@@ -414,6 +418,8 @@ def rad():
     worksite.remove_category("PRODUITS")
     # worksite.remove_category("PRORATA")
 
+   
+    # POUR LA SYNTHESE GLOBALE MAIS A VOIR SI ON NE SUPPRIME PAS
     with open("bibl/" + date + "/" + worksite_name + "_tt.txt", "w") as file:
         file.write(str(worksite.categories["GESPREV"].iloc[-1]["PFDC"]))
 
@@ -430,7 +436,8 @@ def rad():
             # pdf.add_table(planning_margin,y=A4[0]-inch*3.2,x=inch*9.6,tableHeight=inch*2,indexName="Temps")
             # pdf.add_table(planning_pfdc,y=inch*2,x=A4[1]-inch*1.5,tableHeight=inch*2,indexName="Marges")
             pdf.add_table(
-                worksite.get_formatted_data(nom),
+                planning.forward_planning,
+                #worksite.get_formatted_data(nom),
                 y=A4[0] - inch * 3.2,
                 tableHeight=inch * 3,
                 coloring=True,

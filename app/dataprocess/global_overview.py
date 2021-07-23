@@ -31,7 +31,7 @@ class GlobalOverview(Overview):
     def calculate_data(self, month, year, budget=None):
         """Calcul de la synthese des dépenses d'une année\
                 en omettant la structure."""
-        csv_worksite = self.precalc_pfdc(month, year)
+        csv_worksite = super(GlobalOverview, self).precalc_pfdc(month, year)
         for name in self.worksite_names:
             worksite_line = ["", 0, 0, 0, 0, 0, 0, 0, 0, 0]
             worksite_line[0] = name
