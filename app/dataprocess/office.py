@@ -25,6 +25,7 @@ class Office(Categories):
             self.categories[name]["%CA Cumul"] = 0
 
     def __get_year_data_of_office(self, accounting_plan):
+        """ Récupère toutes les dépenses et avenants de la structure pour une année particulière"""
         total = None
         for filename in os.listdir(self.csv_path):
             if (

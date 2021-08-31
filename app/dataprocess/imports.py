@@ -1,6 +1,6 @@
 import pandas as pd
 import datetime
-
+from .excel_analyzing import verify_expenses_file
 
 def get_expenses_file(filepath):
     """
@@ -14,6 +14,11 @@ def get_expenses_file(filepath):
     """
     try:
         expenses = pd.read_excel(filepath)
+    except Exception as error:
+        raise error
+
+    try:
+        verify_expenses_file(filepath)
     except Exception as error:
         raise error
 
@@ -44,7 +49,7 @@ def get_expenses_file(filepath):
 
 
 def split_expenses_file_as_worksite_csv(filepath, outputpath):
-
+    """Crée un csv pour chaque chantier et avec distinction des années"""
     expenses = get_expenses_file(filepath)
     worksite_names = expenses["Section analytique"].unique()
 
@@ -66,6 +71,7 @@ def get_csv_expenses(filepath):
 
 
 def split_salary_file_as_salary_csv(filepath, outputpath):
+    """Crée un csv pour les dépenses de salaires par chantier par année"""
     xl = pd.ExcelFile(filepath)
     for sheet in xl.sheet_names:
         if "AFFECTATION" in sheet:
@@ -127,6 +133,7 @@ def split_salary_file_as_salary_csv(filepath, outputpath):
 
 
 def get_salary_file(filepath, columns, sheet):
+    """ Lis le fichier de masse salariale"""
     try:
         salary = pd.read_excel(filepath, usecols=columns, sheet_name=sheet)
         date = ""
@@ -165,7 +172,7 @@ def get_salary_file(filepath, columns, sheet):
         return salary
 
     except Exception as error:
-        raise error
+        raise "Problème de format sur le fichier de masse salariale : "+str(error)
 
 
 def get_accounting_file(filepath):
@@ -306,7 +313,8 @@ def store_all_worksites_names(filepath, outputpath):
 
 
 def get_bab_file(filepath):
-    """Bois Acier Beton Quantités"""
+    """Recupere le csv contenant les informations supplémentaires à propos\
+            des postes Bois Acier Beton"""
     out = pd.read_csv(
         filepath,
         names=["POSTE", "SOUS-POSTE", "TYPE", "VALEUR"],

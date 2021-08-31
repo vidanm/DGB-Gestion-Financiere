@@ -1,3 +1,6 @@
+""" Ce fichier permet la génération d'un fichier HTML dans le style du site
+recensant les erreurs à l'éxécution du programme ( critique ou non ) """
+
 HTML_HEAD = (
     "\
 <!DOCTYPE HTML>\

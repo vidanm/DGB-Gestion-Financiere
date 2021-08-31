@@ -1,6 +1,7 @@
 class Categories:
     def __init__(self, accounting_plan):
-        """Classe abstraite. Objet hérité par ChantierPoste et StructPoste."""
+        """Classe abstraite. Objet hérité par ChantierPoste et StructPoste.
+        pour le calcul de la synthèse de chantier / structure """
         self.category_names = accounting_plan["POSTE"].unique().tolist()
         self.categories = {}
 
