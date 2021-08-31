@@ -147,7 +147,7 @@ class YearOverview(Overview):
             )
 
             cumulative_revenues = (
-                worksite_revenue.calculate_cumulative_revenues(self.year)
+                worksite_revenue.calculate_cumulative_revenues(self.month,self.year)
             )
 
             sell_price = 0

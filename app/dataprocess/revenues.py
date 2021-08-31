@@ -1,5 +1,6 @@
+import calendar
 import datetime
-
+import pandas as pd
 
 class Revenues:
     def __init__(self, data):
@@ -46,13 +47,18 @@ class Revenues:
 
     def calculate_cumulative_with_year_limit(self, year):
         return self.calculate_cumulative_revenues(
+            12,
             year
         ) - self.calculate_year_revenues(year + 1)
 
-    def calculate_cumulative_revenues(self, year):
+    def calculate_cumulative_revenues(self, month, year):
         # N'est pas borné au mois demandée
-        result = self.data["Crédit"].sum() - self.data["Débit"].sum()
-        # for _, row in self.data.iternotrows():
-        #    result += row['Crédit']
+        data = self.data
+        data['Date'] = pd.to_datetime(data['Date']) 
+
+        current_date = datetime.datetime(year, month, calendar.monthrange(year,month)[1])
+        data = data.loc[data["Date"] <= current_date]
+
+        result = data["Crédit"].sum() - self.data["Débit"].sum()
 
         return result

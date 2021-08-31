@@ -111,7 +111,7 @@ class GlobalOverview(Overview):
                 2,
             )
             self.data.loc[name, "CA CUMUL"] = round(
-                worksite_revenue.calculate_cumulative_revenues(self.year), 2
+                worksite_revenue.calculate_cumulative_revenues(self.month, self.year), 2
             )
 
     def add_budget(self, budget):
