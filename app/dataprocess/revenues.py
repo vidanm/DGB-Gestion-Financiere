@@ -14,8 +14,8 @@ class Revenues:
         """Elimine toutes les lignes d'achats pour ne garder que les ventes."""
 
         self.data = self.data[self.data['Général'].apply(lambda x: str(x).isnumeric())]
-        self.data = self.data.loc[self.data["Général"] > 700000]
-        self.data = self.data.loc[self.data["Général"] < 800000] # Inutile mais protection
+        self.data = self.data.loc[self.data['Général'] > 700000]
+        self.data = self.data.loc[self.data['Général'] < 800000] # Inutile mais protection
 
     def calculate_month_revenues(self, month, year):
         """Calcul le chiffre d'affaire du mois de l'année donné en argument."""

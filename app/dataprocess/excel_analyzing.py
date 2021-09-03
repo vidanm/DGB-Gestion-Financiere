@@ -40,14 +40,16 @@ def verify_expenses_file(filepath):
 
     for i in column_to_check:
         if i not in columns:
-            raise "Mauvais format de fichier : la colonne "+i+" n'est pas dans les charges"
+            raise ValueError("Mauvais format de fichier : la colonne '"+i+"' n'est pas dans les charges")
         
 
 def verify_accounting_file(filepath):
     """On va vérifier la présence des colonnes et données nécessaire\
     au traitement du fichier"""
-    column_to_check = ["N° DE COMPTE","POSTE","SOUS POSTE"]
-    
+    worksite_column_to_check = ["N° DE COMPTE","POSTE","SOUS POSTE"]
+    office_column_to_check = ["N° DE COMPTE.1","POSTE.1","SOUS POSTE.1"]
+    divers_column_to_check = ["N° DE COMPTE.2","POSTE.2","SOUS POSTE.2"]
+
     try:
         account_worksite = pd.read_excel(filepath, header=1, usecols="A:D")
         account_office = pd.read_excel(filepath, header=1, usecols="E:H")
@@ -55,25 +57,23 @@ def verify_accounting_file(filepath):
     except Exception as error:
         raise error
 
-    columns = account_worksite.columns()
+    columns = account_worksite.columns
 
-    for i in column_to_check:
+    for i in worksite_column_to_check:
         if i not in columns:
-            raise "Mauvais format de fichier : \
-                    la colonne "+i+" n'est pas dans la partie chantier du plan comptable."
+            raise ValueError("Mauvais format de fichier : \
+                    la colonne "+i+" n'est pas dans la partie chantier du plan comptable.")
 
-    columns = account_office.columns()
-
-    for i in column_to_check:
+    columns = account_office.columns
+    for i in office_column_to_check:
         if i not in columns:
-            raise "Mauvais format de fichier : \
-                    la colonne "+i+" n'est pas dans la partie structure du plan comptable."
+            raise ValueError("Mauvais format de fichier : \
+                    la colonne "+i+" n'est pas dans la partie structure du plan comptable.")
 
-    columns = account_divers.columns()
+    columns = account_divers.columns
 
-    for i in column_to_check:
+    for i in divers_column_to_check:
         if i not in columns:
-            raise "Mauvais format de fichier : \
-                    la colonne "+i+" n'est pas dans la partie divers du plan comptable."
+            raise ValueError("Mauvais format de fichier : \
+                    la colonne "+i+" n'est pas dans la partie divers du plan comptable.")
 
-    

@@ -1,6 +1,6 @@
 import pandas as pd
 import datetime
-from .excel_analyzing import verify_expenses_file
+from .excel_analyzing import verify_expenses_file, verify_accounting_file
 
 def get_expenses_file(filepath):
     """
@@ -50,7 +50,11 @@ def get_expenses_file(filepath):
 
 def split_expenses_file_as_worksite_csv(filepath, outputpath):
     """Crée un csv pour chaque chantier et avec distinction des années"""
-    expenses = get_expenses_file(filepath)
+    try:
+        expenses = get_expenses_file(filepath)
+    except Exception as error:
+        raise error
+
     worksite_names = expenses["Section analytique"].unique()
 
     for name in worksite_names:
@@ -172,7 +176,7 @@ def get_salary_file(filepath, columns, sheet):
         return salary
 
     except Exception as error:
-        raise "Problème de format sur le fichier de masse salariale : "+str(error)
+        raise ValueError("Problème de format sur le fichier de masse salariale : "+str(error))
 
 
 def get_accounting_file(filepath):
@@ -192,6 +196,11 @@ def get_accounting_file(filepath):
         account_worksite = pd.read_excel(filepath, header=1, usecols="A:D")
         account_office = pd.read_excel(filepath, header=1, usecols="E:H")
         account_divers = pd.read_excel(filepath, header=1, usecols="I:K")
+    except Exception as error:
+        raise error
+
+    try:
+        verify_accounting_file(filepath)
     except Exception as error:
         raise error
 
@@ -266,16 +275,16 @@ def get_budget_file(filepath):
     try:
         finances = pd.read_excel(filepath, header=3, sheet_name=0)
     except Exception as error:
-        raise "Probleme de lecture de la première feuille du fichier budget :" + str(
+        raise ValueError("Probleme de lecture de la première feuille du fichier budget :" + str(
             error
-        )
+        ))
 
     try:
         mass = pd.read_excel(filepath, header=3, sheet_name=1)
     except Exception as error:
-        raise "Probleme de lecture de la deuxieme feuille du fichier budget : " + str(
+        raise ValueError("Probleme de lecture de la deuxieme feuille du fichier budget : " + str(
             error
-        )
+        ))
 
     mass["POSTE"] = mass["POSTE"].fillna(method="ffill")
     mass = mass[mass["SOUS-POSTE"].notna()]
@@ -304,7 +313,11 @@ def get_budget_file(filepath):
 def store_all_worksites_names(filepath, outputpath):
     """Écris le nom des chantiers présents dans le fichier de dépenses\
             dans un nouveau fichier (utile pour menu déroulant)"""
-    expenses = get_expenses_file(filepath)
+    try:
+        expenses = get_expenses_file(filepath)
+    except Exception as error:
+        raise error
+
     worksite_names = expenses["Section analytique"].unique()
     file = open(outputpath + "names.txt", "w+")
     for name in worksite_names:
