@@ -14,8 +14,10 @@ class Revenues:
         """Elimine toutes les lignes d'achats pour ne garder que les ventes."""
 
         self.data = self.data[self.data['Général'].apply(lambda x: str(x).isnumeric())]
-        self.data = self.data.loc[self.data['Général'] > 700000]
-        self.data = self.data.loc[self.data['Général'] < 800000] # Inutile mais protection
+        print(self.data);
+        if not self.data.empty:
+            self.data = self.data.loc[self.data['Général'] > 700000]
+            self.data = self.data.loc[self.data['Général'] < 800000] # Inutile mais protection
 
     def calculate_month_revenues(self, month, year):
         """Calcul le chiffre d'affaire du mois de l'année donné en argument."""
@@ -53,6 +55,9 @@ class Revenues:
 
     def calculate_cumulative_revenues(self, month, year):
         # N'est pas borné au mois demandée
+        if self.data.empty:
+            return 0
+
         data = self.data
         data['Date'] = pd.to_datetime(data['Date']) 
 
