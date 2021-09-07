@@ -29,6 +29,7 @@ from app.dataprocess.imports import (
 from app.dataprocess.date import get_month_name
 from app.dataprocess.errors_to_html import errors_to_html
 from app.dataprocess.forward_planning import ForwardPlanning
+from app.dataprocess.excel_analyzing import verify_expenses_file, verify_accounting_file
 from app.pdf_generation.colors import bleuciel
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
@@ -144,8 +145,11 @@ def syntpdf():
     year = date[0:4]
     month = date[5:7]
     budget = None
-
     filename = "bibl/Synthese.pdf"
+
+    #if len(os.listdir('var/csv') ) == 0:
+    #    return "Veuillez importer des charges via le bouton imports"
+    
     try:
         accounting_plan = AccountingPlan(
             get_accounting_file("var/PlanComptable.xls")
@@ -155,8 +159,8 @@ def syntpdf():
 
     try:
         budget, _ = get_budget_file("var/Budget.xls")
-    except Exception:
-        print("Pas de fichier budget")
+    except Exception as error:
+        print(str(error))
     # revenues = Revenues(charges.get_raw_charges())
     # camois = CA.calcul_ca_mois(int(month),int(year))
     # cacumul = CA.calcul_ca_annee(int(year))
@@ -221,6 +225,9 @@ def diverspdf():
     if not (os.path.exists("bibl/" + date)):
         os.makedirs("bibl/" + date)
 
+    if len(os.listdir('var/csv') ) == 0:
+        return "Veuillez importer des charges via le bouton imports"
+
     try:
         accounting_plan = AccountingPlan(
             get_accounting_file("var/PlanComptable.xls")
@@ -281,6 +288,9 @@ def chantpdf():
         bab = "off"
 
     budget = None
+
+    if len(os.listdir('var/csv') ) == 0:
+        return "Veuillez importer des charges via le bouton imports"
 
     try:
         accounting_plan = AccountingPlan(
@@ -364,13 +374,16 @@ def rad():
     worksite = Worksite(accounting_plan, worksite_name)
     try:
         budget, mas = get_budget_file("var/Budget.xls")
-    except Exception:
-        print("Pas de budget")
+    except Exception as error:
+        print("Erreur budget : "+str(error))
 
     try:
         bab = get_bab_file("var/bab.csv")
     except Exception as error:
-        print(error)
+        print(str(error))
+        is_bab_defined = False
+
+    if budget is None:
         is_bab_defined = False
 
     date = session.get("date", "not set")  # Défini dans chantpdf()
@@ -391,7 +404,7 @@ def rad():
     worksite.compose_pfdc_budget()
     worksite.add_worksite_total()
 
-    if is_bab_defined:
+    if is_bab_defined and budget is not None:
         bois, acier, beton = worksite.calculate_bab(mas, bab)
     
     try:
@@ -572,8 +585,11 @@ def structpdf():
         date = request.form["date"]
         year = date[0:4]
         month = date[5:7]
-
         filename = "bibl/" + year + "-" + month + "_STRUCT.pdf"
+
+        if len(os.listdir('var/csv') ) == 0:
+            return "Veuillez importer des charges via le bouton imports"
+
         try:
             accounting_plan = AccountingPlan(
                 get_accounting_file("var/PlanComptable.xls"), env="STRUCT"
@@ -702,12 +718,14 @@ def upload_file():
         return redirect("/login")
 
     if request.method == "POST":
-
         #  check if the post request has the file part
-        check_save_uploaded_file("PlanComptable")
-        check_save_uploaded_file("Charges")
-        check_save_uploaded_file("Budget")
-        check_save_uploaded_file("MasseSalariale")
+        try: 
+            check_save_uploaded_file("PlanComptable")
+            check_save_uploaded_file("Charges")
+            check_save_uploaded_file("Budget")
+            check_save_uploaded_file("MasseSalariale")
+        except Exception as e :
+            return str(e)
 
         return redirect("/")
         # return redirect(url_for('upload_file',filename=filename))
@@ -737,8 +755,11 @@ def check_save_uploaded_file(tag):
     else:
         file = request.files[tag]
         if file.filename == "":
-            flash("No selected files")
-        if file and allowed_file(file.filename):
+            return
+
+        if not allowed_file(file.filename):
+            raise ValueError("Format du fichier incorrect : seul les fichiers .xls sont acceptés")
+        if file:
             filename = file.filename
             file.save(
                 os.path.join(
@@ -746,15 +767,21 @@ def check_save_uploaded_file(tag):
                     tag + "." + filename.split(".")[1],
                 )
             )
-
             if tag == "Charges":
-                split_expenses_file_as_worksite_csv(
-                    filepath=os.path.join(
-                        app.config["UPLOAD_FOLDER"],
-                        tag + "." + filename.split(".")[1],
-                    ),
-                    outputpath="var/csv/",
-                )
+                try :
+                    filepath = os.path.join(
+                            app.config["UPLOAD_FOLDER"],
+                            tag + "." + filename.split(".")[1],
+                            )
+
+                    verify_expenses_file(filepath)
+                    split_expenses_file_as_worksite_csv(
+                        filepath=filepath,
+                        outputpath="var/csv/",
+                    )
+                except Exception as e:
+                    raise e
+                
                 store_all_worksites_names(
                     filepath=os.path.join(
                         app.config["UPLOAD_FOLDER"],
@@ -764,10 +791,22 @@ def check_save_uploaded_file(tag):
                 )
 
             elif tag == "MasseSalariale":
-                split_salary_file_as_salary_csv(
-                    filepath=os.path.join(
-                        app.config["UPLOAD_FOLDER"],
-                        tag + "." + filename.split(".")[1],
-                    ),
-                    outputpath="var/csv/",
-                )
+                try :
+                    split_salary_file_as_salary_csv(
+                        filepath=os.path.join(
+                            app.config["UPLOAD_FOLDER"],
+                            tag + "." + filename.split(".")[1],
+                        ),
+                        outputpath="var/csv/",
+                    )
+                except Exception as error:
+                    raise error
+            elif tag == "PlanComptable":
+                try :
+                    filepath = os.path.join(
+                            app.config["UPLOAD_FOLDER"],
+                            tag + "." + filename.split(".")[1],
+                            )
+                    verify_accounting_file(filepath)
+                except Exception as error:
+                    raise error

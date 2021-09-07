@@ -1,5 +1,6 @@
 import pandas as pd
 import datetime
+import os
 from .excel_analyzing import verify_expenses_file, verify_accounting_file
 
 def get_expenses_file(filepath):
@@ -271,6 +272,8 @@ def get_budget_file(filepath):
     Returns:
         Dataframe of budget splitted in two ( 2 sheets )
     """
+    if (not os.path.exists("var/Budget.xls")):
+        return None
 
     try:
         finances = pd.read_excel(filepath, header=3, sheet_name=0)
