@@ -363,7 +363,7 @@ def rad():
         return render_template("rad.html")
 
     budget = None
-    is_bab_defined = True
+    with_bab = True
     worksite_name = session.get(
         "worksite_name", "not set"
     )  # Défini dans chantpdf()
@@ -381,10 +381,7 @@ def rad():
         bab = get_bab_file("var/bab.csv")
     except Exception as error:
         print(str(error))
-        is_bab_defined = False
-
-    if budget is None:
-        is_bab_defined = False
+        with_bab = False
 
     date = session.get("date", "not set")  # Défini dans chantpdf()
     year = date[0:4]
@@ -404,7 +401,7 @@ def rad():
     worksite.compose_pfdc_budget()
     worksite.add_worksite_total()
 
-    if is_bab_defined and budget is not None:
+    if with_bab and budget is not None:
         bois, acier, beton = worksite.calculate_bab(mas, bab)
     
     try:
@@ -429,10 +426,7 @@ def rad():
 
     worksite.calcul_ges_prev()
     worksite.remove_category("PRODUITS")
-    # worksite.remove_category("PRORATA")
 
-   
-    # POUR LA SYNTHESE GLOBALE MAIS A VOIR SI ON NE SUPPRIME PAS
     with open("bibl/" + date + "/" + worksite_name + "_tt.txt", "w") as file:
         file.write(str(worksite.categories["GESPREV"].iloc[-1]["PFDC"]))
 
@@ -443,11 +437,6 @@ def rad():
 
         if nom == "GESPREV":
             pdf.new_page("Gestion prévisionnelle 1/2", worksite_name)
-            # pdf.add_table(worksite.get_formatted_data(nom),
-            #              y=A4[0] - inch * 3.2,x=inch*4,tableHeight=inch*3)
-            # pdf.create_bar_gesprevgraph(600, 250, worksite)
-            # pdf.add_table(planning_margin,y=A4[0]-inch*3.2,x=inch*9.6,tableHeight=inch*2,indexName="Temps")
-            # pdf.add_table(planning_pfdc,y=inch*2,x=A4[1]-inch*1.5,tableHeight=inch*2,indexName="Marges")
             pdf.add_table(
                 planning.forward_planning,
                 #worksite.get_formatted_data(nom),
@@ -525,7 +514,7 @@ def rad():
 
         elif nom == "DIVERS":
             continue
-        elif (nom == "BOIS") and is_bab_defined:
+        elif (nom == "BOIS") and with_bab:
             pdf.new_page(nom, worksite_name)
             pdf.add_table(
                 worksite.get_formatted_data(nom),
@@ -535,7 +524,7 @@ def rad():
             pdf.add_table(
                 bois, y=(A4[0] / 4), tableHeight=inch * 5, total=False
             )
-        elif (nom == "ACIERS") and is_bab_defined:
+        elif (nom == "ACIERS") and with_bab:
             pdf.new_page(nom, worksite_name)
             pdf.add_table(
                 worksite.get_formatted_data(nom),
@@ -545,7 +534,7 @@ def rad():
             pdf.add_table(
                 acier, y=(A4[0] / 4), tableHeight=inch * 5, total=False
             )
-        elif (nom == "BETON") and is_bab_defined:
+        elif (nom == "BETON") and with_bab:
             pdf.new_page(nom, worksite_name)
             pdf.add_table(
                 worksite.get_formatted_data(nom),
@@ -747,6 +736,12 @@ def clear():
     if os.path.exists("var/bab.csv"):
         os.remove("var/bab.csv")
 
+def is_name_in_budget(mas, name):
+    if mas is not None:
+        for i in mas.columns:
+            if name in i:
+                return True
+    return False
 
 def check_save_uploaded_file(tag):
 
@@ -810,3 +805,5 @@ def check_save_uploaded_file(tag):
                     verify_accounting_file(filepath)
                 except Exception as error:
                     raise error
+
+    

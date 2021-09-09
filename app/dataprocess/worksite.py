@@ -138,6 +138,15 @@ class Worksite(Categories):
 
         csvBab = csvBab.loc[csvBab["POSTE"] == "BOIS"]
         budMas = budMas.loc[budMas["POSTE"] == "BOIS"]
+        in_budget = False
+
+        for i in budMas.columns:
+            if self.worksite_name in i:
+                in_budget = True
+
+        if in_budget == False:
+            budMas[self.worksite_name+"-MQ"] = 0
+            budMas[self.worksite_name+"-AP"] = 0
 
         for poste in sp:
             surface_coffrante = (
@@ -227,6 +236,17 @@ class Worksite(Categories):
 
         csvBab = csvBab.loc[csvBab["POSTE"] == "ACIERS"]
         budMas = budMas.loc[budMas["POSTE"] == "ACIERS"]
+
+        in_budget = False
+
+        for i in budMas.columns:
+            if self.worksite_name in i:
+                in_budget = True
+
+        if in_budget == False:
+            budMas[self.worksite_name+"-MQ"] = 0
+            budMas[self.worksite_name+"-AP"] = 0
+
         # budMas['SOUS-POSTE'] = budMas['SOUS-POSTE'].filter(items=sp)
 
         for poste in sp:
@@ -324,6 +344,16 @@ class Worksite(Categories):
         csvBab = csvBab.loc[csvBab["POSTE"] == "BETON"]
         budMas = budMas.loc[budMas["POSTE"] == "BETON"]
         # budMas['SOUS-POSTE'] = budMas['SOUS-POSTE'].filter(items=sp)
+        in_budget = False
+
+        for i in budMas.columns:
+            if self.worksite_name in i:
+                in_budget = True
+
+        if in_budget == False:
+            budMas[self.worksite_name+"-MQ"] = 0
+            budMas[self.worksite_name+"-AP"] = 0
+
 
         for poste in sp:
             type_beton = poste
@@ -445,6 +475,16 @@ class Worksite(Categories):
         budMas = budMas.loc[budMas["POSTE"] != "BETON"]
         budMas = budMas.loc[budMas["POSTE"] != "ACIERS"]
         budMas = budMas.loc[budMas["POSTE"] != "BOIS"]
+        in_budget = False
+
+        for i in budMas.columns:
+            if self.worksite_name in i:
+                in_budget = True
+
+        if in_budget == False:
+            budMas[self.worksite_name+"-MQ"] = 0
+            budMas[self.worksite_name+"-AP"] = 0
+
 
         for poste in budMas["POSTE"].unique():
             tmp = budMas.loc[budMas["POSTE"] == poste]
